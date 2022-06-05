@@ -12,7 +12,7 @@ Remember you can _always_ Google or ask for help if you get stuck.
 
 ## Projects
 
-TODO
+- [CLI & Files](./cli-files)
 
 ## Authors
 
