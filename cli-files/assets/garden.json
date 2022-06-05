@@ -1,0 +1,25 @@
+{
+  "flowers": [
+    {
+      "name": "Great Maiden's Blush",
+      "genus": "Rosa",
+      "species": "Rosa × alba",
+      "color": "white",
+      "height": 2.2
+    },
+    {
+      "name": "Bright Gem",
+      "genus": "Tulipa",
+      "species": "Tulipa linifolia",
+      "color": "Yellow/orange",
+      "height": 0.17
+    },
+    {
+      "name": "Elizabeth",
+      "genus": "Magnolia",
+      "species": "M. acuminata × M. denudata",
+      "color": "Pale yellow",
+      "height": 9.6
+    }
+  ]
+}
