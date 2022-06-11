@@ -1,6 +1,6 @@
 # CLI & Files
 
-Become familiar with go and the toolchain by building a JSON-file reading CLI tool: `get-data ".flowers[0].name" garden.json`
+In this project you're going to get familiar with the [Go programming language][go] by rebuilding two very common tools that programmers and computer administrators use all the time: [cat][cat] and [ls][ls].
 
 Timebox: 4 days
 
@@ -11,56 +11,57 @@ Objectives:
 - Understand what a process is & the basics of process - lifecycle
 - Accept arguments on the CLI
 - Open, read (and close) files from CLI arguments
-- Learn about JSON and parsing
-- Read strings from arguments
-- Extract data from a JSON file and print it to the CLI
-- Add support for YAML
+- Reading directories for files
 
 ## Instructions
 
-You're going to build a command-line application that reads data from files.
+You're going to build a command-line application that reads data the computers file system.
 
-Let's say you have a `garden.json` file like this, containing data about what's growing in our garden:
+Let's say you have a few files containing poems in a directory:
 
-```json
-{
-  "flowers": [
-    {
-      "name": "Great Maiden's Blush",
-      "genus": "Rosa",
-      "species": "Rosa × alba",
-      "color": "white",
-      "height": 2.2
-    },
-    {
-      "name": "Bright Gem",
-      "genus": "Tulipa",
-      "species": "Tulipa linifolia",
-      "color": "Yellow/orange",
-      "height": 0.17
-    },
-    {
-      "name": "Elizabeth",
-      "genus": "Magnolia",
-      "species": "M. acuminata × M. denudata",
-      "color": "Pale yellow",
-      "height": 9.6
-    }
-  ]
-}
+- `dew.txt`
+- `for_you.txt`
+- `rain.txt`
+
+The `ls` tool will list the files in that directory:
+
+```
+> ls
+dew.txt
+for_you.txt
+rain.txt
 ```
 
-The tool you will build will extra data from this file. Here are some examples:
+While the `cat` command will output the contents of a file to you:
+
+```
+> cat dew.txt
+“A World of Dew” by Kobayashi Issa
+
+A world of dew,
+And within every dewdrop
+A world of struggle.
+```
+
+As you can see, `cat` takes an argument, namely the file to be written out. You'll learn how to do this too.
+
+You're going to rebuild these two tools in Go:
 
 ```bash
-> get-data ".flowers[0].name" garden.json
-"Great Maiden's Blush"
+> go-ls
+dew.txt
+for_you.txt
+rain.txt
 
-> get-data ".flowers[1].height" garden.json
-2.2
+> go-cat dew.txt
+“A World of Dew” by Kobayashi Issa
 
-> get-data ".flowers[2]" garden.json
-{"name": "Elizabeth", "genus": "Magnolia", "species": "M. acuminata × M. denudata", "color": "Pale yellow", "height": 9.6 }
+A world of dew,
+And within every dewdrop
+A world of struggle.
 ```
 
+[go]: https://go.dev/
+[cat]: https://en.m.wikipedia.org/wiki/Cat_(Unix)
+[ls]: https://en.m.wikipedia.org/wiki/Ls
 [cobra]: https://github.com/spf13/cobra#overview
