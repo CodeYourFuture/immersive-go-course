@@ -15,7 +15,7 @@ Objectives:
 
 ## Instructions
 
-You're going to build a command-line application that reads data the computers file system.
+You're going to build a command-line application that reads data from your computer's file system.
 
 Let's say you have a few files containing poems in a directory:
 
