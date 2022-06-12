@@ -10,8 +10,15 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "go-ls",
 	Short: "go-ls is a re-implementation of the ls command",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Hello, world!")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		files, err := os.ReadDir(".")
+		if err != nil {
+			return err
+		}
+		for _, file := range files {
+			fmt.Println(file.Name())
+		}
+		return nil
 	},
 }
 

@@ -62,6 +62,7 @@ A world of struggle.
 ```
 
 <<<<<<< HEAD
+
 ### go-ls
 
 These steps will leave some work for you to do. If something's not clear, search around for to find the answer. If you're stuck for half an hour at most, ask for help. Remember to use Git to store your progress, committing often in small increments with useful descriptions.
@@ -166,13 +167,6 @@ Let's try it out: `go install . && go-cat`. It will do nothing, but it's a start
 Now it's over to you: set up a command that takes a path to a file as an argument, then opens that file and prints it out. You'll need the built-in go functions `os.ReadFile` and `os.Stdout.Write`, as well as more from the `os` package.
 
 Bonus task: handle the error if you pass it a directory rather than a file, like cat does.
-=======
-### Steps (notes)
-
-- Setup cobra with https://github.com/spf13/cobra/blob/master/user_guide.md
-- install in cli-files `go get -u github.com/spf13/cobra@latest`
-- `cmd` directory, `root.go`
->>>>>>> 740abac (redo file structure for commands and add gitignores)
 
 [go]: https://go.dev/
 [cat]: https://en.m.wikipedia.org/wiki/Cat_(Unix)
