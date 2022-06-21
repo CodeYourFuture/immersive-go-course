@@ -61,6 +61,49 @@ And within every dewdrop
 A world of struggle.
 ```
 
+### Steps (notes)
+
+- make sure the working directory is go-ls: `cd go-ls`
+- create `go.mod`, `main.go`, `cmd/root.go`
+
+```go
+// go.mod
+module vinery/cli-files/go-ls
+
+go 1.18
+```
+
+```go
+// main.go
+package main
+
+import (
+	"vinery/cli-files/go-ls/cmd"
+)
+
+func main() {
+	cmd.Execute()
+}
+```
+
+```go
+// cmd/root.go
+package cmd
+
+func Execute() {}
+```
+
+- `go get -u github.com/spf13/cobra@latest`
+- follow cobra [user guide](https://github.com/spf13/cobra/blob/master/user_guide.md) to make a root command that prints hello in `cmd/root.go`
+- implement basic ls with `os.ReadDir`
+- allow the command to take arguments with `cobra.ArbitraryArgs`
+- when passed an argument such as `go-ls assets`, read from the passed directory
+- ensure that this directory path can be relative: `go-ls ..` and `go-ls ../go-ls` should both work
+- handle the error (e.g. `Error: fdopendir go.mod: not a directory` when passing `go-ls` a file argument: `go-ls go.mod`)
+- update `go-ls` to match `ls` in terms of how it handles files (hint: `os.Stat`)
+- make `go-ls -h` include a helpful description
+- bonus: write some tests for `go-ls`
+
 [go]: https://go.dev/
 [cat]: https://en.m.wikipedia.org/wiki/Cat_(Unix)
 [ls]: https://en.m.wikipedia.org/wiki/Ls
