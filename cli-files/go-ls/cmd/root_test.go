@@ -42,3 +42,20 @@ rain.txt
 		t.Fatalf("expected \"%s\" got \"%s\"", expected, string(out))
 	}
 }
+
+func TestRootCmdFile(t *testing.T) {
+	cmd := NewRoodCmd()
+	b := bytes.NewBufferString("")
+	cmd.SetOut(b)
+	cmd.SetArgs([]string{"../assets/dew.txt"})
+	cmd.Execute()
+	out, err := ioutil.ReadAll(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	expected := `dew.txt
+`
+	if string(out) != expected {
+		t.Fatalf("expected \"%s\" got \"%s\"", expected, string(out))
+	}
+}

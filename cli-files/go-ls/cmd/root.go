@@ -20,6 +20,24 @@ func NewRoodCmd() *cobra.Command {
 				dir = args[0]
 			}
 
+			// Stat the file so we can check if it's a directory or not before
+			// we try to read it as a directory using ReadDir. os.ReadDir will
+			// generates an error if the thing you pass to it is not a directory.
+			// https://pkg.go.dev/os#Stat
+			fileInfo, err := os.Stat(dir)
+			if err != nil {
+				return err
+			}
+
+			// We can only list the contents of a directory.
+			// To match the real ls, if we're asked to ls a file, we'll just print
+			// out the file's name.
+			// https://pkg.go.dev/io/fs#FileInfo
+			if fileInfo.IsDir() == false {
+				fmt.Fprintln(cmd.OutOrStdout(), fileInfo.Name())
+				return nil
+			}
+
 			// Read this directory to get a list of files
 			// https://pkg.go.dev/os#ReadDir
 			files, err := os.ReadDir(dir)
