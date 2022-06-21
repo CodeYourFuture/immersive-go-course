@@ -61,8 +61,6 @@ And within every dewdrop
 A world of struggle.
 ```
 
-<<<<<<< HEAD
-
 ### go-ls
 
 These steps will leave some work for you to do. If something's not clear, search around for to find the answer. If you're stuck for half an hour at most, ask for help. Remember to use Git to store your progress, committing often in small increments with useful descriptions.
