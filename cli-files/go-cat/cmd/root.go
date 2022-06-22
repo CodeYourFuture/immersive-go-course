@@ -17,7 +17,34 @@ func NewRoodCmd() *cobra.Command {
 		Use:   "go-cat",
 		Short: "Go implementation of cat",
 		Long:  `Works like cat`,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// Don't do anything if we didn't get an arg
+			if len(args) < 1 {
+				return nil
+			}
+			path := args[0]
+
+			// Get data about the file so we can do this safely
+			file, err := os.Stat(path)
+			if err != nil {
+				return err
+			}
+
+			// If it's a directory, do the right thing and error
+			if file.IsDir() {
+				return fmt.Errorf("go-cat: %s: Is a directory", path)
+			}
+
+			data, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+
+			// Print those lovely bytes
+			out := cmd.OutOrStdout()
+			out.Write(data)
+
+			return nil
 		},
 	}
 }
