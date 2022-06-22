@@ -65,7 +65,7 @@ A world of struggle.
 
 These steps will leave some work for you to do. If something's not clear, search around for to find the answer. If you're stuck for half an hour at most, ask for help. Remember to use Git to store your progress, committing often in small increments with useful descriptions.
 
-A full implementation of this is available on the `impl/go-ls` branch.
+A full implementation of this is available on the `impl/cat-ls` branch.
 
 The `go-ls` directory is provided for you with some example files in the `assets/` folder.
 
