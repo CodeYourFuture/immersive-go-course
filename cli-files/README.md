@@ -13,7 +13,7 @@ Objectives:
 - Open, read (and close) files from CLI arguments
 - Reading directories for files
 
-## Instructions
+## Project
 
 You're going to build a command-line application that reads data from your computer's file system.
 
@@ -61,10 +61,17 @@ And within every dewdrop
 A world of struggle.
 ```
 
-### Steps (notes)
+### go-ls
 
-- make sure the working directory is go-ls: `cd go-ls`
-- create `go.mod`, `main.go`, `cmd/root.go`
+These steps will leave some work for you to do. If something's not clear, search around for to find the answer. If you're stuck for half an hour at most, ask for help. Remember to use Git to store your progress, committing often in small increments with useful descriptions.
+
+A full implementation of this is available on the `impl/go-ls` branch.
+
+The `go-ls` directory is provided for you with some example files in the `assets/` folder.
+
+In your command line/terminal, make sure your working directory is go-ls: `cd go-ls`
+
+Create `go.mod`, `main.go`, `cmd/root.go`. The `touch` command creates files: `touch go.mod`.
 
 ```go
 // go.mod
@@ -93,18 +100,54 @@ package cmd
 func Execute() {}
 ```
 
-- `go get -u github.com/spf13/cobra@latest`
-- follow cobra [user guide](https://github.com/spf13/cobra/blob/master/user_guide.md) to make a root command that prints hello in `cmd/root.go`
-- implement basic ls with `os.ReadDir`
-- allow the command to take arguments with `cobra.ArbitraryArgs`
-- when passed an argument such as `go-ls assets`, read from the passed directory
-- ensure that this directory path can be relative: `go-ls ..` and `go-ls ../go-ls` should both work
-- handle the error (e.g. `Error: fdopendir go.mod: not a directory` when passing `go-ls` a file argument: `go-ls go.mod`)
-- update `go-ls` to match `ls` in terms of how it handles files (hint: `os.Stat`)
-- make `go-ls -h` include a helpful description
-- bonus: write some tests for `go-ls`
+We're going to use the [Cobra][cobra] package to make these commands. It does a lot of magic for you.
+
+Install the Cobra package using the `go get` command: `go get -u github.com/spf13/cobra@latest`
+
+The Cobra [user guide](https://github.com/spf13/cobra/blob/master/user_guide.md) will show you how to make a root command that prints hello in `cmd/root.go`.
+
+To use your command, install and run it: `go install .`
+
+Then run the following so that your command line knows where to look for the executable code that Go is generating: `export PATH=$PATH:$(dirname $(go list -f '{{.Target}}' .))`
+
+You should now be able to run `go-ls`.
+
+Now, when you change your code, install and run it: `go install . && go-ls`
+
+Now you've got something working, we'll speed up the steps. You can do it!
+
+The `ls` command reads a directory, generating a list of files or sub-directories. Go comes with packages for interacting with files built-in, include a package called [os][os], which contains a function called `ReadDir` which will do lots of the work of `ls` for you.
+
+See if you can implement basic `ls` with `os.ReadDir`. It should read the list of files in the current, "working" directory:
+
+```
+> go install .
+> cd assets
+> go-ls
+dew.txt
+for_you.txt
+rain.txt
+```
+
+The real `ls` allows you pass a directory to be read: `ls assets`.
+
+Extend your `go-ls` to allow the command to take arguments (look for `cobra.ArbitraryArgs`) and then, when passed an argument such as `go-ls assets`, read from the passed directory.
+
+Make that this directory path can be relative: `go-ls ..` and `go-ls ../go-ls` should both work.
+
+Handle the error `Error: fdopendir go.mod: not a directory` when passing `go-ls` a file argument: `go-ls go.mod`. Think hard about why this is happening before you try to fix it.
+
+Update `go-ls` to match `ls` in terms of how it handles files (hint: `os.Stat`) — it should just output the name of the file.
+
+Make `go-ls -h` include a helpful description.
+
+If you smash through this, here's some fun/tricky extensions:
+
+- Write some tests for `go-ls`
+- Extend `go-ls` to support some more features of the real `ls` (for example, `ls -m assets`)
 
 [go]: https://go.dev/
 [cat]: https://en.m.wikipedia.org/wiki/Cat_(Unix)
 [ls]: https://en.m.wikipedia.org/wiki/Ls
 [cobra]: https://github.com/spf13/cobra#overview
+[os]: https://pkg.go.dev/os
