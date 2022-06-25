@@ -1,7 +1,7 @@
 package main
 
 import (
-	"vinery/cli-files/go-ls/cmd"
+	"go-ls/cmd"
 )
 
 func main() {

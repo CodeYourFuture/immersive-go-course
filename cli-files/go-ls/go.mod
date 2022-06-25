@@ -1,8 +1,8 @@
-module vinery/cli-files/go-ls
+module go-ls
 
 go 1.18
 
-require github.com/spf13/cobra v1.4.0
+require github.com/spf13/cobra v1.5.0
 
 require (
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
