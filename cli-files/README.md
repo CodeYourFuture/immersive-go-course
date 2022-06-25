@@ -75,7 +75,7 @@ Create `go.mod`, `main.go`, `cmd/root.go`. The `touch` command creates files: `t
 
 ```go
 // go.mod
-module vinery/cli-files/go-ls
+module go-ls
 
 go 1.18
 ```
@@ -85,7 +85,7 @@ go 1.18
 package main
 
 import (
-	"vinery/cli-files/go-ls/cmd"
+	"go-ls/cmd"
 )
 
 func main() {
@@ -108,9 +108,9 @@ The Cobra [user guide](https://github.com/spf13/cobra/blob/master/user_guide.md)
 
 To use your command, install and run it: `go install .`
 
-Then run the following so that your command line knows where to look for the executable code that Go is generating: `export PATH=$PATH:$(dirname $(go list -f '{{.Target}}' .))`
+To run the code, you need to tell your command line where executable code compiled from go lives. The way to do this is different depending on your operating system, but here's [a guide on the Go website](https://go.dev/doc/install) — look at anything that mentions `go/bin` on your `PATH`.
 
-You should now be able to run `go-ls`.
+Once added, you should now be able to run `go-ls`.
 
 Now, when you change your code, install and run it: `go install . && go-ls`
 
@@ -145,6 +145,26 @@ If you smash through this, here's some fun/tricky extensions:
 
 - Write some tests for `go-ls`
 - Extend `go-ls` to support some more features of the real `ls` (for example, `ls -m assets`)
+
+### go-cat
+
+This one we're going to make in a different, so we can see how to use tools to initialise go projects more quickly.
+
+We'll use the [cobra-cli](https://github.com/spf13/cobra-cli/blob/main/README.md) to initialise a new project. There's a guide on that page to installing it, but it's likely `go install github.com/spf13/cobra-cli@latest`.
+
+Then `cd` to the `cli-files` directory.
+
+Make a `go-cat` directory, `cd` into it, and run `go mod init go-cat` ([documentation here](https://pkg.go.dev/cmd/go#hdr-Initialize_new_module_in_current_directory)).
+
+Then run `cobra-cli init .`. [This command](https://github.com/spf13/cobra-cli/blob/main/README.md) will create your initial application code for you.
+
+Take a look at all the files it has created. See how they differ or are similar to what you did in the `go-ls` example.
+
+Let's try it out: `go install . && go-cat`. It will do nothing, but it's a start.
+
+Now it's over to you: set up a command that takes a path to a file as an argument, then opens that file and prints it out. You'll need the built-in go functions `os.ReadFile` and `os.Stdout.Write`, as well as more from the `os` package.
+
+Bonus task: handle the error if you pass it a directory rather than a file, like cat does.
 
 [go]: https://go.dev/
 [cat]: https://en.m.wikipedia.org/wiki/Cat_(Unix)
