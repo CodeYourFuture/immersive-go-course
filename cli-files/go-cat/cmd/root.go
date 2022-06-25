@@ -35,6 +35,8 @@ func NewRoodCmd() *cobra.Command {
 				return fmt.Errorf("go-cat: %s: Is a directory", path)
 			}
 
+			// Read the data from the file
+			// https://pkg.go.dev/os#ReadFile
 			data, err := os.ReadFile(path)
 			if err != nil {
 				return err
