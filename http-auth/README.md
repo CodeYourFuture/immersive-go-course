@@ -19,4 +19,18 @@ Learning objectives:
 
 ## Project
 
-TODO
+- `go mod init http-auth`
+- create empty main package and main function
+- `go run .`
+- `import "net/http"`
+- Basic server:
+
+```go
+func main() {
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello, world"))
+	})
+
+	http.ListenAndServe(":8080", nil)
+}
+```
