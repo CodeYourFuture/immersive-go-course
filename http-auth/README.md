@@ -34,3 +34,33 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 ```
+
+- User `curl` to interact
+- Add handlers such that the following URLs and responses work. Use `http.NotFoundHandler()`
+
+```
+> curl -i http://localhost:8080/500
+HTTP/1.1 500 Internal Server Error
+Date: Sat, 25 Jun 2022 11:16:30 GMT
+Content-Length: 21
+Content-Type: text/plain; charset=utf-8
+
+Internal server error
+
+> curl -i http://localhost:8080/200
+HTTP/1.1 200 OK
+Date: Sat, 25 Jun 2022 11:17:17 GMT
+Content-Length: 3
+Content-Type: text/plain; charset=utf-8
+
+200
+
+> curl -i http://localhost:8080/404
+HTTP/1.1 404 Not Found
+Content-Type: text/plain; charset=utf-8
+X-Content-Type-Options: nosniff
+Date: Sat, 25 Jun 2022 11:17:29 GMT
+Content-Length: 19
+
+404 page not found
+```
