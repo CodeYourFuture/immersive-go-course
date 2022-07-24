@@ -13,6 +13,7 @@ Remember you can _always_ Google or ask for help if you get stuck.
 ## Projects
 
 - [CLI & Files](./cli-files)
+- [Servers & HTTP requests](./http-auth)
 
 ## Authors
 
