@@ -7,10 +7,25 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"golang.org/x/time/rate"
 )
 
 func authOk(user string, pass string) bool {
 	return user == os.Getenv("AUTH_USERNAME") && pass == os.Getenv("AUTH_PASSWORD")
+}
+
+// Take a rate.Limiter instance and a http.HandlerFunc and return another http.HandlerFunc that
+// checks the rate limiter using `Allow()` before calling the supplied handler. If the request
+// is not allowed by the limiter, a `503 Service Unavailable` Error is returned.
+func rateLimit(lim *rate.Limiter, next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if lim.Allow() {
+			next.ServeHTTP(w, r)
+		} else {
+			http.Error(w, "Service Unavailable", http.StatusServiceUnavailable)
+		}
+	})
 }
 
 func main() {
@@ -70,6 +85,15 @@ func main() {
 			w.Write([]byte(fmt.Sprintf("Hello %s!", html.EscapeString(username))))
 		}
 	})
+
+	lim := rate.NewLimiter(100, 30)
+
+	// This endpoint is rate limited by `lim`. The handler function is wrapped by `rateLimit`, which
+	// will call it if the request is allowed under the rate limit, or automatically return a 503
+	http.HandleFunc("/limited", rateLimit(lim, func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "text/html")
+		w.Write([]byte("<!DOCTYPE html>\n<html>\nHello world!"))
+	}))
 
 	http.Handle("/404", http.NotFoundHandler())
 

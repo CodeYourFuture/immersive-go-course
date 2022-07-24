@@ -189,3 +189,132 @@ You can generate the `dXNl...` text [using this website](https://opinionatedgeek
 ```
 > AUTH_USERNAME=admin AUTH_PASSWORD=long-memorable-password go run .
 ```
+
+- [Follow this guide](https://www.datadoghq.com/blog/apachebench/) to install and use ApacheBench, which will test to see how many requests your server can handle
+
+```
+> ab -n 10000 -c 100 http://localhost:8080/
+
+This is ApacheBench, Version 2.3 <$Revision: 1879490 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 1000 requests
+Completed 2000 requests
+Completed 3000 requests
+Completed 4000 requests
+Completed 5000 requests
+Completed 6000 requests
+Completed 7000 requests
+Completed 8000 requests
+Completed 9000 requests
+Completed 10000 requests
+Finished 10000 requests
+
+
+Server Software:
+Server Hostname:        localhost
+Server Port:            8080
+
+Document Path:          /
+Document Length:        76 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.779 seconds
+Complete requests:      10000
+Failed requests:        0
+Total transferred:      1770000 bytes
+HTML transferred:       760000 bytes
+Requests per second:    12837.71 [#/sec] (mean)
+Time per request:       7.790 [ms] (mean)
+Time per request:       0.078 [ms] (mean, across all concurrent requests)
+Transfer rate:          2219.02 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    4   3.2      3      49
+Processing:     1    4   3.2      4      49
+Waiting:        0    4   3.1      4      49
+Total:          5    8   4.5      7      53
+
+Percentage of the requests served within a certain time (ms)
+  50%      7
+  66%      8
+  75%      8
+  80%      8
+  90%      8
+  95%      9
+  98%     10
+  99%     11
+ 100%     53 (longest request)
+```
+
+- It's better to protect your server from being asked to handle too many requests than to have it fall over! So use the `rate` library to reject excess requests (> X per second) with a `503 Service Unavailable` error on a `/limited` endpoint.
+
+```
+> go get -u golang.org/x/time
+```
+
+You will need to import the module:
+
+```go
+import "golang.org/x/time/rate"
+```
+
+Then create a limiter:
+
+```go
+lim := rate.NewLimiter(100, 30)
+```
+
+And use it:
+
+```go
+if lim.Allow() {
+    // Respond as normal!
+} else {
+    // Respond with an error
+}
+```
+
+If it is working, you will see `Non-2xx responses` and `Failed requests` in your ApacheBench output:
+
+```
+> ab -n 100 -c 100 http://localhost:8080/limited
+...
+
+Document Path:          /limited
+Document Length:        35 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.006 seconds
+Complete requests:      100
+Failed requests:        70 <----- HERE!
+   (Connect: 0, Receive: 0, Length: 70, Exceptions: 0)
+Non-2xx responses:      70 <----- HERE!
+Total transferred:      17170 bytes
+HTML transferred:       2450 bytes
+Requests per second:    15544.85 [#/sec] (mean)
+Time per request:       6.433 [ms] (mean)
+Time per request:       0.064 [ms] (mean, across all concurrent requests)
+Transfer rate:          2606.49 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    2   0.7      2       4
+Processing:     1    1   0.3      1       4
+Waiting:        0    1   0.2      1       1
+Total:          2    4   0.7      4       5
+
+Percentage of the requests served within a certain time (ms)
+  50%      4
+  66%      4
+  75%      4
+  80%      4
+  90%      5
+  95%      5
+  98%      5
+  99%      5
+ 100%      5 (longest request)
+```
