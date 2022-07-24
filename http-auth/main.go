@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -10,7 +11,7 @@ func main() {
 		// Indicate that we are sending back HTML
 		w.Header().Add("Content-Type", "text/html")
 		// Write the doctype and opening tag regardless of method
-		w.Write([]byte("<!DOCTYPE html><html>"))
+		w.Write([]byte("<!DOCTYPE html>\n<html>\n"))
 		// If the request is POSTing data, return what they sent back
 		if r.Method == "POST" {
 			// The request (r) body is an io.Reader and the response (w) is a writer
@@ -23,7 +24,13 @@ func main() {
 			}
 		} else {
 			// In all other cases, just say hello
-			w.Write([]byte("<em>Hello, world</em>"))
+			w.Write([]byte("<em>Hello, world</em>\n"))
+			w.Write([]byte("<p>Query parameters:\n<ul>\n"))
+			for k, v := range r.URL.Query() {
+				w.Write([]byte(fmt.Sprintf("<li>%s: %s</li>\n", k, v)))
+			}
+			w.Write([]byte("</ul>"))
+
 		}
 	})
 

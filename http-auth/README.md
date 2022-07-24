@@ -68,7 +68,7 @@ Content-Length: 19
 - Make the index page at `/` returns some HTML to a `GET` request
 
 ```
-curl -i http://localhost:8080/
+> curl -i http://localhost:8080/
 HTTP/1.1 200 OK
 Content-Type: text/html
 Date: Sun, 24 Jul 2022 09:42:30 GMT
@@ -80,7 +80,7 @@ Content-Length: 42
 - Make the index page accept `POST` requests with some HTML, and return that HTML:
 
 ```
-curl -i -d "<em>Hi</em>" http://localhost:8080/
+> curl -i -d "<em>Hi</em>" http://localhost:8080/
 HTTP/1.1 200 OK
 Content-Type: text/html
 Date: Sun, 24 Jul 2022 09:43:20 GMT
@@ -90,3 +90,21 @@ Content-Length: 32
 ```
 
 - Ensure you've got error handling in the handler function
+
+- Make the handler at `/` output the query parameters as a list. Having the output spaced over multiple lines is optional, but done here for readability.
+
+```
+> curl -i http://localhost:8080\?foo=bar
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Sun, 24 Jul 2022 09:55:33 GMT
+Content-Length: 96
+
+<!DOCTYPE html>
+<html>
+<em>Hello, world</em>
+<p>Query parameters:
+<ul>
+<li>foo: [bar]</li>
+</ul>
+```
