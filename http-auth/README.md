@@ -108,3 +108,54 @@ Content-Length: 96
 <li>foo: [bar]</li>
 </ul>
 ```
+
+- Try putting some HTML into the query params or body to see that it is interpreted as HTML:
+
+```
+> curl -i http://localhost:8080\?foo=\<strong\>bar\</strong
+\>
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Sun, 24 Jul 2022 09:57:20 GMT
+Content-Length: 113
+
+<!DOCTYPE html>
+<html>
+<em>Hello, world</em>
+<p>Query parameters:
+<ul>
+<li>foo: [<strong>bar</strong>]</li>
+</ul>
+```
+
+This isn't good! This kind of thing can lead to security issues. Search for "XSS attack" to find out more. Let's fix it.
+
+- "Escape" the string any time you take some input (data in `POST` or query parameters) and output it back:
+
+```
+> curl -i http://localhost:8080\?foo=\<strong\>bar\</strong\>
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Sun, 24 Jul 2022 10:08:08 GMT
+Content-Length: 125
+
+<!DOCTYPE html>
+<html>
+<em>Hello, world</em>
+<p>Query parameters:
+<ul>
+<li>foo: [&lt;strong&gt;bar&lt;/strong&gt;]</li>
+</ul>
+```
+
+```
+> curl -i -d "<em>Hi</em>" http://localhost:8080/
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Sun, 24 Jul 2022 10:08:21 GMT
+Content-Length: 46
+
+<!DOCTYPE html>
+<html>
+&lt;em&gt;Hi&lt;/em&gt;
+```

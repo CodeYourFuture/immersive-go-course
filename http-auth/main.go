@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"html"
 	"io"
 	"net/http"
+	"strings"
 )
 
 func main() {
@@ -14,20 +16,33 @@ func main() {
 		w.Write([]byte("<!DOCTYPE html>\n<html>\n"))
 		// If the request is POSTing data, return what they sent back
 		if r.Method == "POST" {
-			// The request (r) body is an io.Reader and the response (w) is a writer
-			// so we can stream one directly into the other in chunks.
-			// We ignore the output of io.Copy and just handle the error.
-			if _, err := io.Copy(w, r.Body); err != nil {
+			// The request (r) body is an io.Reader so we can copy it into the
+			// string builder and handle errors
+			body := new(strings.Builder)
+			if _, err := io.Copy(body, r.Body); err != nil {
 				// In the case of an error in this copying process, return a server error
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("Internal server error"))
 			}
+			// Write the body back to the requester in a safe way
+			w.Write([]byte(html.EscapeString(body.String())))
 		} else {
 			// In all other cases, just say hello
 			w.Write([]byte("<em>Hello, world</em>\n"))
 			w.Write([]byte("<p>Query parameters:\n<ul>\n"))
-			for k, v := range r.URL.Query() {
-				w.Write([]byte(fmt.Sprintf("<li>%s: %s</li>\n", k, v)))
+			// Query parameters are available as a Values map[string][]string
+			// https://pkg.go.dev/net/url#Values
+			for k, vs := range r.URL.Query() {
+				// As we're sending the query parameters straight back, we need to escape them.
+				// Each value is a list, supporting query params like ?color=red&color=blue
+				// so we need to iterate through each query parameter value and escape the string
+				escaped_vs := make([]string, len(vs))
+				for i, v := range vs {
+					escaped_vs[i] = html.EscapeString(v)
+				}
+				// We can now write a list item, escaping the key and printing the escaped values list
+				// TODO: is the use of %s here unsafe? https://pkg.go.dev/fmt
+				w.Write([]byte(fmt.Sprintf("<li>%s: %s</li>\n", html.EscapeString(k), escaped_vs)))
 			}
 			w.Write([]byte("</ul>"))
 
