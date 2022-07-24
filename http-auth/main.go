@@ -5,11 +5,12 @@ import (
 	"html"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 )
 
 func authOk(user string, pass string) bool {
-	return user == "username" && pass == "password"
+	return user == os.Getenv("AUTH_USERNAME") && pass == os.Getenv("AUTH_PASSWORD")
 }
 
 func main() {

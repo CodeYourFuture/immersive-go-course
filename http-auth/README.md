@@ -181,3 +181,11 @@ Content-Length: 38
 <html>
 Hello username!
 ```
+
+You can generate the `dXNl...` text [using this website](https://opinionatedgeek.com/Codecs/Base64Encoder). This is "base64 encoded" which you can search for to find a bit more about. Enter `username:password` to get `dXNlcm5hbWU6cGFzc3dvcmQ=`.
+
+- It's not a good idea to put secrets like passwords into code. So remove any hard-coded usernames and passwords for basic auth, and use `os.Getenv(...)` so that this works:
+
+```
+> AUTH_USERNAME=admin AUTH_PASSWORD=long-memorable-password go run .
+```
