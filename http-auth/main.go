@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+func authOk(user string, pass string) bool {
+	return user == "username" && pass == "password"
+}
+
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Indicate that we are sending back HTML
@@ -52,6 +56,18 @@ func main() {
 	http.HandleFunc("/200", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("200"))
+	})
+
+	http.HandleFunc("/authenticated", func(w http.ResponseWriter, r *http.Request) {
+		username, password, ok := r.BasicAuth()
+		if !ok || !authOk(username, password) {
+			w.Header().Add("WWW-Authenticate", "Basic realm=\"localhost\", charset=\"UTF-8\"")
+			w.WriteHeader(http.StatusUnauthorized)
+		} else {
+			w.Header().Add("Content-Type", "text/html")
+			w.Write([]byte("<!DOCTYPE html>\n<html>\n"))
+			w.Write([]byte(fmt.Sprintf("Hello %s!", html.EscapeString(username))))
+		}
 	})
 
 	http.Handle("/404", http.NotFoundHandler())

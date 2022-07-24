@@ -159,3 +159,25 @@ Content-Length: 46
 <html>
 &lt;em&gt;Hi&lt;/em&gt;
 ```
+
+- Add an endpoint `/authenticated` that requires the use of HTTP Basic auth. It should return a `401 Unauthorized` status code with a `WWW-Authenticate` header if basic auth is not present or does not match a username and password of your choice. Once Basic Auth is provided, it should respond successful!
+
+```
+> curl -i http://localhost:8080/authenticated
+HTTP/1.1 401 Unauthorized
+Www-Authenticate: Basic realm="localhost", charset="UTF-8"
+Date: Sun, 24 Jul 2022 14:12:35 GMT
+Content-Length: 0
+```
+
+```
+> curl -i http://localhost:8080/authenticated -H 'Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ='
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Sun, 24 Jul 2022 14:13:04 GMT
+Content-Length: 38
+
+<!DOCTYPE html>
+<html>
+Hello username!
+```
