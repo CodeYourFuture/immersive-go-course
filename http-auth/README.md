@@ -64,3 +64,29 @@ Content-Length: 19
 
 404 page not found
 ```
+
+- Make the index page at `/` returns some HTML to a `GET` request
+
+```
+curl -i http://localhost:8080/
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Sun, 24 Jul 2022 09:42:30 GMT
+Content-Length: 42
+
+<!DOCTYPE html><html><em>Hello, world</em>%
+```
+
+- Make the index page accept `POST` requests with some HTML, and return that HTML:
+
+```
+curl -i -d "<em>Hi</em>" http://localhost:8080/
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Sun, 24 Jul 2022 09:43:20 GMT
+Content-Length: 32
+
+<!DOCTYPE html><html><em>Hi</em>
+```
+
+- Ensure you've got error handling in the handler function
