@@ -6,9 +6,7 @@ Timebox: 6 days
 
 Learning objectives:
 
-- Use SQL
-- Explain: what is a database?
-- Open, operate & close an sqlite3 database
-- Read data
-- Accept data over a POST request and writing it to the database
-- Test against stateful systems
+- Build a simple API server that talks JSON
+- Understand how a server and a database work together
+- Use SQL to read data from a database
+- Accept data over a POST request and write it to the database
