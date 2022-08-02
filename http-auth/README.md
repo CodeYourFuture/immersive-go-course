@@ -1,6 +1,6 @@
-# HTTP & Authentication
+# Servers & HTTP requests
 
-In this project you're going toearn about long-lived processes, some simple networking and the basics of HTTP.
+In this project you're going to learn about long-lived processes, some simple networking and the basics of HTTP.
 
 Timebox: 6 days
 
