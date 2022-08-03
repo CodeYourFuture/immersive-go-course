@@ -13,8 +13,6 @@ Learning objectives:
 - Accept parameters in via GET in the query string
 - Accept data via a POST request
 - Setup authentication via basic HTTP auth
-- Switch to using JWTs
-- Accept multiple forms of authentication
 - Write tests for the above
 
 ## Project
