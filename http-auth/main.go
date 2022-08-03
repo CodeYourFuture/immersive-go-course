@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -18,9 +19,9 @@ func authOk(user string, pass string) bool {
 // Take a rate.Limiter instance and a http.HandlerFunc and return another http.HandlerFunc that
 // checks the rate limiter using `Allow()` before calling the supplied handler. If the request
 // is not allowed by the limiter, a `503 Service Unavailable` Error is returned.
-func rateLimit(lim *rate.Limiter, next http.HandlerFunc) http.HandlerFunc {
+func rateLimit(limiter *rate.Limiter, next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if lim.Allow() {
+		if limiter.Allow() {
 			next.ServeHTTP(w, r)
 		} else {
 			http.Error(w, "Service Unavailable", http.StatusServiceUnavailable)
@@ -28,12 +29,16 @@ func rateLimit(lim *rate.Limiter, next http.HandlerFunc) http.HandlerFunc {
 	})
 }
 
+// writeStartOfHTML is a function we can call from both the POST and GET path to start off the HTML response.
+func writeStartOfHTML(w http.ResponseWriter) {
+	// Indicate that we are sending back HTML
+	w.Header().Add("Content-Type", "text/html")
+	// Write the doctype and opening tag
+	w.Write([]byte("<!DOCTYPE html>\n<html>\n"))
+}
+
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Indicate that we are sending back HTML
-		w.Header().Add("Content-Type", "text/html")
-		// Write the doctype and opening tag regardless of method
-		w.Write([]byte("<!DOCTYPE html>\n<html>\n"))
 		// If the request is POSTing data, return what they sent back
 		if r.Method == "POST" {
 			// The request (r) body is an io.Reader so we can copy it into the
@@ -41,12 +46,16 @@ func main() {
 			body := new(strings.Builder)
 			if _, err := io.Copy(body, r.Body); err != nil {
 				// In the case of an error in this copying process, return a server error
+				log.Printf("Error copying request body: %v", err)
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("Internal server error"))
+				return
 			}
+			writeStartOfHTML(w)
 			// Write the body back to the requester in a safe way
 			w.Write([]byte(html.EscapeString(body.String())))
 		} else {
+			writeStartOfHTML(w)
 			// In all other cases, just say hello
 			w.Write([]byte("<em>Hello, world</em>\n"))
 			w.Write([]byte("<p>Query parameters:\n<ul>\n"))
@@ -56,13 +65,12 @@ func main() {
 				// As we're sending the query parameters straight back, we need to escape them.
 				// Each value is a list, supporting query params like ?color=red&color=blue
 				// so we need to iterate through each query parameter value and escape the string
-				escaped_vs := make([]string, len(vs))
-				for i, v := range vs {
-					escaped_vs[i] = html.EscapeString(v)
+				escapedVs := make([]string, 0, len(vs))
+				for _, v := range vs {
+					escapedVs = append(escapedVs, html.EscapeString(v))
 				}
 				// We can now write a list item, escaping the key and printing the escaped values list
-				// TODO: is the use of %s here unsafe? https://pkg.go.dev/fmt
-				w.Write([]byte(fmt.Sprintf("<li>%s: %s</li>\n", html.EscapeString(k), escaped_vs)))
+				w.Write([]byte(fmt.Sprintf("<li>%s: [%s]</li>\n", html.EscapeString(k), strings.Join(escapedVs, ", "))))
 			}
 			w.Write([]byte("</ul>"))
 
@@ -86,11 +94,12 @@ func main() {
 		}
 	})
 
-	lim := rate.NewLimiter(100, 30)
+	limiter := rate.NewLimiter(100, 30)
 
-	// This endpoint is rate limited by `lim`. The handler function is wrapped by `rateLimit`, which
-	// will call it if the request is allowed under the rate limit, or automatically return a 503
-	http.HandleFunc("/limited", rateLimit(lim, func(w http.ResponseWriter, r *http.Request) {
+	// This endpoint is rate limited by `limiter`. The handler function is wrapped by `rateLimit`,
+	// which will call it if the request is allowed under the rate limit, or automatically return
+	// a 503.
+	http.HandleFunc("/limited", rateLimit(limiter, func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "text/html")
 		w.Write([]byte("<!DOCTYPE html>\n<html>\nHello world!"))
 	}))
@@ -102,5 +111,8 @@ func main() {
 		w.Write([]byte("Internal server error"))
 	})
 
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
