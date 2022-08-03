@@ -148,7 +148,7 @@ If you smash through this, here's some fun/tricky extensions:
 
 ### go-cat
 
-This one we're going to make in a different, so we can see how to use tools to initialise go projects more quickly.
+This one we're going to make in a different way, so we can see how to use tools to initialise go projects more quickly.
 
 We'll use the [cobra-cli](https://github.com/spf13/cobra-cli/blob/main/README.md) to initialise a new project. There's a guide on that page to installing it, but it's likely `go install github.com/spf13/cobra-cli@latest`.
 
