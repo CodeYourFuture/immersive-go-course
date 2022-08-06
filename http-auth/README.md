@@ -1,6 +1,6 @@
 # Servers & HTTP requests
 
-In this project you're going to learn about long-lived processes, some simple networking and the basics of HTTP.
+In this project you're going to learn about long-lived processes, some  networking and the fundamentals of HTTP.
 
 Timebox: 6 days
 
@@ -12,12 +12,12 @@ Learning objectives:
 - Define URL, header, body and content-type
 - Accept parameters in via GET in the query string
 - Accept data via a POST request
-- Setup authentication via a basic HTTP auth
-- Switch to using JWTs
-- Accept multiple forms of authentication
+- Setup authentication via basic HTTP auth
 - Write tests for the above
 
 ## Project
+
+### Making an HTTP server
 
 [Create a new go module](https://go.dev/doc/tutorial/create-module) in this `http-auth` directory: `go mod init http-auth`.
 
@@ -28,6 +28,10 @@ The main library you'll be working with is built-in to Go: `net/http`. Import it
 Here's a basic server that you'll build from:
 
 ```go
+package main
+
+import "net/http"
+
 func main() {
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello, world"))
@@ -44,7 +48,7 @@ curl is a tool for transfering data from or to a server. It's very useful for te
 Using `curl -i` will show you how the server responds, including the response "headers" and "body". The headers contain metadata about the response, such as what type of data is being sent back.
 
 ```
-> curl -i http://localhost:8080/
+> curl -i 'http://localhost:8080/'
 HTTP/1.1 200 OK
 Date: Sat, 25 Jun 2022 11:17:17 GMT
 Content-Length: 25
@@ -61,16 +65,18 @@ HTTP requests are sent from a client to a server. They come in various types suc
 
 HTTP responses — data sent back to a "client" from a "server" as a result of an HTTP request — can use a set of [standard codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) to indicate the status of the server or something about the request.
 
+### Status codes
+
 You're going to make a server that responds to `GET` requests with some of the common ones when a client makes a request to the appropriate URL: 200, 404, 500.
 
-Update your go code so that each of the following works. Notice how the URL matches the code that is returned:
+Update your go code so that each of the following paths works. Notice how the URL matches the code that is returned:
 
 - `/200` -> 200 OK
 - `/404` -> 404 Not found
 - `/500` -> 500 Internal Server Error
 
 ```
-> curl -i http://localhost:8080/200
+> curl -i 'http://localhost:8080/200'
 HTTP/1.1 200 OK
 Date: Sat, 25 Jun 2022 11:16:17 GMT
 Content-Length: 3
@@ -78,7 +84,7 @@ Content-Type: text/plain; charset=utf-8
 
 200
 
-> curl -i http://localhost:8080/500
+> curl -i 'http://localhost:8080/500'
 HTTP/1.1 500 Internal Server Error
 Date: Sat, 25 Jun 2022 11:16:30 GMT
 Content-Length: 21
@@ -86,7 +92,7 @@ Content-Type: text/plain; charset=utf-8
 
 Internal server error
 
-> curl -i http://localhost:8080/404
+> curl -i 'http://localhost:8080/404'
 HTTP/1.1 404 Not Found
 Content-Type: text/plain; charset=utf-8
 X-Content-Type-Options: nosniff
@@ -98,10 +104,12 @@ Content-Length: 19
 
 Use `http.NotFoundHandler()` for the `404` error.
 
-HTTP requests can return more than just plan text. Next, make the index page at `/` returns some HTML to a `GET` request. Make sure the `Content-Type` response header is set: `w.Header().Add("Content-Type", "text/html")`
+### The Content-Type header
+
+HTTP requests can return more than just plan text. Next, make the index page at `/` returns some HTML in response to a `GET` request. Make sure the `Content-Type` response header is set: `w.Header().Add("Content-Type", "text/html")`
 
 ```
-> curl -i http://localhost:8080/
+> curl -i 'http://localhost:8080/'
 HTTP/1.1 200 OK
 Content-Type: text/html
 Date: Sun, 24 Jul 2022 09:42:30 GMT
@@ -110,10 +118,20 @@ Content-Length: 42
 <!DOCTYPE html><html><em>Hello, world</em>
 ```
 
+Curl is just one client we can use to make HTTP requests. Take a moment to try out two more that you've already used:
+1. A web browser - open up http://localhost:8080/ in Chrome.
+2. Postman - make a GET request to http://localhost:8080/ and see the output.
+
+All three of these are clients that know how to speak HTTP, but they do different things with the response data because they have different goals.
+
+The goal of the Content-Type header is to tell the client how it may want to render the response to the user. Try changing the Content-Type header back to `text/plain`, and see what Chrome does with the same response body.
+
+### Methods: GET and POST
+
 Now make the index page accept `POST` requests with some HTML, and return that HTML. You'll need to check the request method: `request.Method`.
 
 ```
-> curl -i -d "<em>Hi</em>" http://localhost:8080/
+> curl -i -d "<em>Hi</em>" 'http://localhost:8080/'
 HTTP/1.1 200 OK
 Content-Type: text/html
 Date: Sun, 24 Jul 2022 09:43:20 GMT
@@ -122,10 +140,16 @@ Content-Length: 32
 <!DOCTYPE html><html><em>Hi</em>
 ```
 
+Again, take a look at the response in different clients.
+
+### Query parameters
+
 HTTP requests can also supply "query parameters" in the URL: `/blog-posts?after=2022-05-04`. Make the handler at `/` output the query parameters as a list. Having the output spaced over multiple lines is optional, but done here for readability.
 
+Note that when running commands in a terminal, some characters have special meaning by default, and need escaping - `?` is one of those characters. We've been using single-quotes (`'`s) around all of our URLs because it stops the terminal from making these characters behave specially.
+
 ```
-> curl -i http://localhost:8080\?foo=bar
+> curl -i 'http://localhost:8080?foo=bar'
 HTTP/1.1 200 OK
 Content-Type: text/html
 Date: Sun, 24 Jul 2022 09:55:33 GMT
@@ -143,8 +167,7 @@ Content-Length: 96
 Try putting some HTML into the query params or body. You'll see that it is interpreted as HTML:
 
 ```
-> curl -i http://localhost:8080\?foo=\<strong\>bar\</strong
-\>
+> curl -i 'http://localhost:8080?foo=<strong>bar</strong>'
 HTTP/1.1 200 OK
 Content-Type: text/html
 Date: Sun, 24 Jul 2022 09:57:20 GMT
@@ -159,12 +182,14 @@ Content-Length: 113
 </ul>
 ```
 
+(Make sure to take a look at this one in a browser!)
+
 This isn't good! This kind of thing can lead to security issues. Search for "XSS attack" to find out more. Let's fix it.
 
 "Escape" the string any time you take some input (data in `POST` or query parameters) and output it back. You'll need to investigate `html.EscapeString(v)`:
 
 ```
-> curl -i http://localhost:8080\?foo=\<strong\>bar\</strong\>
+> curl -i 'http://localhost:8080?foo=<strong>bar</strong>'
 HTTP/1.1 200 OK
 Content-Type: text/html
 Date: Sun, 24 Jul 2022 10:08:08 GMT
@@ -180,7 +205,7 @@ Content-Length: 125
 ```
 
 ```
-> curl -i -d "<em>Hi</em>" http://localhost:8080/
+> curl -i -d "<em>Hi</em>" 'http://localhost:8080/'
 HTTP/1.1 200 OK
 Content-Type: text/html
 Date: Sun, 24 Jul 2022 10:08:21 GMT
@@ -191,14 +216,18 @@ Content-Length: 46
 &lt;em&gt;Hi&lt;/em&gt;
 ```
 
+Take a look at this in a browser too.
+
+### Authentication
+
 Next you're going to add a URL that can only be accessed if you know a username and secret password.
 
-Add an endpoint `/authenticated` that requires the use of HTTP Basic auth. It should return a `401 Unauthorized` status code with a `WWW-Authenticate` header if basic auth is not present or does not match a username and password of your choice. Once Basic Auth is provided, it should respond successful!
+Add an endpoint `/authenticated` that requires the use of [HTTP Basic auth](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication). It should return a `401 Unauthorized` status code with a `WWW-Authenticate` header if basic auth is not present or does not match a username and password of your choice. Once Basic Auth is provided, it should respond successful!
 
 Go's `http` library comes with some Basic Auth support built-in, so be sure to use it to make the following work:
 
 ```
-> curl -i http://localhost:8080/authenticated
+> curl -i 'http://localhost:8080/authenticated'
 HTTP/1.1 401 Unauthorized
 Www-Authenticate: Basic realm="localhost", charset="UTF-8"
 Date: Sun, 24 Jul 2022 14:12:35 GMT
@@ -206,7 +235,7 @@ Content-Length: 0
 ```
 
 ```
-> curl -i http://localhost:8080/authenticated -H 'Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ='
+> curl -i 'http://localhost:8080/authenticated' -H 'Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ='
 HTTP/1.1 200 OK
 Content-Type: text/html
 Date: Sun, 24 Jul 2022 14:13:04 GMT
@@ -219,18 +248,22 @@ Hello username!
 
 You can generate the `dXNl...` text [using this website](https://opinionatedgeek.com/Codecs/Base64Encoder). This is "base64 encoded" which you can search for to find a bit more about. Enter `username:password` to get `dXNlcm5hbWU6cGFzc3dvcmQ=`.
 
-It's not a good idea to put secrets like passwords into code. So remove any hard-coded usernames and passwords for basic auth, and use `os.Getenv(...)` so that this works:
+It's not a good idea to put secrets like passwords into code (and base64 encoding text doesn't hide it, it just stores it in a different format). So remove any hard-coded usernames and passwords for basic auth, and use `os.Getenv(...)` so that this works:
 
 ```
 > AUTH_USERNAME=admin AUTH_PASSWORD=long-memorable-password go run .
 ```
 
+For bonus points, use [a library](https://github.com/joho/godotenv) to support dotenv files, and set your AUTH_USERNAME and AUTH_PASSWORD in a `.env` file.
+
+### Handling load
+
 Next you're going to test how many requests your server can support, and add basic [rate limiting](https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting).
 
-[Follow this guide](https://www.datadoghq.com/blog/apachebench/) to install and use ApacheBench, which will test to see how many requests your server can handle
+[Follow this guide](https://www.datadoghq.com/blog/apachebench/) to install and use ApacheBench, which will test to see how many requests your server can handle.
 
 ```
-> ab -n 10000 -c 100 http://localhost:8080/
+> ab -n 10000 -c 100 'http://localhost:8080/'
 
 This is ApacheBench, Version 2.3 <$Revision: 1879490 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
@@ -287,6 +320,10 @@ Percentage of the requests served within a certain time (ms)
  100%     53 (longest request)
 ```
 
+If a server receives too many requests at once, it can break (e.g. it may cause the system to run out of memory).
+
+The fact that some of our requests took much longer than others, even though they were doing the same work, suggests that our server was getting stressed. We can see that in the "Percentages of the requests served within a certain time" section - half of the requests took less than 7ms, but the slowest took 53ms - more than 7 times slower.
+
 It's better to protect your server from being asked to handle too many requests than to have it fall over! So use the `rate` library to reject excess requests (> X per second) with a `503 Service Unavailable` error on a `/limited` endpoint.
 
 ```
@@ -302,13 +339,13 @@ import "golang.org/x/time/rate"
 Then create a limiter:
 
 ```go
-lim := rate.NewLimiter(100, 30)
+limiter := rate.NewLimiter(100, 30)
 ```
 
 And use it:
 
 ```go
-if lim.Allow() {
+if limiter.Allow() {
     // Respond as normal!
 } else {
     // Respond with an error
@@ -318,7 +355,7 @@ if lim.Allow() {
 If it is working, you will see `Non-2xx responses` and `Failed requests` in your ApacheBench output:
 
 ```
-> ab -n 100 -c 100 http://localhost:8080/limited
+> ab -n 100 -c 100 'http://localhost:8080/limited'
 ...
 
 Document Path:          /limited
@@ -355,3 +392,11 @@ Percentage of the requests served within a certain time (ms)
   99%      5
  100%      5 (longest request)
 ```
+
+Notice that all of our requests took about the same time this time around, and none were much slower - this shows that our server wasn't getting stressed.
+
+One of the things we find in real life is that failure is inevitable. Computers lose power, servers get overloaded and slow down or stop working all together, networks break, etc. Our job as engineers isn't to _prevent_ failure, it's to try to make our systems behave as well as possible _depite_ failure.
+
+In this exercise, we chose to make some of our requests fail fast, so that all of the requests that we _did_ process, got processed well (none were really slow, and our server didn't get overloaded).
+
+Through this course, you will learn a lot more about ways we can give users a better experience by controlling _when_ and _how_ things fail.
