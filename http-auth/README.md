@@ -260,7 +260,7 @@ For bonus points, use [a library](https://github.com/joho/godotenv) to support d
 
 Next you're going to test how many requests your server can support, and add basic [rate limiting](https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting).
 
-[Follow this guide](https://www.datadoghq.com/blog/apachebench/) to install and use ApacheBench, which will test to see how many requests your server can handle. (Note: `ab` comes pre-installed on macOS!)
+[Follow this guide](https://www.datadoghq.com/blog/apachebench/) to install and use ApacheBench, which will test to see how many requests your server can handle.
 
 ```
 > ab -n 10000 -c 100 'http://localhost:8080/'
