@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type Image struct {
@@ -18,20 +20,22 @@ func main() {
 	}
 
 	http.HandleFunc("/images.json", func(w http.ResponseWriter, r *http.Request) {
-		// Indicate that what follows will be JSON
-		w.Header().Add("Content-Type", "text/json")
+		indent := r.URL.Query().Get("indent")
 		// Convert our data file to a byte-array for writing back in a response
 		var b []byte
-		var err error
-		if r.URL.Query().Get("pretty") == "1" {
-			b, err = json.MarshalIndent(data, "", "  ")
+		var marshalErr error
+		// Allow up to 10 characters of indent
+		if i, err := strconv.Atoi(indent); err == nil && i > 0 && i <= 10 {
+			b, marshalErr = json.MarshalIndent(data, "", strings.Repeat(" ", i))
 		} else {
-			b, err = json.Marshal(data)
+			b, marshalErr = json.Marshal(data)
 		}
-		if err != nil {
+		if marshalErr != nil {
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
 			return
 		}
+		// Indicate that what follows will be JSON
+		w.Header().Add("Content-Type", "text/json")
 		// Send it back!
 		w.Write(b)
 	})
