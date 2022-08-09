@@ -12,8 +12,11 @@ Remember you can _always_ Google or ask for help if you get stuck.
 
 ## Projects
 
-- [CLI & Files](./cli-files)
-- [Servers & HTTP requests](./http-auth)
+Each project has its own directory and a reference implementation on a branch, with an associated [Pull Request](https://github.com/CodeYourFuture/immersive-go-course/pulls).
+
+- [CLI & Files](./cli-files) — `impl/cat-ls`
+- [Servers & HTTP requests](./http-auth) - `impl/http-auth`
+- [Servers & Databases](./server-database) - `impl/server-database`
 
 ## Authors
 
