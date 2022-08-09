@@ -30,7 +30,7 @@ type Image struct {
 Initialise some data:
 
 ```go
-data := []Image{
+images := []Image{
     {"Sunset", "Clouds at sunset", "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"},
     {"Mountain", "A mountain at sunset", "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"},
 }
@@ -39,7 +39,7 @@ data := []Image{
 Import `"encoding/json"` and `Marshal`:
 
 ```go
-b, err := json.Marshal(data)
+b, err := json.Marshal(images)
 ```
 
 Write this back as the response:
@@ -114,6 +114,8 @@ CREATE DATABASE "go-server-database"
     IS_TEMPLATE = False;
 ```
 
+TODO: note here introducing SQL.
+
 Data in Postgres is arranged in tables with columns, like a spreadsheet.
 
 Next create a table that will store our image data. Within the `go-server-database` database, open `schemas`, `public`, and then create a new table.
@@ -166,7 +168,15 @@ INSERT INTO public.images(title, url, alt_text)
 	VALUES ('Sunset', 'https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80', 'Clouds at sunset');
 ```
 
-This should insert some data. We can check by deleting this query and running a different one:
+This should insert some data:
+
+```
+INSERT 0 1
+
+Query returned successfully in 132 msec.
+```
+
+We can check by deleting this query and running a different one:
 
 ```sql
 SELECT * from images;
@@ -177,3 +187,138 @@ You should see the row you added, and a value in the ID column.
 Now write a new `INSERT` query with the other image file from our code.
 
 When this is done, the `SELECT` query should return two rows with different IDs and data. Nice.
+
+---
+
+We can now connect our server to the database.
+
+The server and the database are two separate systems that communicate over a network, like our client (`curl`) and server did before. This time, the server will be acting as the "client" by making requests to the database, and the database will responding with data it has stored.
+
+We will be sending requests from our server to the database using SQL: from now on we'll call them queries. At the most basic level, queries can read, write, update and delete data.
+
+Let's get going.
+
+Install pgx: `go get github.com/jackc/pgx/v4`
+
+`pgx` is the library we will use to connect to and query the database.
+
+The first step is to connect. Our server needs to know which database to connect to, and we'll do that by running the server like this:
+
+```
+> DATABASE_URL='postgres://localhost:5432/go-server-database' go run .
+```
+
+`DATABASE_URL` is an environment variable, and our server can access the value of this variable like this:
+
+```go
+os.Getenv("DATABASE_URL")
+```
+
+Before going any further, write some code that checks if `DATABASE_URL` is set. If it's not: write a helpful error to `os.Stderr` and exit the process with a non-zero code, to indicate failure (`os.Exit(1)`).
+
+Next, create a connection using `pgx.Connect`. You will need to supply a `context`, which can simply be `context.Background()`. You can [find out about contexts in the Go documentation](https://pkg.go.dev/context), but they are not an important concept for now.
+
+Remember to handle errors in connecting to the database gracefully: handle the error and output a useful error message. You can check this is working by turning off Postgres and starting your server:
+
+```
+> DATABASE_URL='postgres://localhost:5432/go-server-database' go run .
+unable to connect to database: failed to connect to `host=localhost user=tom database=go-server-database`: dial error (dial tcp 127.0.0.1:5432: connect: connection refused)
+exit status 1
+```
+
+Once connected to the database, you can look in pgAdmin at the Dashboard for your server: it will show an active session.
+
+It's important to gracefully close our connection to the database, so we need to add `defer conn.Close(context.Background())` immediately after we successfully connect. The `defer` keyword means that this line of code is delayed until the nearby function returns. [Defer is really useful!](https://go.dev/blog/defer-panic-and-recover)
+
+Now we're connected we can fetch some data.
+
+To get data we'll use `conn.Query`, which is a [method](https://gobyexample.com/methods) defined for the connection (`pgx.Conn`) to the Postgres database.
+
+The SQL will be the same as above, to fetch all the images:
+
+```sql
+"SELECT title, url, alt_text FROM public.images"
+```
+
+Remember to handle the error from `conn.Query` gracefully.
+
+`conn.Query` returns some `Rows` which we can use to `Scan` for the actual data:
+
+We need a container [slice](https://gobyexample.com/slices) for the image: `var images []Image`
+
+We can iterate over the rows: `for rows.Next() { ... }`
+
+Using `Scan` to extract the data from each row means [passing a pointer to the variables](https://gobyexample.com/pointers) you want to fill, so they can be modified:
+
+```go
+var title, url, altText string
+err = rows.Scan(&title, &url, &altText)
+```
+
+After handling the possible error, you can add an image to the list:
+
+```go
+images = append(images, Image{Title: title, Url: url, AltText: altText})
+```
+
+And that's it! We've not got all images from the database, and our server can now return them as JSON.
+
+The structure of your overall solution now should look something like:
+
+```go
+func main() {
+    // Check that DATABASE_URL is set
+
+    // Connect to the database
+
+    // Handle a possible connection error
+
+    // Defer closing the connection to when main function exits
+
+    // Fetch images from the database
+
+    // Send a query to the database, returning raw rows
+
+    // Handle query errors
+
+    // Create slice to contain the images
+
+    // Iterate through each row to extract the data
+        // Extract the data, passing pointers so the data can be updated in place
+        // Append this as a new Image to the images slice
+
+    // Create the handler function that serves the images JSON
+        // Handle the indent query parameter
+        // Convert images to a byte-array for writing back in a response
+        // Write a `Content-Type` header
+        // Write the data back to the client
+
+    // Listen & serve on port 8080
+}
+```
+
+Don't forget error handling!
+
+---
+
+There's now quite a bit of logic in this `main` function and it's getting a bit big.
+
+Extract the image fetching log (not the database connection) to its own function with this signature:
+
+```go
+func fetchImages(conn *pgx.Conn) ([]Image, error) {
+    // Fetch images from the database
+
+    // Send a query to the database, returning raw rows
+
+    // Handle query errors
+
+    // Create slice to contain the images
+
+    // Iterate through each row to extract the data
+        // Extract the data, passing pointers so the data can be updated in place
+        // Append this as a new Image to the images slice
+
+    // Return the images
+}
+```
