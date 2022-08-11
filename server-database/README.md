@@ -322,3 +322,55 @@ func fetchImages(conn *pgx.Conn) ([]Image, error) {
     // Return the images
 }
 ```
+
+---
+
+Now we're going to accept data over an [HTTP POST request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST). This will add new images to the database.
+
+This is going to be an exercise for you. At the end, the following request should work:
+
+```
+> curl 'http://localhost:8080/images.json?indent=2' -i --data '{"Title": "Cat", "AltText": "A cool cat", "Url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"}'
+HTTP/1.1 200 OK
+Content-Type: text/json
+Date: Thu, 11 Aug 2022 20:17:32 GMT
+Content-Length: 213
+
+{
+  "Title": "Cat",
+  "AltText": "A cool cat",
+  "Url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+}
+```
+
+After that request, a `GET /images.json` request should return all the images:
+
+```
+> curl 'http://localhost:8080/images.json?indent=2' -i
+HTTP/1.1 200 OK
+Content-Type: text/json
+Date: Thu, 11 Aug 2022 20:17:32 GMT
+Content-Length: 763
+
+[
+  {
+    "Title": "Sunset",
+    "AltText": "Clouds at sunset",
+    "Url": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+  },
+  {
+    "Title": "Mountain",
+    "AltText": "A mountain at sunset",
+    "Url": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+  },
+  {
+    "Title": "Cat",
+    "AltText": "A cool cat",
+    "Url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+  }
+]
+```
+
+Here's some extensions:
+
+- Don't let the same image URL be uploaded twice
