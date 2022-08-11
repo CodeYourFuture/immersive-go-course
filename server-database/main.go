@@ -20,7 +20,7 @@ type Image struct {
 
 func fetchImages(conn *pgx.Conn) ([]Image, error) {
 	// Send a query to the database, returning raw rows
-	rows, err := conn.Query(context.Background(), `"SELECT title, url, alt_text FROM public.images"`)
+	rows, err := conn.Query(context.Background(), "SELECT title, url, alt_text FROM public.images")
 	// Handle query errors
 	if err != nil {
 		return []Image{}, fmt.Errorf("unable to query database: [%w]", err)
@@ -60,15 +60,16 @@ func main() {
 	// Defer closing the connection to when main function exits
 	defer conn.Close(context.Background())
 
-	// Fetch images from the database
-	images, err := fetchImages(conn)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "unable to get images: %v\n", err)
-		os.Exit(1)
-	}
-
 	// Create the handler function that serves the images JSON
 	http.HandleFunc("/images.json", func(w http.ResponseWriter, r *http.Request) {
+		// Fetch images from the database
+		images, err := fetchImages(conn)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			http.Error(w, "Something went wrong", http.StatusInternalServerError)
+			return
+		}
+
 		indent := r.URL.Query().Get("indent")
 		// Convert images to a byte-array for writing back in a response
 		var b []byte
@@ -80,6 +81,7 @@ func main() {
 			b, marshalErr = json.Marshal(images)
 		}
 		if marshalErr != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
 			return
 		}
