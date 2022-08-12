@@ -11,13 +11,15 @@ Learning objectives:
 - Use SQL to read data from a database
 - Accept data over a POST request and write it to the database
 
-## Steps
+## Project
 
-`go mod init server-database`
+We're going to be using JSON in this project. Before you start, read this [introduction to Go and JSON](https://go.dev/blog/json).
 
-[intro to Go and JSON](https://go.dev/blog/json)
+To get started, `cd` into the `server-database` directory, and run `go mod init server-database`.
 
-Create a struct that represents the data:
+You've created some `main.go` files in the past: do the same here.
+
+Initially we need to create a struct that represents the data we're going to store: a list of images with a title, alternative text that stores a description of the image for accessibility, and a URL.
 
 ```go
 type Image struct {
@@ -27,7 +29,7 @@ type Image struct {
 }
 ```
 
-Initialise some data:
+Then we can initialise some data:
 
 ```go
 images := []Image{
@@ -36,13 +38,7 @@ images := []Image{
 }
 ```
 
-Import `"encoding/json"` and `Marshal`:
-
-```go
-b, err := json.Marshal(images)
-```
-
-Write this back as the response:
+Now, set up an HTTP server (we did this in the `http-auth` project), and create an endpoint `/images.json` that returns this data in the response:
 
 ```
 > curl 'http://localhost:8080/images.json' -i
@@ -54,9 +50,13 @@ Content-Length: 487
 [{"Title":"Sunset","AltText":"Clouds at sunset","Url":"https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"},{"Title":"Mountain","AltText":"A mountain at sunset","Url":"https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"}]
 ```
 
-Add a query param `indent` which uses `MarshalIndent` instead (https://pkg.go.dev/encoding/json#MarshalIndent) such that the following snippet works. The indent value should increase the amount of indentation: `?indent=4` should have 4 spaces, but `?indent=2` should have 2.
+You're going to need to import `"encoding/json"` and `Marshal` to turn the data into JSON.
 
-To do this, you'll need to investigate the `strconv` and `strings` packages in the Go standard library.
+```go
+b, err := json.Marshal(images)
+```
+
+Next, add a query parameter `indent` which uses `MarshalIndent` instead (https://pkg.go.dev/encoding/json#MarshalIndent) such that the following snippet works.
 
 ```
 > curl 'http://localhost:8080/images.json?indent=2' -i
@@ -78,6 +78,10 @@ Content-Length: 536
   }
 ]
 ```
+
+The indent value should increase the amount of indentation: `?indent=4` should have 4 spaces, but `?indent=2` should have 2.
+
+To do this, you'll need to investigate the `strconv` and `strings` packages in the Go standard library.
 
 We've now got a working server that responds to requests with data in JSON format, and can format it.
 
@@ -334,7 +338,7 @@ This is going to be an exercise for you. At the end, the following request shoul
 HTTP/1.1 200 OK
 Content-Type: text/json
 Date: Thu, 11 Aug 2022 20:17:32 GMT
-Content-Length: 213
+Content-Length: 240
 
 {
   "Title": "Cat",
