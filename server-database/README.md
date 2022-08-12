@@ -1,6 +1,6 @@
 # Server and database
 
-In this project, you'll build another server. This one will have a simple API that serves data in JSON form. You'll them convert the backend to read from a Postgres database, serving data for the API. You'll then turn off the database and learn how to handle errors correctly.
+In this project, you'll build another server. This one will have a simple API that serves data in JSON form. You'll then convert the backend to read from a Postgres database, serving data for the API. You'll then turn off the database and learn how to handle errors correctly.
 
 Timebox: 6 days
 
