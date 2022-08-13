@@ -16,11 +16,11 @@ import (
 type Image struct {
 	Title   string
 	AltText string
-	Url     string
+	URL     string
 }
 
 func (img Image) String() string {
-	return fmt.Sprintf("%s (%s): %s", img.Title, img.AltText, img.Url)
+	return fmt.Sprintf("%s (%s): %s", img.Title, img.AltText, img.URL)
 }
 
 func fetchImages(conn *pgx.Conn) ([]Image, error) {
@@ -39,38 +39,40 @@ func fetchImages(conn *pgx.Conn) ([]Image, error) {
 		// Extract the data, passing pointers so the data can be updated in place
 		err = rows.Scan(&title, &url, &altText)
 		if err != nil {
-			break
+			return nil, fmt.Errorf("unable to read from database: %w", err)
 		}
 		// Append this as a new Image to the images slice
-		images = append(images, Image{Title: title, Url: url, AltText: altText})
+		images = append(images, Image{Title: title, URL: url, AltText: altText})
 	}
 
 	return images, nil
 }
 
-func addImage(conn *pgx.Conn, r *http.Request) (Image, error) {
+func addImage(conn *pgx.Conn, r *http.Request) (*Image, error) {
 	// Read the request body into a bytes slice
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		return Image{}, fmt.Errorf("could not read request body: [%w]", err)
+		return nil, fmt.Errorf("could not read request body: [%w]", err)
 	}
 
 	// Parse the body JSON into an image struct
 	var image Image
 	err = json.Unmarshal(body, &image)
 	if err != nil {
-		return Image{}, fmt.Errorf("could not parse request body: [%w]", err)
+		return nil, fmt.Errorf("could not parse request body: [%w]", err)
 	}
 
 	// Insert it into the database
-	_, err = conn.Exec(context.Background(), "INSERT INTO public.images(title, url, alt_text) VALUES ($1, $2, $3)", image.Title, image.Url, image.AltText)
+	_, err = conn.Exec(context.Background(), "INSERT INTO public.images(title, url, alt_text) VALUES ($1, $2, $3)", image.Title, image.URL, image.AltText)
 	if err != nil {
-		return Image{}, fmt.Errorf("could not insert image: [%w]", err)
+		return nil, fmt.Errorf("could not insert image: [%w]", err)
 	}
 
-	return image, nil
+	return &image, nil
 }
 
+// The special type interface{} allows us to take _any_ value, not just one of a specific type.
+// This means we can re-use this function for both a single image _and_ a slice of multiple images.
 func marshalWithIndent(data interface{}, indent string) ([]byte, error) {
 	// Convert images to a byte-array for writing back in a response
 	var b []byte
@@ -82,7 +84,7 @@ func marshalWithIndent(data interface{}, indent string) ([]byte, error) {
 		b, marshalErr = json.Marshal(data)
 	}
 	if marshalErr != nil {
-		return []byte{}, fmt.Errorf("could not marshal data: [%w]", marshalErr)
+		return nil, fmt.Errorf("could not marshal data: [%w]", marshalErr)
 	}
 	return b, nil
 }
@@ -116,6 +118,10 @@ func main() {
 			image, err := addImage(conn, r)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err.Error())
+				// We don't expose our internal errors (i.e. the contents of err) directly to the user for a few reasons:
+				//  1. It may leak private information (e.g. a database connection string, which may even include a password!), which may be a security risk.
+				//  2. It probably isn't useful to them to know.
+				//  3. It may contain confusing terminology which may be embarrassing or confusing to expose.
 				http.Error(w, "Something went wrong", http.StatusInternalServerError)
 				return
 			}
