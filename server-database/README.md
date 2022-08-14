@@ -377,4 +377,12 @@ Content-Length: 763
 
 Here's some extensions:
 
+- Write tests that check:
+  - list of images in response to a `GET /images.json` request
+  - list is fetched from the database
+  - new images are added based on `POST /images.json`
+  - rejects malformed `POST` data
+  - fails gracefully if the database errors
+  - ... other cases that you can think of!
 - Don't let the same image URL be uploaded twice
+- Use Apachebench to test the load this server can sustain. What is causing issues, if any? Can you address them?
