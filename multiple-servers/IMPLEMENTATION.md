@@ -50,3 +50,11 @@ Copied over from server-database, with file split up:
 - `api.go` for the DB connection & HTTP handlers
 
 This has the same setup steps as server-database, so those can be copied over.
+
+## Apache
+
+Switch static server over to 8083.
+
+`brew install apache2` (or `brew install httpd`?)
+
+`brew services restart httpd`
