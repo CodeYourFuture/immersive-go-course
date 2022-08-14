@@ -64,6 +64,7 @@ func Run(config Config) {
 		}
 		// Indicate that what follows will be JSON
 		w.Header().Add("Content-Type", "text/json")
+		w.Header().Add("Access-Control-Allow-Origin", "*")
 		// Send it back!
 		w.Write(response)
 	})
