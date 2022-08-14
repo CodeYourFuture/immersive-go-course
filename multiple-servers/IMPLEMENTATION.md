@@ -32,3 +32,11 @@ api/
 ```
 
 Running will be `go run ./cmd/static-server`
+
+## Static files
+
+A self-contained website is in `assets`. This is just a simple image gallery that loads images from static configuration. Later on I'll update it to load from a URL.
+
+`cmd/static-server/main.go` accept CLI flag to assets directory, create config, pass to the server
+
+Server listens, reads files when it gets a request. Using `http.ServeFile` — works v well.
