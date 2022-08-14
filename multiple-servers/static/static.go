@@ -1,13 +1,15 @@
 package static
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
 )
 
 type Config struct {
-	Dir string
+	Dir  string
+	Port int
 }
 
 func Run(config Config) {
@@ -21,5 +23,5 @@ func Run(config Config) {
 		http.ServeFile(w, r, path)
 	})
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil))
 }

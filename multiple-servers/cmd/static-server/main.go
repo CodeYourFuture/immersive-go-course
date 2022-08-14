@@ -17,6 +17,7 @@ func main() {
 	}
 
 	static.Run(static.Config{
-		Dir: absPath,
+		Dir:  absPath,
+		Port: 8080,
 	})
 }
