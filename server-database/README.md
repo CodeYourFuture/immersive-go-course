@@ -1,6 +1,6 @@
 # Server and database
 
-In this project, you'll build another server. This one will have a simple API that serves data in JSON form. You'll them convert the backend read from a Postgres database, serving data for the API. You'll then turn off the database and learn how to handle errors correctly.
+In this project, you'll build another server. This one will have a simple API that serves data in JSON form. You'll them convert the backend to read from a Postgres database, serving data for the API. You'll then turn off the database and learn how to handle errors correctly.
 
 Timebox: 6 days
 
@@ -25,7 +25,7 @@ Initially we need to create a struct that represents the data we're going to sto
 type Image struct {
 	Title   string
 	AltText string
-	Url     string
+	URL     string
 }
 ```
 
@@ -33,21 +33,29 @@ Then we can initialise some data:
 
 ```go
 images := []Image{
-    {"Sunset", "Clouds at sunset", "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"},
-    {"Mountain", "A mountain at sunset", "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"},
+    {
+      Title: "Sunset",
+      AltText: "Clouds at sunset",
+      URL: "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+    },
+    {
+      Title: "Mountain",
+      AltText: "A mountain at sunset",
+      URL: "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+    },
 }
 ```
 
 Now, set up an HTTP server (we did this in the `http-auth` project), and create an endpoint `/images.json` that returns this data in the response:
 
-```
+```console
 > curl 'http://localhost:8080/images.json' -i
 HTTP/1.1 200 OK
 Content-Type: text/json
 Date: Wed, 03 Aug 2022 18:06:34 GMT
 Content-Length: 487
 
-[{"Title":"Sunset","AltText":"Clouds at sunset","Url":"https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"},{"Title":"Mountain","AltText":"A mountain at sunset","Url":"https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"}]
+[{"Title":"Sunset","AltText":"Clouds at sunset","URL":"https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"},{"Title":"Mountain","AltText":"A mountain at sunset","URL":"https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"}]
 ```
 
 You're going to need to import `"encoding/json"` and `Marshal` to turn the data into JSON.
@@ -56,9 +64,23 @@ You're going to need to import `"encoding/json"` and `Marshal` to turn the data 
 b, err := json.Marshal(images)
 ```
 
+We don't always want to use the exact same field names from our programming language as we do in our public JSON. Instead of `Title`, `AltText`, and `URL`, let's make it so that when we serialise the fields, the keys are in [snake_case](https://en.wikipedia.org/wiki/Snake_case) not [CamelCase](https://en.wikipedia.org/wiki/Camel_case), so that instead our `curl` will behave like this:
+
+```console
+> curl 'http://localhost:8080/images.json' -i
+HTTP/1.1 200 OK
+Content-Type: text/json
+Date: Wed, 03 Aug 2022 18:06:34 GMT
+Content-Length: 487
+
+[{"title":"Sunset","alt_text":"Clouds at sunset","url":"https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"},{"title":"Mountain","alt_text":"A mountain at sunset","url":"https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"}]
+```
+
+Make sure not to change the field names of the struct when you do so!
+
 Next, add a query parameter `indent` which uses `MarshalIndent` instead (https://pkg.go.dev/encoding/json#MarshalIndent) such that the following snippet works.
 
-```
+```console
 > curl 'http://localhost:8080/images.json?indent=2' -i
 HTTP/1.1 200 OK
 Content-Type: text/json
@@ -67,14 +89,14 @@ Content-Length: 536
 
 [
   {
-    "Title": "Sunset",
-    "AltText": "Clouds at sunset",
-    "Url": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+    "title": "Sunset",
+    "alt_text": "Clouds at sunset",
+    "url": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
   },
   {
-    "Title": "Mountain",
-    "AltText": "A mountain at sunset",
-    "Url": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+    "title": "Mountain",
+    "alt_text": "A mountain at sunset",
+    "url": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
   }
 ]
 ```
@@ -83,7 +105,7 @@ The indent value should increase the amount of indentation: `?indent=4` should h
 
 To do this, you'll need to investigate the `strconv` and `strings` packages in the Go standard library.
 
-We've now got a working server that responds to requests with data in JSON format, and can format it.
+We've now got a working server that responds to requests with data in JSON format, and can format it to be more readable by developers exploring the API.
 
 ---
 
@@ -232,7 +254,7 @@ exit status 1
 
 Once connected to the database, you can look in pgAdmin at the Dashboard for your server: it will show an active session.
 
-It's important to gracefully close our connection to the database, so we need to add `defer conn.Close(context.Background())` immediately after we successfully connect. The `defer` keyword means that this line of code is delayed until the nearby function returns. [Defer is really useful!](https://go.dev/blog/defer-panic-and-recover)
+It's important to gracefully close our connection to the database, so we need to add `defer conn.Close(context.Background())` immediately after we successfully connect. The `defer` keyword means that this line of code is delayed until the enclosing function returns. [Defer is really useful!](https://go.dev/blog/defer-panic-and-recover)
 
 Now we're connected we can fetch some data.
 
@@ -252,7 +274,7 @@ We need a container [slice](https://gobyexample.com/slices) for the image: `var 
 
 We can iterate over the rows: `for rows.Next() { ... }`
 
-Using `Scan` to extract the data from each row means [passing a pointer to the variables](https://gobyexample.com/pointers) you want to fill, so they can be modified:
+Using `Scan` to extract the data from each row means [passing a pointer to the variables](https://www.digitalocean.com/community/conceptual_articles/understanding-pointers-in-go) you want to fill, so they can be modified:
 
 ```go
 var title, url, altText string
@@ -262,7 +284,7 @@ err = rows.Scan(&title, &url, &altText)
 After handling the possible error, you can add an image to the list:
 
 ```go
-images = append(images, Image{Title: title, Url: url, AltText: altText})
+images = append(images, Image{Title: title, URL: url, AltText: altText})
 ```
 
 And that's it! We've not got all images from the database, and our server can now return them as JSON.
@@ -307,7 +329,7 @@ Don't forget error handling!
 
 There's now quite a bit of logic in this `main` function and it's getting a bit big.
 
-Extract the image fetching log (not the database connection) to its own function with this signature:
+Extract the image fetching logic (not the database connection) to its own function with this signature:
 
 ```go
 func fetchImages(conn *pgx.Conn) ([]Image, error) {
@@ -333,23 +355,23 @@ Now we're going to accept data over an [HTTP POST request](https://developer.moz
 
 This is going to be an exercise for you. At the end, the following request should work:
 
-```
-> curl 'http://localhost:8080/images.json?indent=2' -i --data '{"Title": "Cat", "AltText": "A cool cat", "Url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"}'
+```console
+> curl 'http://localhost:8080/images.json?indent=2' -i --data '{"title": "Cat", "alt_text": "A cool cat", "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"}'
 HTTP/1.1 200 OK
 Content-Type: text/json
 Date: Thu, 11 Aug 2022 20:17:32 GMT
 Content-Length: 240
 
 {
-  "Title": "Cat",
-  "AltText": "A cool cat",
-  "Url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+  "title": "Cat",
+  "alt_text": "A cool cat",
+  "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
 }
 ```
 
 After that request, a `GET /images.json` request should return all the images:
 
-```
+```console
 > curl 'http://localhost:8080/images.json?indent=2' -i
 HTTP/1.1 200 OK
 Content-Type: text/json
@@ -358,19 +380,19 @@ Content-Length: 763
 
 [
   {
-    "Title": "Sunset",
-    "AltText": "Clouds at sunset",
-    "Url": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+    "title": "Sunset",
+    "alt_text": "Clouds at sunset",
+    "url": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
   },
   {
-    "Title": "Mountain",
-    "AltText": "A mountain at sunset",
-    "Url": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+    "title": "Mountain",
+    "alt_text": "A mountain at sunset",
+    "url": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
   },
   {
-    "Title": "Cat",
-    "AltText": "A cool cat",
-    "Url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    "title": "Cat",
+    "alt_text": "A cool cat",
+    "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
   }
 ]
 ```
@@ -378,3 +400,6 @@ Content-Length: 763
 Here's some extensions:
 
 - Don't let the same image URL be uploaded twice
+- On upload, try to detect if completely useless alt-text has been supplied, and reject the request
+- On upload, have your server make sure the URL actually works and returns an image, and reject the request if it didn't
+- On upload, record the resolution of the fetched image in the database too, and return it in the JSON
