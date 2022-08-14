@@ -48,7 +48,7 @@ images := []Image{
 
 Now, set up an HTTP server (we did this in the `http-auth` project), and create an endpoint `/images.json` that returns this data in the response:
 
-```
+```console
 > curl 'http://localhost:8080/images.json' -i
 HTTP/1.1 200 OK
 Content-Type: text/json
@@ -64,9 +64,23 @@ You're going to need to import `"encoding/json"` and `Marshal` to turn the data 
 b, err := json.Marshal(images)
 ```
 
+We don't always want to use the exact same field names from our programming language as we do in our public JSON. Instead of `Title`, `AltText`, and `URL`, let's make it so that when we serialise the fields, the keys are in [snake_case](https://en.wikipedia.org/wiki/Snake_case) not [CamelCase](https://en.wikipedia.org/wiki/Camel_case), so that instead our `curl` will behave like this:
+
+```console
+> curl 'http://localhost:8080/images.json' -i
+HTTP/1.1 200 OK
+Content-Type: text/json
+Date: Wed, 03 Aug 2022 18:06:34 GMT
+Content-Length: 487
+
+[{"title":"Sunset","alt_text":"Clouds at sunset","url":"https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"},{"title":"Mountain","alt_text":"A mountain at sunset","url":"https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"}]
+```
+
+Make sure not to change the field names of the struct when you do so!
+
 Next, add a query parameter `indent` which uses `MarshalIndent` instead (https://pkg.go.dev/encoding/json#MarshalIndent) such that the following snippet works.
 
-```
+```console
 > curl 'http://localhost:8080/images.json?indent=2' -i
 HTTP/1.1 200 OK
 Content-Type: text/json
@@ -75,14 +89,14 @@ Content-Length: 536
 
 [
   {
-    "Title": "Sunset",
-    "AltText": "Clouds at sunset",
-    "URL": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+    "title": "Sunset",
+    "alt_text": "Clouds at sunset",
+    "url": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
   },
   {
-    "Title": "Mountain",
-    "AltText": "A mountain at sunset",
-    "URL": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+    "title": "Mountain",
+    "alt_text": "A mountain at sunset",
+    "url": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
   }
 ]
 ```
@@ -341,23 +355,23 @@ Now we're going to accept data over an [HTTP POST request](https://developer.moz
 
 This is going to be an exercise for you. At the end, the following request should work:
 
-```
-> curl 'http://localhost:8080/images.json?indent=2' -i --data '{"Title": "Cat", "AltText": "A cool cat", "URL": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"}'
+```console
+> curl 'http://localhost:8080/images.json?indent=2' -i --data '{"title": "Cat", "alt_text": "A cool cat", "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"}'
 HTTP/1.1 200 OK
 Content-Type: text/json
 Date: Thu, 11 Aug 2022 20:17:32 GMT
 Content-Length: 240
 
 {
-  "Title": "Cat",
-  "AltText": "A cool cat",
-  "URL": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+  "title": "Cat",
+  "alt_text": "A cool cat",
+  "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
 }
 ```
 
 After that request, a `GET /images.json` request should return all the images:
 
-```
+```console
 > curl 'http://localhost:8080/images.json?indent=2' -i
 HTTP/1.1 200 OK
 Content-Type: text/json
@@ -366,19 +380,19 @@ Content-Length: 763
 
 [
   {
-    "Title": "Sunset",
-    "AltText": "Clouds at sunset",
-    "URL": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+    "title": "Sunset",
+    "alt_text": "Clouds at sunset",
+    "url": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
   },
   {
-    "Title": "Mountain",
-    "AltText": "A mountain at sunset",
-    "URL": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+    "title": "Mountain",
+    "alt_text": "A mountain at sunset",
+    "url": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
   },
   {
-    "Title": "Cat",
-    "AltText": "A cool cat",
-    "URL": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    "title": "Cat",
+    "alt_text": "A cool cat",
+    "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
   }
 ]
 ```
