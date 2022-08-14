@@ -22,6 +22,8 @@ Each project has its own directory with a README.md file that has instructions. 
    <br>Learn about long-running processes, HTTP and `curl`.
 1. [Servers & Databases](./server-database) - `impl/server-database`
    <br>Build a server that takes data from a database and serves it in `json` format.
+1. [Multiple Servers](./multiple-servers) - `impl/multiple-servers`
+   <br>Build and run file & API servers behind Apache in a simple multi-server architecture.
 
 ## Authors
 
