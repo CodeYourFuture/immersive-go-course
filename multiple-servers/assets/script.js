@@ -1,5 +1,5 @@
 function fetchImages() {
-    return fetch("http://localhost:8081/images.json").then(_ => _.json())
+    return fetch("http://localhost:8080/api/images.json").then(_ => _.json())
   }
 
   function timeout(t, v) {

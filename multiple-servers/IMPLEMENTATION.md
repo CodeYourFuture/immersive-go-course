@@ -57,4 +57,10 @@ Switch static server over to 8083.
 
 `brew install apache2` (or `brew install httpd`?)
 
-`brew services restart httpd`
+```
+brew services restart httpd
+```
+
+```
+sudo httpd -D FOREGROUND -f `pwd`/config/httpd.conf
+```
