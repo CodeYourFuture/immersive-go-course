@@ -40,3 +40,13 @@ A self-contained website is in `assets`. This is just a simple image gallery tha
 `cmd/static-server/main.go` accept CLI flag to assets directory, create config, pass to the server
 
 Server listens, reads files when it gets a request. Using `http.ServeFile` — works v well.
+
+## API
+
+Copied over from server-database, with file split up:
+
+- `util.go` for `MarshalWithIndent`
+- `images.go` for all images
+- `api.go` for the DB connection & HTTP handlers
+
+This has the same setup steps as server-database, so those can be copied over.
