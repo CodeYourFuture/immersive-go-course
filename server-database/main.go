@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -28,7 +29,7 @@ func fetchImages(conn *pgx.Conn) ([]Image, error) {
 	rows, err := conn.Query(context.Background(), "SELECT title, url, alt_text FROM public.images")
 	// Handle query errors
 	if err != nil {
-		return []Image{}, fmt.Errorf("unable to query database: [%w]", err)
+		return nil, fmt.Errorf("unable to query database: [%w]", err)
 	}
 
 	// Create slice to contain the images
@@ -149,5 +150,5 @@ func main() {
 		// Send it back!
 		w.Write(response)
 	})
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
