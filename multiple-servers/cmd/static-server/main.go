@@ -16,8 +16,8 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	static.Run(static.Config{
+	log.Fatal(static.Run(static.Config{
 		Dir:  absPath,
 		Port: 8082,
-	})
+	}))
 }

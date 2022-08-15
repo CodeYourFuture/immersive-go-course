@@ -12,8 +12,8 @@ func main() {
 		log.Fatalln("DATABASE_URL not set")
 	}
 
-	api.Run(api.Config{
+	log.Fatal(api.Run(api.Config{
 		DatabaseURL: os.Getenv("DATABASE_URL"),
 		Port:        8081,
-	})
+	}))
 }

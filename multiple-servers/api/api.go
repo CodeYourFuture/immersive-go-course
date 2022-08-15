@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/jackc/pgx/v4"
 )
@@ -15,10 +14,10 @@ type Config struct {
 	Port        int
 }
 
-func Run(config Config) {
+func Run(config Config) error {
 	conn, err := pgx.Connect(context.Background(), config.DatabaseURL)
 	if err != nil {
-		log.Fatalf("unable to connect to database: %v\n", err)
+		return fmt.Errorf("unable to connect to database: %v", err)
 	}
 	// Defer closing the connection to when main function exits
 	defer conn.Close(context.Background())
@@ -35,7 +34,7 @@ func Run(config Config) {
 			// Add new image to the database
 			image, err := AddImage(conn, r)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err.Error())
+				log.Println(err.Error())
 				// We don't expose our internal errors (i.e. the contents of err) directly to the user for a few reasons:
 				//  1. It may leak private information (e.g. a database connection string, which may even include a password!), which may be a security risk.
 				//  2. It probably isn't useful to them to know.
@@ -49,7 +48,7 @@ func Run(config Config) {
 			// Fetch images from the database
 			images, err := FetchImages(conn)
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err.Error())
+				log.Println(err.Error())
 				http.Error(w, "Something went wrong", http.StatusInternalServerError)
 				return
 			}
@@ -58,7 +57,7 @@ func Run(config Config) {
 		}
 
 		if responseErr != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
+			log.Println(responseErr.Error())
 			http.Error(w, "Something went wrong", http.StatusInternalServerError)
 			return
 		}
@@ -69,5 +68,5 @@ func Run(config Config) {
 		w.Write(response)
 	})
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil))
+	return http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil)
 }

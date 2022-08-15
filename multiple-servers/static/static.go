@@ -12,7 +12,7 @@ type Config struct {
 	Port int
 }
 
-func Run(config Config) {
+func Run(config Config) error {
 	// The "/" path handles everything, so we need to inspect the path (`req.URL.Path`) to be able to
 	// identify which file to serve.
 	// https://pkg.go.dev/net/http#ServeMux.Handle
@@ -23,5 +23,5 @@ func Run(config Config) {
 		http.ServeFile(w, r, path)
 	})
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil))
+	return http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil)
 }
