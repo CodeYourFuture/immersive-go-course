@@ -68,5 +68,6 @@ func Run(config Config) error {
 		w.Write(response)
 	})
 
+	log.Printf("port: %d\n", config.Port)
 	return http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil)
 }

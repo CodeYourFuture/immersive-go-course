@@ -51,6 +51,10 @@ Copied over from server-database, with file split up:
 
 This has the same setup steps as server-database, so those can be copied over.
 
+# Ports
+
+`cmd` files should allow ports to be configred using `--port`.
+
 ## Nginx
 
 Switch static server over to 8082.

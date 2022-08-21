@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"servers/api"
@@ -12,8 +13,11 @@ func main() {
 		log.Fatalln("DATABASE_URL not set")
 	}
 
+	port := flag.Int("port", 8081, "port the server will listen on")
+	flag.Parse()
+
 	log.Fatal(api.Run(api.Config{
 		DatabaseURL: os.Getenv("DATABASE_URL"),
-		Port:        8081,
+		Port:        *port,
 	}))
 }

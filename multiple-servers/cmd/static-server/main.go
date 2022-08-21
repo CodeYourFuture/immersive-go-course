@@ -9,6 +9,7 @@ import (
 
 func main() {
 	path := flag.String("path", ".", "path to static files")
+	port := flag.Int("port", 8082, "port the server will listen on")
 	flag.Parse()
 
 	absPath, err := filepath.Abs(*path)
@@ -18,6 +19,6 @@ func main() {
 
 	log.Fatal(static.Run(static.Config{
 		Dir:  absPath,
-		Port: 8082,
+		Port: *port,
 	}))
 }

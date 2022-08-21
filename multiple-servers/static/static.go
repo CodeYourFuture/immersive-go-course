@@ -23,5 +23,6 @@ func Run(config Config) error {
 		http.ServeFile(w, r, path)
 	})
 
+	log.Printf("port: %d\n", config.Port)
 	return http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil)
 }
