@@ -51,16 +51,12 @@ Copied over from server-database, with file split up:
 
 This has the same setup steps as server-database, so those can be copied over.
 
-## Apache
+## Nginx
 
-Switch static server over to 8083.
+Switch static server over to 8082.
 
-`brew install apache2` (or `brew install httpd`?)
-
-```
-brew services restart httpd
-```
+`brew install nginx`
 
 ```
-sudo httpd -D FOREGROUND -f `pwd`/config/httpd.conf
+nginx -c `pwd`/config/nginx.conf
 ```
