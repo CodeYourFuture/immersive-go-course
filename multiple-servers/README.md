@@ -37,8 +37,10 @@ Let's follow an example request, to `http://localhost:8080/index.html`:
 1. The browser requests `http://localhost:8080/index.html`
 1. The load balancer is listening on this port and receives the HTTP request
 1. It looks at the path (`/index.html`) of the request and tried to match it against its configuration
-1. The request path does not match `/api/*`, which you can read ash "slash api slash anything". The `*` is often called a "wildcard".
+1. The request path does not match `/api/*`, which you can read as "slash api slash anything". The `*` is often called a "wildcard".
 1. The request _does_ match `/*` — "slash anything" — so it **routes** the request to the file server
+
+This selection of where to send the request is called routing, and the order we perform the checks matters. `/*` matches everything, so if we checked that first, we'd never send any traffic to our API server. We check in order from the _most specific_ path pattern to the least specific path patterns.
 
 ### Module & packages
 
@@ -84,7 +86,7 @@ $ go run ./cmd/static-server --path assets --port 8082
 
 ### Static server
 
-Our "static" server will the files for a really simple website. The website will fetch images from our API server and display them as an image gallery.
+Our "static" server will serve the files for a really simple website. The website will fetch images from our API server and display them as an image gallery.
 
 If you have time or simply want to, you can build this website yourself! However, to get us started, here is something that will work.
 
@@ -253,7 +255,7 @@ fetchImages(true).then(
 );
 ```
 
-This code isn't meant to be fancy or be the focus of this exercise. Feel free to improve it!
+This code isn't meant to be fancy or be the focus of this exercise. Feel free to improve it (but don't get too distracted doing so)!
 
 #### Static CLI tool
 
@@ -315,7 +317,7 @@ path: assets
 port: 8082
 ```
 
-Remember that it should be the file in `static` that is doing the printing, not the CLI tool! The configuration should be passed from one to the other.
+Remember that it should be `static/static.go` that is doing the printing, not `cmd/static-server/main.go`! The configuration should be passed from one to the other.
 
 ### Static server
 
