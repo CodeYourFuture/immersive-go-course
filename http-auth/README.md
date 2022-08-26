@@ -1,6 +1,6 @@
 # Servers & HTTP requests
 
-In this project you're going to learn about long-lived processes, some  networking and the fundamentals of HTTP.
+In this project we are going to learn about long-lived processes, some  networking and the fundamentals of HTTP.
 
 Timebox: 6 days
 
@@ -25,7 +25,7 @@ Create empty main package `main.go` and main function. Check it's all working by
 
 The main library you'll be working with is built-in to Go: `net/http`. Import it for use: `import "net/http"`.
 
-Here's a basic server that you'll build from:
+Here's a basic server that we will build from:
 
 ```go
 package main
@@ -45,7 +45,7 @@ Use `curl` to interact with it: `curl -i http://localhost:8080/`
 
 curl is a tool for transfering data from or to a server. It's very useful for testing and interacting with servers that you build.
 
-Using `curl -i` will show you how the server responds, including the response "headers" and "body". The headers contain metadata about the response, such as what type of data is being sent back.
+Using `curl -i` will show us how the server responds, including the response "headers" and "body". The headers contain metadata about the response, such as what type of data is being sent back.
 
 ```
 > curl -i 'http://localhost:8080/'
@@ -59,7 +59,7 @@ Hello, world
 
 A common [protocol](https://en.m.wikipedia.org/wiki/Communication_protocol) for sending data between clients and servers over the internet is HTTP. It's used for websites, for example.
 
-You can read [lots about HTTP here](https://developer.mozilla.org/en-US/docs/Web/HTTP).
+We can read [lots about HTTP here](https://developer.mozilla.org/en-US/docs/Web/HTTP).
 
 HTTP requests are sent from a client to a server. They come in various types such as `GET`, for reading information, and `POST` for sending information back.
 
@@ -67,9 +67,9 @@ HTTP responses — data sent back to a "client" from a "server" as a result of a
 
 ### Status codes
 
-You're going to make a server that responds to `GET` requests with some of the common ones when a client makes a request to the appropriate URL: 200, 404, 500.
+We are going to make a server that responds to `GET` requests with some of the common ones when a client makes a request to the appropriate URL: 200, 404, 500.
 
-Update your go code so that each of the following paths works. Notice how the URL matches the code that is returned:
+Update our go code so that each of the following paths works. Notice how the URL matches the code that is returned:
 
 - `/200` -> 200 OK
 - `/404` -> 404 Not found
@@ -118,7 +118,7 @@ Content-Length: 42
 <!DOCTYPE html><html><em>Hello, world</em>
 ```
 
-Curl is just one client we can use to make HTTP requests. Take a moment to try out two more that you've already used:
+Curl is just one client we can use to make HTTP requests. Take a moment to try out two more that we've already used:
 1. A web browser - open up http://localhost:8080/ in Chrome.
 2. Postman - make a GET request to http://localhost:8080/ and see the output.
 
@@ -164,7 +164,7 @@ Content-Length: 96
 </ul>
 ```
 
-Try putting some HTML into the query params or body. You'll see that it is interpreted as HTML:
+Try putting some HTML into the query params or body. We'll see that it is interpreted as HTML:
 
 ```
 > curl -i 'http://localhost:8080?foo=<strong>bar</strong>'
@@ -186,7 +186,7 @@ Content-Length: 113
 
 This isn't good! This kind of thing can lead to security issues. Search for "XSS attack" to find out more. Let's fix it.
 
-"Escape" the string any time you take some input (data in `POST` or query parameters) and output it back. You'll need to investigate `html.EscapeString(v)`:
+"Escape" the string any time we take some input (data in `POST` or query parameters) and output it back. We'll need to investigate `html.EscapeString(v)`:
 
 ```
 > curl -i 'http://localhost:8080?foo=<strong>bar</strong>'
@@ -220,9 +220,9 @@ Take a look at this in a browser too.
 
 ### Authentication
 
-Next you're going to add a URL that can only be accessed if you know a username and secret password.
+Next we're going to add a URL that can only be accessed if we know a username and secret password.
 
-Add an endpoint `/authenticated` that requires the use of [HTTP Basic auth](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication). It should return a `401 Unauthorized` status code with a `WWW-Authenticate` header if basic auth is not present or does not match a username and password of your choice. Once Basic Auth is provided, it should respond successful!
+Add an endpoint `/authenticated` that requires the use of [HTTP Basic auth](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication). It should return a `401 Unauthorized` status code with a `WWW-Authenticate` header if basic auth is not present or does not match a username and password of our choice. Once Basic Auth is provided, it should respond successful!
 
 Go's `http` library comes with some Basic Auth support built-in, so be sure to use it to make the following work:
 
@@ -246,7 +246,7 @@ Content-Length: 38
 Hello username!
 ```
 
-You can generate the `dXNl...` text [using this website](https://opinionatedgeek.com/Codecs/Base64Encoder). This is "base64 encoded" which you can search for to find a bit more about. Enter `username:password` to get `dXNlcm5hbWU6cGFzc3dvcmQ=`.
+We can generate the `dXNl...` text [using this website](https://opinionatedgeek.com/Codecs/Base64Encoder). This is "base64 encoded" which we can search for to find a bit more about. Enter `username:password` to get `dXNlcm5hbWU6cGFzc3dvcmQ=`.
 
 It's not a good idea to put secrets like passwords into code (and base64 encoding text doesn't hide it, it just stores it in a different format). So remove any hard-coded usernames and passwords for basic auth, and use `os.Getenv(...)` so that this works:
 
@@ -258,9 +258,9 @@ For bonus points, use [a library](https://github.com/joho/godotenv) to support d
 
 ### Handling load
 
-Next you're going to test how many requests your server can support, and add basic [rate limiting](https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting).
+Next we're going to test how many requests your server can support, and add basic [rate limiting](https://www.cloudflare.com/en-gb/learning/bots/what-is-rate-limiting).
 
-[Follow this guide](https://www.datadoghq.com/blog/apachebench/) to install and use ApacheBench, which will test to see how many requests your server can handle.
+[Follow this guide](https://www.datadoghq.com/blog/apachebench/) to install and use ApacheBench, which will test to see how many requests our server can handle.
 
 ```
 > ab -n 10000 -c 100 'http://localhost:8080/'
@@ -330,7 +330,7 @@ It's better to protect your server from being asked to handle too many requests 
 > go get -u golang.org/x/time
 ```
 
-You will need to import the module:
+We will need to import the module:
 
 ```go
 import "golang.org/x/time/rate"
@@ -352,7 +352,7 @@ if limiter.Allow() {
 }
 ```
 
-If it is working, you will see `Non-2xx responses` and `Failed requests` in your ApacheBench output:
+If it is working, we will see `Non-2xx responses` and `Failed requests` in our ApacheBench output:
 
 ```
 > ab -n 100 -c 100 'http://localhost:8080/limited'
@@ -399,4 +399,4 @@ One of the things we find in real life is that failure is inevitable. Computers 
 
 In this exercise, we chose to make some of our requests fail fast, so that all of the requests that we _did_ process, got processed well (none were really slow, and our server didn't get overloaded).
 
-Through this course, you will learn a lot more about ways we can give users a better experience by controlling _when_ and _how_ things fail.
+Through this course, we  learnt a lot more about ways we can give users a better experience by controlling _when_ and _how_ things fail.
