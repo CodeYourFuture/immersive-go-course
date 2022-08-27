@@ -76,7 +76,7 @@ Content-Length: 487
 [{"title":"Sunset","alt_text":"Clouds at sunset","url":"https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"},{"title":"Mountain","alt_text":"A mountain at sunset","url":"https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"}]
 ```
 
-Make sure not to change the field names of the struct when we  do so!
+Make sure not to change the field names of the struct when we do so!
 
 Next, add a query parameter `indent` which uses `MarshalIndent` instead (https://pkg.go.dev/encoding/json#MarshalIndent) such that the following snippet works.
 
