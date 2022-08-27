@@ -353,7 +353,7 @@ func fetchImages(conn *pgx.Conn) ([]Image, error) {
 
 Now we're going to accept data over an [HTTP POST request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST). This will add new images to the database.
 
-This is going to be an exercise for us. At the end, the following request should work:
+This is going to be an exercise for you. At the end, the following request should work:
 
 ```console
 > curl 'http://localhost:8080/images.json?indent=2' -i --data '{"title": "Cat", "alt_text": "A cool cat", "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"}'
