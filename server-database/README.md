@@ -242,7 +242,7 @@ os.Getenv("DATABASE_URL")
 
 Before going any further, write some code that checks if `DATABASE_URL` is set. If it's not: write a helpful error to `os.Stderr` and exit the process with a non-zero code, to indicate failure (`os.Exit(1)`).
 
-Next, create a connection using `pgx.Connect`.We will need to supply a `context`, which can simply be `context.Background()`. We can [find out about contexts in the Go documentation](https://pkg.go.dev/context), but they are not an important concept for now.
+Next, create a connection using `pgx.Connect`. We will need to supply a `context`, which can simply be `context.Background()`. We can [find out about contexts in the Go documentation](https://pkg.go.dev/context), but they are not an important concept for now.
 
 Remember to handle errors in connecting to the database gracefully: handle the error and output a useful error message. You can check this is working by turning off Postgres and starting your server:
 
