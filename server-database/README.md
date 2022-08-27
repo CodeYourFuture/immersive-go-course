@@ -244,7 +244,7 @@ Before going any further, write some code that checks if `DATABASE_URL` is set. 
 
 Next, create a connection using `pgx.Connect`. We will need to supply a `context`, which can simply be `context.Background()`. We can [find out about contexts in the Go documentation](https://pkg.go.dev/context), but they are not an important concept for now.
 
-Remember to handle errors in connecting to the database gracefully: handle the error and output a useful error message. You can check this is working by turning off Postgres and starting your server:
+Remember to handle errors in connecting to the database gracefully: handle the error and output a useful error message. We can check this is working by turning off Postgres and starting our server:
 
 ```
 > DATABASE_URL='postgres://localhost:5432/go-server-database' go run .
