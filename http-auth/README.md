@@ -399,4 +399,4 @@ One of the things we find in real life is that failure is inevitable. Computers 
 
 In this exercise, we chose to make some of our requests fail fast, so that all of the requests that we _did_ process, got processed well (none were really slow, and our server didn't get overloaded).
 
-Through this course, we  learnt a lot more about ways we can give users a better experience by controlling _when_ and _how_ things fail.
+Through this course, we learnt a lot more about ways we can give users a better experience by controlling _when_ and _how_ things fail.
