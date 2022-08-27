@@ -115,7 +115,7 @@ We'll use [Postgres](https://www.postgresql.org/), which is an open source relat
 
 First, install Postgres. We may have been provided with access to Amazon Web Services, which provides Postgres for us via their Relational Database Service. If not, we can also run it on our computer: follow the [instructions on the Postgres website](https://www.postgresql.org/download/).
 
-Your goal is to have a database running that we can connect to using a connection string, which will look something like this: `postgres://user:secret@localhost:5432/mydatabasename`
+Our goal is to have a database running that we can connect to using a connection string, which will look something like this: `postgres://user:secret@localhost:5432/mydatabasename`
 
 For easy demoing, we'll assume you have Postgres running locally and connect with `postgresql://localhost`.
 
