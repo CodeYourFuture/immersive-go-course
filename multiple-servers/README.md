@@ -221,7 +221,7 @@ function fetchImages(development) {
       },
     ]);
   }
-  return fetch("http://localhost:8080/api/images.json").then((_) => _.json());
+  return fetch("http://localhost:8081/images.json").then((_) => _.json());
 }
 
 function timeout(t, v) {
@@ -257,7 +257,7 @@ fetchImages(true).then(
 
 This code isn't meant to be fancy or be the focus of this exercise. Feel free to improve it (but don't get too distracted doing so)!
 
-#### Static CLI tool
+#### Static server CLI tool
 
 On to some Go!
 
@@ -319,7 +319,7 @@ port: 8082
 
 Remember that it should be `static/static.go` that is doing the printing, not `cmd/static-server/main.go`! The configuration should be passed from one to the other.
 
-### Static server
+#### Static server
 
 Now we've got config being passed forward, we can build the server itself. This will be up to you to figure out!
 
@@ -334,3 +334,94 @@ $ go run ./cmd/static-server --path assets --port 8082
 ```
 
 We aren't loading the list of images from an API yet; they're hard coded in the JavaScript. Making the API work is coming next.
+
+### API server
+
+The API server in this project will be very similar to the one we created in the `server-database` project, if you have completed that one.
+
+This one will again be up to you. Here's what we need:
+
+- A CLI tool at `cmd/api-server/main.go` that collects a `DATABASE_URL` environment variable and `--port` flag, and then runs the API server
+- A Postgres database setup with an appropriate schema: `images` with `title`, `url` and `alt_text`, plus a unique ID
+- An API server that:
+  - Connects to the database
+  - Accepts `GET` requests to `/images.json` and responds with JSON
+  - Accepts `POST` requests to `/images.json`, adds the image to the database, and responds with JSON
+  - Handles errors without exposing the internal details
+  - Supports an `indent` query parameter
+
+Don't forget to handle errors and close the database connection.
+
+We don't expose our internal errors directly to the user for a few reasons:
+
+1. It may leak private information (e.g. a database connection string, which may even include a password!), which may be a security risk.
+1. It probably isn't useful to them to know.
+1. It may contain confusing terminology which may be embarrassing or confusing to expose.
+
+At the end of this part of the project, we should have the following working...
+
+A server that you start like this: `DATABASE_URL='postgres://localhost:5432/go-server-database' go run ./cmd/api-server --port 8081`
+
+We can `curl` the server to `GET` images:
+
+```console
+> curl 'http://localhost:8081/images.json?indent=2' -i
+HTTP/1.1 200 OK
+Content-Type: text/json
+Date: Thu, 11 Aug 2022 20:17:32 GMT
+Content-Length: 763
+
+[
+  {
+    "title": "Sunset",
+    "alt_text": "Clouds at sunset",
+    "url": "https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+  },
+  {
+    "title": "Mountain",
+    "alt_text": "A mountain at sunset",
+    "url": "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1\u0026ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8\u0026auto=format\u0026fit=crop\u0026w=1000\u0026q=80"
+  },
+  {
+    "title": "Cat",
+    "alt_text": "A cool cat",
+    "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+  }
+]
+```
+
+We can `curl` the server to `POST` new images:
+
+```console
+> curl 'http://localhost:8080/images.json?indent=2' -i --data '{"title": "Cat", "alt_text": "A cool cat", "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"}'
+HTTP/1.1 200 OK
+Content-Type: text/json
+Date: Thu, 11 Aug 2022 20:17:32 GMT
+Content-Length: 240
+
+{
+  "title": "Cat",
+  "alt_text": "A cool cat",
+  "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+}
+```
+
+### Getting images from the API
+
+We've now built two servers: a static server for files and an API server that reads & writes data from a database.
+
+We can run these at the same time, listening on two different ports: 8082 for the static server and 8081 for the API.
+
+(What happens if you try to run them on the same port? Give this a try if you haven't.)
+
+But our frontend is not yet fetching images from the API server. We'll do that next, but not without running into a bit of a problem.
+
+Update the `script.js` file to talk to the API: update `fetchImages(true)` to `fetchImages(false)`. This will cause the script to load from a URL rather than a static list of images.
+
+However! We've hit a problem. The images won't load, and we can see "Something went wrong."
+
+See if you can debug what's happening here and fix it: check the [developer tools in your browser](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_are_browser_developer_tools).
+
+The fix will be a modification to the API server, modifying the response.
+
+These are the kinds of issues we often run into when developing a server interacting with other systems, such as a web browser. It's our job to understand and consider how those other systems work when developing.
