@@ -406,6 +406,11 @@ Content-Length: 240
 }
 ```
 
+As an extension to this exercise, practice Go modularity by splitting up your API server code into modules:
+
+- `api.go` for the DB connection & HTTP handlers — this is the file we already wrote
+- `images.go` for all code relating to reading or writing images
+
 ### Getting images from the API
 
 We've now built two servers: a static server for files and an API server that reads & writes data from a database.
@@ -425,3 +430,100 @@ See if you can debug what's happening here and fix it: check the [developer tool
 The fix will be a modification to the API server, modifying the response.
 
 These are the kinds of issues we often run into when developing a server interacting with other systems, such as a web browser. It's our job to understand and consider how those other systems work when developing.
+
+### Load balancing & routing
+
+The the architecture diagram at the start we had the file and API servers separated, with requests from the browser going through a load balancer and router layer.
+
+This is a common pattern that we find in larger systems. At the most basic level, this layer is acting as a "reverse proxy" for our servers: it is accepting requests, forwarding them on to other servers, and returning responses. Routing refers to this layer sending requests to the appropriate destination according to some criteria, while load balancing refers to distributing requests across multiple instances of a server.
+
+[Here's a good guide to these ideas](https://www.nginx.com/resources/glossary/reverse-proxy-vs-load-balancer), including some information on why we choose to use such a layer.
+
+For our load balancer/proxy we're going to [Nginx](https://www.nginx.com/), which is a very widely used and useful tool for this job.
+
+We're going to run Nginx locally, in our computers, alongside the API and static server:
+
+- When it receives a request to `/api/*` — "anything beginning with `/api/` — it will forward that request to the API server
+- All other requests will go to the static server
+
+First, get Nginx installed by following [this guide](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/). If you're on macOS, you can use [Homebrew](https://brew.sh) and the [`nginx` formula](https://formulae.brew.sh/formula/nginx#default): `brew install nginx`.
+
+Learning how to configure Nginx end-to-end is out of scope for this course, so here's an _incomplete_ configuration file to get you started. Put this in `config/nginx.conf` folder. Copy the [`mime.types`](./readme-assets/mime.types) to `config/mime.types`.
+
+```conf
+# Determines whether nginx should become a daemon (run in the background — daemon – or foreground)
+# https://nginx.org/en/docs/ngx_core_module.html#daemon
+daemon off;
+
+# For development purposes, log to stderr
+# https://nginx.org/en/docs/ngx_core_module.html#error_log
+error_log stderr info;
+
+# Defines the number of worker processes. Auto tries to optimise this, likely to the number of CPU cores.
+# https://nginx.org/en/docs/ngx_core_module.html#worker_processes
+worker_processes auto;
+
+# Directives that affect connection processing.
+# https://nginx.org/en/docs/ngx_core_module.html#events
+events {
+    # Sets the maximum number of simultaneous connections that can be opened by a worker process.
+    # https://nginx.org/en/docs/ngx_core_module.html#events
+    worker_connections 1024;
+}
+
+http {
+    include mime.types;
+
+    # Defines the default MIME type of a response.
+    # https://nginx.org/en/docs/http/ngx_http_core_module.html#default_type
+    default_type text/plain;
+
+    # Log to stdout
+    # https://nginx.org/en/docs/http/ngx_http_log_module.html#access_log
+    access_log /dev/stdout;
+
+    # Specifies log format.
+    # https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+    '$status $body_bytes_sent "$http_referer" '
+    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    # By default, NGINX handles file transmission itself and copies the file into the buffer before sending it.
+    # Enabling the sendfile directive eliminates the step of copying the data into the buffer and enables direct
+    # copying data from one file descriptor to another.
+    # https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/
+    sendfile on;
+
+    # Enable compression
+    # https://docs.nginx.com/nginx/admin-guide/web-server/compression/
+    gzip on;
+
+    # Sets configuration for a virtual server.
+    # https://nginx.org/en/docs/http/ngx_http_core_module.html#server
+    server {
+        # Port to listen on
+        listen 8080;
+
+        # Requests to /api/ are forwarded to a local server running on port 8081
+        # https://nginx.org/en/docs/http/ngx_http_core_module.html#location
+        location /api/ {
+            # proxy_pass [FILL THIS IN]
+        }
+
+        # Other request forwarded to a local server running on port 8082
+        location / {
+            # proxy_pass [FILL THIS IN]
+        }
+    }
+}
+```
+
+Once installed, we can run nginx like this:
+
+```console
+> nginx -c `pwd`/config/nginx.conf
+```
+
+The `-c` argument tells nginx to load a particular config file, rather than its default location.
+
+The config above is incomplete: there is work to do on the `proxy_pass` lines. Follow the nginx documentation to get it working so that `curl http://localhost:8080/` is sent to the static server, but `curl http://localhost:8080/api/images.json` is sent to the API.
