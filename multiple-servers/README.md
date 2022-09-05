@@ -527,3 +527,164 @@ Once installed, we can run nginx like this:
 The `-c` argument tells nginx to load a particular config file, rather than its default location.
 
 The config above is incomplete: there is work to do on the `proxy_pass` lines. Follow the nginx documentation to get it working so that `curl http://localhost:8080/` is sent to the static server, but `curl http://localhost:8080/api/images.json` is sent to the API.
+
+### Benchmarking
+
+Now let's test all out using [Apache Bench](https://httpd.apache.org/docs/2.4/programs/ab.html) again.
+
+`ab` the API:
+
+```console
+> ab -n 5000 -c 25 "http://127.0.0.1:8080/api/images.json"
+This is ApacheBench, Version 2.3 <$Revision: 1901567 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking 127.0.0.1 (be patient)
+
+Completed 500 requests
+Completed 1000 requests
+Completed 1500 requests
+Completed 2000 requests
+Completed 2500 requests
+Completed 3000 requests
+Completed 3500 requests
+Completed 4000 requests
+Completed 4500 requests
+Completed 5000 requests
+Finished 5000 requests
+
+
+Server Software:        nginx/1.23.1
+Server Hostname:        127.0.0.1
+Server Port:            8080
+
+Document Path:          /api/images.json
+Document Length:        4 bytes
+
+Concurrency Level:      25
+Time taken for tests:   1.866 seconds
+Complete requests:      5000
+Failed requests:        0
+Total transferred:      885000 bytes
+HTML transferred:       20000 bytes
+Requests per second:    2680.08 [#/sec] (mean)
+Time per request:       9.328 [ms] (mean)
+Time per request:       0.373 [ms] (mean, across all concurrent requests)
+Transfer rate:          463.26 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   2.0      1      59
+Processing:     1    8  24.2      3     322
+Waiting:        0    7  20.3      3     322
+Total:          1    9  24.3      4     323
+
+Percentage of the requests served within a certain time (ms)
+  50%      4
+  66%      4
+  75%      5
+  80%      6
+  90%     28
+  95%     34
+  98%     37
+  99%     62
+ 100%    323 (longest request)
+```
+
+And the static server:
+
+```console
+> ab -n 5000 -c 25 "http://127.0.0.1:8080/"
+This is ApacheBench, Version 2.3 <$Revision: 1901567 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking 127.0.0.1 (be patient)
+Completed 500 requests
+Completed 1000 requests
+Completed 1500 requests
+Completed 2000 requests
+Completed 2500 requests
+Completed 3000 requests
+Completed 3500 requests
+Completed 4000 requests
+Completed 4500 requests
+Completed 5000 requests
+Finished 5000 requests
+
+
+Server Software:        nginx/1.23.1
+Server Hostname:        127.0.0.1
+Server Port:            8080
+
+Document Path:          /
+Document Length:        607 bytes
+
+Concurrency Level:      25
+Time taken for tests:   1.502 seconds
+Complete requests:      5000
+Failed requests:        0
+Total transferred:      4165000 bytes
+HTML transferred:       3035000 bytes
+Requests per second:    3328.26 [#/sec] (mean)
+Time per request:       7.511 [ms] (mean)
+Time per request:       0.300 [ms] (mean, across all concurrent requests)
+Transfer rate:          2707.46 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   0.3      1       3
+Processing:     1    7  10.2      3     115
+Waiting:        1    6   9.2      3     115
+Total:          2    7  10.1      4     116
+
+Percentage of the requests served within a certain time (ms)
+  50%      4
+  66%      4
+  75%      5
+  80%      9
+  90%     23
+  95%     25
+  98%     27
+  99%     28
+ 100%    116 (longest request)
+```
+
+What do you notice about the profile above? How does it compare to what you see?
+
+We can see from the examples above that there is a bit variance in the performance of the requests. Look at the median and max values for `Total:` — they are quite different! Some of our requests are taking a long time.
+
+Let's see what we can do about that.
+
+> By the way: dealing with this in the way we're about it to is unrealistic: we haven't looked into **why** there is such variance. In the real world we'd definitely do that first.
+
+In the real world, one way to deal with this issue is to run multiple copies of the same server and have the load balancer distribute requests to them. This is why it's called load balancing: the load (requests) to the server is balanced (distributed) across multiple underlying servers.
+
+Let's balance load across 3 copies of the API server: investigate the [upstream](http://nginx.org/en/docs/http/ngx_http_upstream_module.html) module in nginx. Remember that each copy of the API server needs to run on different port!
+
+To test if it's working:
+
+- Make sure your API server prints something whenever it gets a request: for example, `log.Println(r.Method, r.URL.EscapedPath())`
+- Run a small `ab`: `ab -n 10 -c 10 "http://127.0.0.1:8080/api/images.json"`
+- Observe the server logs: the requests are distributed between the servers!
+
+One of the reasons running a load balancer like nginx is so useful is that is will stop sending requests to an "upstream" server that starts failing. Try this out: turn off one of the servers and run another small `ab`: `ab -n 10 -c 10 "http://127.0.0.1:8080/api/images.json"`.
+
+Look at the `nginx` logs:
+
+```
+127.0.0.1 - - [21/Aug/2022:17:07:44 +0100] "GET /api/images.json HTTP/1.0" 200 4 "-" "ApacheBench/2.3"
+2022/08/21 17:07:44 [error] 31112#0: *4088 kevent() reported that connect() failed (61: Connection refused) while connecting to upstream, client: 127.0.0.1, server: , request: "GET /api/images.json HTTP/1.0", upstream: "http://127.0.0.1:8084/images.json", host: "127.0.0.1:8080"
+2022/08/21 17:07:44 [warn] 31112#0: *4088 upstream server temporarily disabled while connecting to upstream, client: 127.0.0.1, server: , request: "GET /api/images.json HTTP/1.0", upstream: "http://127.0.0.1:8084/images.json", host: "127.0.0.1:8080"
+2022/08/21 17:07:44 [error] 31112#0: *4090 kevent() reported that connect() failed (61: Connection refused) while connecting to upstream, client: 127.0.0.1, server: , request: "GET /api/images.json HTTP/1.0", upstream: "http://[::1]:8084/images.json", host: "127.0.0.1:8080"
+2022/08/21 17:07:44 [warn] 31112#0: *4090 upstream server temporarily disabled while connecting to upstream, client: 127.0.0.1, server: , request: "GET /api/images.json HTTP/1.0", upstream: "http://[::1]:8084/images.json", host: "127.0.0.1:8080"
+2022/08/21 17:07:44 [error] 31113#0: *4092 kevent() reported that connect() failed (61: Connection refused) while connecting to upstream, client: 127.0.0.1, server: , request: "GET /api/images.json HTTP/1.0", upstream: "http://127.0.0.1:8084/images.json", host: "127.0.0.1:8080"
+2022/08/21 17:07:44 [warn] 31113#0: *4092 upstream server temporarily disabled while connecting to upstream, client: 127.0.0.1, server: , request: "GET /api/images.json HTTP/1.0", upstream: "http://127.0.0.1:8084/images.json", host: "127.0.0.1:8080"
+2022/08/21 17:07:44 [error] 31113#0: *4092 kevent() reported that connect() failed (61: Connection refused) while connecting to upstream, client: 127.0.0.1, server: , request: "GET /api/images.json HTTP/1.0", upstream: "http://[::1]:8084/images.json", host: "127.0.0.1:8080"
+2022/08/21 17:07:44 [warn] 31113#0: *4092 upstream server temporarily disabled while connecting to upstream, client: 127.0.0.1, server: , request: "GET /api/images.json HTTP/1.0", upstream: "http://[::1]:8084/images.json", host: "127.0.0.1:8080"
+```
+
+Note `upstream server temporarily disabled while connecting to upstream` — it is automatically spotting this and disabling the server.
+
+What happens if you turn of _all_ the API server?
