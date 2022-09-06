@@ -689,9 +689,9 @@ Let's see what we can do about that.
 
 ---
 
-Important! Dealing with this in the way we're about it to is unrealistic: we haven't looked into **why** there is such variance. In the real world we'd definitely do that first. And load testing on locally, on your computer, is a bad way to do it: it doesn't simulate the kinds of real requests that your server would receive, and it doesn't adequately capture important details like the real hardware and the network that is getting data to and from your server. Also, the load testing actually _uses_ some real CPU and memory that would otherwise be used by the server.
+Important! Dealing with this in the way we're about it to is unrealistic: we haven't looked into **why** there is such variance. In the real world we'd definitely do that first. And load testing locally, on your computer, is a bad way to do it: it doesn't simulate the kinds of real requests that your server would receive, and it doesn't adequately capture important details like the real hardware and the network that is getting data to and from your server. Also, the load testing actually _uses_ some real CPU and memory that would otherwise be used by the server.
 
-The key takeaway here is: load test with realistic requests using a computer that is similar to the one you'll use to host the real server, and don't load test a server from the same computer it is running one.
+The key takeaway here is: load test with realistic requests using a computer that is similar to the one you'll use to host the real server, and don't load test a server from the same computer it is running on.
 
 ---
 
