@@ -42,6 +42,34 @@ Let's follow an example request, to `http://localhost:8080/index.html`:
 
 This selection of where to send the request is called routing, and the order we perform the checks matters. `/*` matches everything, so if we checked that first, we'd never send any traffic to our API server. We check in order from the _most specific_ path pattern to the least specific path patterns.
 
+Separating out servers like this is one way real systems are built. Why do we do this? Much of it comes down to **scale**: doing a lot of anything puts strain on computer resources...
+
+#### State
+
+Some code is "stateful" while other code can be "stateless". We often separate code that is stateful from code that is stateless and, as much as possible, reduce the number of stateful systems. This is because state introduces the _possibility_ of incorrectness, failure and data loss, particularly working at scale.
+
+**Stateless** means there is no stored knowledge relating to past requests; each request can be served independently without depending to another. A file server is likely to be stateless: it can serve any file without knowing what other files have been served in the past to a particular client.
+
+Stateless systems scale easily and simply — you just run more of them!
+
+**Stateful** servers store and retrieve information, and requests may depend on each other: for example, a server that handles banking information needs to know how much money is in the account before it can let someone take money out!
+
+This state/stateless split is the common reason for separating a file server from a server that communicates with a database.
+
+#### Different workloads
+
+Sometimes we split code into different servers or systems because there are very different demands on the computer hardware. This is called the "workload" that the code places on the hardware:
+
+- A _CPU-bound workload_ means something that is limited by the speed of the CPU. A task that performs many calculations, running a complex algorithm like video encoding or 3D modelling, is likely to be CPU bound.
+
+- _I/O-bound workloads_ is limited by how fast data can be read or written from disk or the network, and place heavy demands on these. A server that loads and processes many small files is likely to be I/O bound.
+
+- _Memory-bound workloads_ place heavy demands on the amount of memory or RAM the computer has. Workloads that have to a lot of data into memory, such a database or cache server, are likely to be memory bound.
+
+Placing dissimilar workloads on the same computer can force us to buy very expensive and specialised hardware, make scaling difficult, and make each independent workload negatively affect the other.
+
+There's a good, short guide to workloads on [scaleyourapp.com](https://scaleyourapp.com/a-super-helpful-guide-to-understanding-workload-its-types-in-cloud/) which also looks at workloads in terms of usage patterns.
+
 ### Module & packages
 
 Our file layout for this project will look like this:
@@ -655,11 +683,19 @@ What do you notice about the profile above? How does it compare to what you see?
 
 We can see from the examples above that there is a bit variance in the performance of the requests. Look at the median and max values for `Total:` — they are quite different! Some of our requests are taking a long time.
 
+This issue is happening because our server is struggling to keep up with the all the requests we are sending it: maybe it's running out of CPU or memory to handle so many requests!
+
 Let's see what we can do about that.
 
-> By the way: dealing with this in the way we're about it to is unrealistic: we haven't looked into **why** there is such variance. In the real world we'd definitely do that first.
+---
 
-In the real world, one way to deal with this issue is to run multiple copies of the same server and have the load balancer distribute requests to them. This is why it's called load balancing: the load (requests) to the server is balanced (distributed) across multiple underlying servers.
+Important! Dealing with this in the way we're about it to is unrealistic: we haven't looked into **why** there is such variance. In the real world we'd definitely do that first. And load testing on locally, on your computer, is a bad way to do it: it doesn't simulate the kinds of real requests that your server would receive, and it doesn't adequately capture important details like the real hardware and the network that is getting data to and from your server. Also, the load testing actually _uses_ some real CPU and memory that would otherwise be used by the server.
+
+The key takeaway here is: load test with realistic requests using a computer that is similar to the one you'll use to host the real server, and don't load test a server from the same computer it is running one.
+
+---
+
+One way to deal with this performance issue is to run multiple copies of the same server and have the load balancer distribute requests to them. This is why it's called load balancing: the load (requests) to the server is balanced (distributed) across multiple underlying servers.
 
 Let's balance load across 3 copies of the API server: investigate the [upstream](http://nginx.org/en/docs/http/ngx_http_upstream_module.html) module in nginx. Remember that each copy of the API server needs to run on different port!
 
