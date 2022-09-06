@@ -14,7 +14,7 @@ Remember: you can _always_ Google or ask for help if you get stuck.
 
 This course is structured into self-contained projects that you can work through at your own pace.
 
-Each project has its own directory with a README.md file that has instructions. If you want to take a look at one way of completing an exercise, there's some code waiting in an associated [Pull Request](https://github.com/CodeYourFuture/immersive-go-course/pulls) for you to look at. Try not to copy!
+Each project has its own directory with a README.md file that has instructions. If you want to take a look at one way of completing an exercise, there's some code waiting on a branch prefixed `impl/` (for "implementation") and an associated [Pull Request](https://github.com/CodeYourFuture/immersive-go-course/pulls) for you to look at. Try not to copy!
 
 1. [CLI & Files](./cli-files) — `impl/cat-ls`
    <br>An introduction to building things with Go by replicating the unix tools `cat` and `ls`.
@@ -23,12 +23,11 @@ Each project has its own directory with a README.md file that has instructions. 
 1. [Servers & Databases](./server-database) - `impl/server-database`
    <br>Build a server that takes data from a database and serves it in `json` format.
 1. [Multiple Servers](./multiple-servers) - `impl/multiple-servers`
-   <br>Build and run file & API servers behind Apache in a simple multi-server architecture.
+   <br>Build and run file & API servers behind nginx in a simple multi-server architecture.
 
-## Authors
+## Contributing
 
-- Tom Ashworth
-- Daniel Wagner-Hall
+Having your help to improve these projects would be amazing. See [CONTRIBUTING.md](./CONTRIBUTING.md) for a guide on how to get involved.
 
 Feel free to ask for help in the CYF Slack!
 
