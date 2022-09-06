@@ -1,13 +1,13 @@
 # Multiple servers
 
-Create file server to serve static HTML files. Create an API server that serves JSON from a database. Run the API and file server as two separate servers. Try to load the website & see CORS issue. Put apache in front of the file server and the API so they are on a single port and hostname. Learn about how to run services in VMs in the cloud. Replicate this local setup in the cloud on a single VM, with all services running on the same host. Route requests to the service.
+Create file server to serve static HTML files. Create an API server that serves JSON from a database. Run the API and file server as two separate servers. Try to load the website & see CORS issue. Put nginx in front of the file server and the API so they are on a single port and hostname. Learn about how to run services in VMs in the cloud. Replicate this local setup in the cloud on a single VM, with all services running on the same host. Route requests to the service.
 
 Timebox: 5 days
 
 Learning objectives:
 
 - Basic microservices ideas, separating concerns of services
-- Configure apache to talk to 2-3 copies of the API server
+- Configure nginx to talk to 2-3 copies of the API server
 - Some web security ideas (CORS)
 - Reverse proxy configuration, routing on path
 - Health checks
@@ -327,7 +327,7 @@ This is not as complicated as it might sound. Have a look at all the functions i
 
 It's possible to do this all in <20 lines of code.
 
-At the end, you should be able to run the server and visit [http://localhost:8082] to see the image gallery!
+At the end, you should be able to run the server and visit [http://localhost:8082](http://localhost:8082) to see the image gallery!
 
 ```console
 $ go run ./cmd/static-server --path assets --port 8082
@@ -427,13 +427,13 @@ However! We've hit a problem. The images won't load, and we can see "Something w
 
 See if you can debug what's happening here and fix it: check the [developer tools in your browser](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_are_browser_developer_tools).
 
-The fix will be a modification to the API server, modifying the response.
+The fix will be a modification to the API server, modifying the response headers.
 
 These are the kinds of issues we often run into when developing a server interacting with other systems, such as a web browser. It's our job to understand and consider how those other systems work when developing.
 
 ### Load balancing & routing
 
-The the architecture diagram at the start we had the file and API servers separated, with requests from the browser going through a load balancer and router layer.
+In the architecture diagram at the start we had the file and API servers separated, with requests from the browser going through a load balancer and router layer.
 
 This is a common pattern that we find in larger systems. At the most basic level, this layer is acting as a "reverse proxy" for our servers: it is accepting requests, forwarding them on to other servers, and returning responses. Routing refers to this layer sending requests to the appropriate destination according to some criteria, while load balancing refers to distributing requests across multiple instances of a server.
 
@@ -443,7 +443,7 @@ For our load balancer/proxy we're going to [Nginx](https://www.nginx.com/), whic
 
 We're going to run Nginx locally, in our computers, alongside the API and static server:
 
-- When it receives a request to `/api/*` — "anything beginning with `/api/` — it will forward that request to the API server
+- When it receives a request to `/api/*` — "anything beginning with `/api/`" — it will forward that request to the API server
 - All other requests will go to the static server
 
 First, get Nginx installed by following [this guide](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/). If you're on macOS, you can use [Homebrew](https://brew.sh) and the [`nginx` formula](https://formulae.brew.sh/formula/nginx#default): `brew install nginx`.
@@ -685,6 +685,6 @@ Look at the `nginx` logs:
 2022/08/21 17:07:44 [warn] 31113#0: *4092 upstream server temporarily disabled while connecting to upstream, client: 127.0.0.1, server: , request: "GET /api/images.json HTTP/1.0", upstream: "http://[::1]:8084/images.json", host: "127.0.0.1:8080"
 ```
 
-Note `upstream server temporarily disabled while connecting to upstream` — it is automatically spotting this and disabling the server.
+Note `upstream server temporarily disabled while connecting to upstream` — it is automatically spotting this and disabling the server. All of the requests still succeeded, they were just routed to the two remaining servers.
 
-What happens if you turn of _all_ the API server?
+What happens if you turn of _all_ the API servers?
