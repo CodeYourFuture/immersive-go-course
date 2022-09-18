@@ -26,3 +26,11 @@ Some of the really useful ones:
 3. Autocomplete - Go can guess what you're about to type, and save you time. But more importantly, it can tell you what exists - if you're looking to use something related to HTTP, and you think it's probably in the `http` package, you can type `http.` and see what's auto-completed for you - that could help you find the code you want without needing to switch to Google.
 
 Write a bit of Go in VS Code and experiment with these features. A small investment now will save a lot of time in the future!
+
+> :warning: **Opening the right directory** - When writing Go in VS Code, many of these features only work if you opened the folder directly containing the file named `go.mod`.
+>
+> When working in `immersive-go-course`, you need to open a new window in the directory the code you're working on lives in.
+>
+> If you opened VS Code in the root directory of `immersive-go-course`, you'll probably see a lot of red squiggly lines in your Go code and errors starting "could not import".
+>
+> You can have more than one copy of VS Code open at a time if you need to.
