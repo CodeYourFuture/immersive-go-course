@@ -10,11 +10,32 @@ It is intended to be followed without needing support (i.e. should explain thing
 
 ## How we teach
 
+### Learning by doing
+
 We primarily teach via exercises and projects. We describe outcomes, show examples, and give references (either terms to Google, or links to useful material).
+
+### Don't reinvent the wheel
 
 Where we think there isn't a useful / accurate / well-targeted existing resource, we may write explanations ourselves, but this should be rare - many excellent people have come before us!
 
+### Make it challenging
+
 We don't explain every step along the way - working out the steps is an important part of learning. Deciding exactly how many steps to explain is a tricky balance.
+
+### Fundamentals first
+
+As far as possible and reasonable, we teach foundational topics _before_ teaching abstractions. The goal is that learners can re-apply their knowledge to new situations by re-combining the fundamentals, rather than simply being able to use a specific tool.
+
+### Self-contained
+
+Each project here should be self-contained; projects should not extend existing projects and assume they have been built. However, projects can reference previous projects if there is incidental overlap in what is being built.
+
+- **Yes**: (after instructions for the build) "You might have spotted that this is the same server as in the server-database project."
+- **No**: "Implement this server as per the instructions in the server-database project."
+
+The course itself should be self-contained in that it should not depend on the existence or implementation of any specific Code Your Future resources. This is so that the course does not add a maintenance burden to CYF as it develops: for example, the person managing AWS resources for learners at CYF should _not_ have to update instructions in this course. Instead, this course should link to canonical resources inside CYF.
+
+Rule of thumb: a person should be able to complete a project _without_ being part of CYF, and without having done any of the other projects.
 
 ## Project structure
 
