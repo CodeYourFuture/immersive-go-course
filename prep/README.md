@@ -83,3 +83,14 @@ Content-Length: 42
 ```
 
 **Important**: the output from commands that you run will often not be identical to the example. Dates, times and counts will be different.
+
+Sometimes we may put more than one command in the same snippet:
+
+```console
+> echo hello
+hello
+> echo goodbye
+goodbye
+```
+
+Generally each time a line starts with a `>`, it's a new command (but _occasionally_ it may be output from a previous one!)
