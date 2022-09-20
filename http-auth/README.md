@@ -1,6 +1,6 @@
 # Servers & HTTP requests
 
-In this project we are going to learn about long-lived processes, some  networking and the fundamentals of HTTP.
+In this project we are going to learn about long-lived processes, some networking and the fundamentals of HTTP.
 
 Timebox: 6 days
 
@@ -56,6 +56,8 @@ Content-Type: text/plain; charset=utf-8
 
 Hello, world
 ```
+
+> 💡 See the [prep README.md](../prep/) for an explanation of this command line example.
 
 A common [protocol](https://en.m.wikipedia.org/wiki/Communication_protocol) for sending data between clients and servers over the internet is HTTP. It's used for websites, for example.
 
@@ -119,6 +121,7 @@ Content-Length: 42
 ```
 
 Curl is just one client we can use to make HTTP requests. Take a moment to try out two more that we've already used:
+
 1. A web browser - open up http://localhost:8080/ in Chrome.
 2. Postman - make a GET request to http://localhost:8080/ and see the output.
 
