@@ -32,8 +32,11 @@ Each project here should be self-contained; projects should not extend existing 
 
 - **Yes**: (after instructions for the build) "You might have spotted that this is the same server as in the server-database project."
 - **No**: "Implement this server as per the instructions in the server-database project."
+- **Also no**: "Take your server from the server-database project and make it also respond to gRPC requests"
 
 The course itself should be self-contained in that it should not depend on the existence or implementation of any specific Code Your Future resources. This is so that the course does not add a maintenance burden to CYF as it develops: for example, the person managing AWS resources for learners at CYF should _not_ have to update instructions in this course. Instead, this course should link to canonical resources inside CYF.
+
+It's also fine to rely on prerequisite knowledge as long as there is a link to resources which would explain that prerequisite at the correct level.
 
 Rule of thumb: a person should be able to complete a project _without_ being part of CYF, and without having done any of the other projects.
 
