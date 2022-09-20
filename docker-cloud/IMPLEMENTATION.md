@@ -95,3 +95,26 @@ go get -u github.com/ory/dockertest/v3
 ```
 
 Following [docs here](https://github.com/ory/dockertest) and [example here](https://github.com/olliefr/docker-gs-ping), write some tests.
+
+## GitHub action to run tests
+
+Follow [guide on GitHub](https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go) to get GitHub action testing the code.
+
+Pay attention to:
+
+```yml
+defaults:
+  run:
+    working-directory: docker-cloud
+```
+
+And:
+
+```yml
+- name: Set up Go
+  uses: actions/setup-go@v3
+  with:
+    go-version-file: "docker-cloud/go.mod"
+    cache-dependency-path: "docker-cloud/go.sum"
+    cache: true
+```
