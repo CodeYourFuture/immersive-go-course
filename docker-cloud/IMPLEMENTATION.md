@@ -118,3 +118,16 @@ And:
     cache-dependency-path: "docker-cloud/go.sum"
     cache: true
 ```
+
+### Action to publish image
+
+This is complex.
+
+[Guide here](https://benoitboure.com/securely-access-your-aws-resources-from-github-actions) was very helpful.
+
+Actions used:
+
+- https://github.com/aws-actions/configure-aws-credentials
+- https://github.com/aws-actions/amazon-ecr-login
+
+Consider: setting up a CYF public ECR repository with the right permissions.

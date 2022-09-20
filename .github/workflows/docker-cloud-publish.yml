@@ -1,13 +1,20 @@
 name: docker-cloud go publish
-on: push
+on: workflow_dispatch
 jobs:
   publish:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: docker-cloud
     steps:
       - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::464590638146:role/GitHubActionECRPublicPushImage
+          aws-region: us-east-1
       - name: Login to Amazon ECR Public
         id: login-ecr-public
         uses: aws-actions/amazon-ecr-login@v1
