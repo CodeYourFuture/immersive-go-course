@@ -41,8 +41,8 @@ func TestPing(t *testing.T) {
 	var resp *http.Response
 	err = pool.Retry(func() error {
 		var err error
-		t.Log(resource.GetPort("8080/tcp"))
-		resp, err = http.Get(fmt.Sprint("http://localhost:", resource.GetPort("8080/tcp"), "/ping"))
+		t.Log(resource.GetPort("80/tcp"))
+		resp, err = http.Get(fmt.Sprint("http://localhost:", resource.GetPort("80/tcp"), "/ping"))
 		if err != nil {
 			t.Log("container not ready, waiting...")
 			return err

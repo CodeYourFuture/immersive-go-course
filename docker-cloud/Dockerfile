@@ -23,7 +23,7 @@ WORKDIR /
 
 COPY --from=build /out /out
 
-EXPOSE 8080
+EXPOSE 80
 
 USER nonroot:nonroot
 
