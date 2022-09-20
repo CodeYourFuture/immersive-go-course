@@ -44,6 +44,19 @@ It's also fine to rely on prerequisite knowledge as long as there is a link to r
 
 Rule of thumb: a person should be able to complete a project _without_ being part of CYF, and without having done any of the other projects.
 
+## How we work
+
+Work on this repository is tracked in the [Immersive Go Course GitHub Project](https://github.com/orgs/CodeYourFuture/projects/20).
+
+Work should progress Backlog -> To Do -> In Progress -> Done. Every task should have a Target Sprint capturing which CYF sprint it contributes to. If you're not sure, ask in the GitHub issue.
+
+For the initial implementation of the course:
+
+- Tasks are organised into Development Sprints of one week
+- The work in the current Development Sprint is on the [Current Sprint board](https://github.com/orgs/CodeYourFuture/projects/20/views/2)
+- The work in the current Development Sprint should be prioritised over everything else
+- Every issue and PR should have an associated **milestone** relating to the CYF Course Sprint
+
 ## Project structure
 
 Each project has a name, e.g. `http-auth`.
