@@ -4,20 +4,26 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Config struct {
-	Port int
+	Port string
 }
 
 func main() {
+	port := os.Getenv("HTTP_PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	config := Config{
-		Port: 8080,
+		Port: port,
 	}
 
 	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("pong"))
 	})
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", config.Port), nil))
 }
