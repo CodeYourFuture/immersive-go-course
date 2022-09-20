@@ -112,6 +112,8 @@ $ DATABASE_URL='postgres://localhost:5432/go-server-database' go run ./cmd/api-s
 $ go run ./cmd/static-server --path assets --port 8082
 ```
 
+> 💡 See the [prep README.md](../prep/#command-line-examples) for an explanation of this command line example.
+
 ### Static server
 
 Our "static" server will serve the files for a really simple website. The website will fetch images from our API server and display them as an image gallery.

@@ -21,6 +21,7 @@ With Code Your Future so far, you've mostly used VS Code just as a text editor. 
 Have a read of the features listed on that page.
 
 Some of the really useful ones:
+
 1. Go to definition - when you call a function or use a variable, this will show you where it was defined. This can help to understand what code is doing and why, and even works when calling into things like the standard library.
 2. Go to references - this will show you what bits of code use a variable or function. Say you're changing a function to add a new parameter, this can help you find all the places you'll need to modify.
 3. Autocomplete - Go can guess what you're about to type, and save you time. But more importantly, it can tell you what exists - if you're looking to use something related to HTTP, and you think it's probably in the `http` package, you can type `http.` and see what's auto-completed for you - that could help you find the code you want without needing to switch to Google.
@@ -34,3 +35,62 @@ Write a bit of Go in VS Code and experiment with these features. A small investm
 > If you opened VS Code in the root directory of `immersive-go-course`, you'll probably see a lot of red squiggly lines in your Go code and errors starting "could not import".
 >
 > You can have more than one copy of VS Code open at a time if you need to.
+
+## Conventions used in projects
+
+### Command line examples
+
+In the projects you'll need to run some programs on the command line. To show this, and the output, we'll use an example like the following:
+
+```console
+> echo "Hello, world."
+Hello, world.
+```
+
+What we mean is: "run the command to the right of the `>` sign": `echo "Hello, world."`
+
+Everything after that line is _output_ from the command: `Hello, world.`
+
+In the above example, the command is `echo` with the argument `"Hello, world."`. Here's a more complex example using `curl`:
+
+```console
+> curl -i 'http://localhost:8080/'
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Sun, 24 Jul 2022 09:42:30 GMT
+Content-Length: 42
+
+<!DOCTYPE html><html><em>Hello, world</em>
+```
+
+It doesn't matter what this does: what's important is the input command and the expected output.
+
+Input command:
+
+```console
+curl -i 'http://localhost:8080/'
+```
+
+Expected output:
+
+```
+HTTP/1.1 200 OK
+Content-Type: text/html
+Date: Sun, 24 Jul 2022 09:42:30 GMT
+Content-Length: 42
+
+<!DOCTYPE html><html><em>Hello, world</em>
+```
+
+**Important**: the output from commands that you run will often not be identical to the example. Dates, times and counts will be different.
+
+Sometimes we may put more than one command in the same snippet:
+
+```console
+> echo hello
+hello
+> echo goodbye
+goodbye
+```
+
+Generally each time a line starts with a `>`, it's a new command (but _occasionally_ it may be output from a previous one!)
