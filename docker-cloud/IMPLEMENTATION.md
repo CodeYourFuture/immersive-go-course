@@ -85,3 +85,13 @@ Build & run:
 > curl localhost:8090/ping
 pong
 ```
+
+## Tests
+
+[dockertest](https://github.com/ory/dockertest) — principle is to test against real running services, end to end
+
+```console
+go get -u github.com/ory/dockertest/v3
+```
+
+Following [docs here](https://github.com/ory/dockertest) and [example here](https://github.com/olliefr/docker-gs-ping), write some tests.

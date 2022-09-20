@@ -12,7 +12,7 @@ type Config struct {
 
 func main() {
 	config := Config{
-		Port: 8090,
+		Port: 8080,
 	}
 
 	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
