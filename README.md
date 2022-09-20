@@ -24,6 +24,8 @@ Each project has its own directory with a README.md file that has instructions. 
    <br>Build a server that takes data from a database and serves it in `json` format.
 1. [Multiple Servers](./multiple-servers) - `impl/multiple-servers`
    <br>Build and run file & API servers behind nginx in a simple multi-server architecture.
+1. [Docker & Cloud Deployment](./docker-cloud/)
+   <br>Use containers to reproducibly deploy applications into the cloud
 
 ## Contributing
 
