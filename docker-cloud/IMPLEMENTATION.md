@@ -31,3 +31,57 @@ The task will be to bring this all together to run a local application on Elasti
 - Push the image to ECR (not Docker Hub)
 - Launch it in ECS using the UI
 - Build GitHub actions automate CI/CD
+
+## Server
+
+```console
+> curl localhost:8090/ping
+pong
+```
+
+`Dockerfile` inc multi-stage build:
+
+```Dockerfile
+# syntax=docker/dockerfile:1
+
+## Build
+FROM golang:1.19-bullseye as build
+
+WORKDIR /app
+
+COPY go.mod .
+# COPY go.sum .
+
+RUN go mod download
+
+COPY *.go ./
+
+RUN go build -o /out
+
+CMD [ "/out" ]
+
+## Deploy
+FROM gcr.io/distroless/base-debian11
+
+WORKDIR /
+
+COPY --from=build /out /out
+
+EXPOSE 8080
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/out"]
+```
+
+Build & run:
+
+```console
+> docker build . -t docker-cloud
+[+] Building 22.6s (15/15) FINISHED
+...
+> docker run -dp 8090:8090 docker-cloud
+306cf309f3970d5380cd07c3a54aead7ee8cf4f6726b752fecaec39e40da69f5
+> curl localhost:8090/ping
+pong
+```
