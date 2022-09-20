@@ -112,7 +112,7 @@ $ DATABASE_URL='postgres://localhost:5432/go-server-database' go run ./cmd/api-s
 $ go run ./cmd/static-server --path assets --port 8082
 ```
 
-> 💡 See the [prep README.md](../prep/#command-line-examples) for an explanation of this command line example.
+> 💡 See the [prep README.md](../prep/README.md#command-line-examples) for an explanation of this command line example.
 
 ### Static server
 
