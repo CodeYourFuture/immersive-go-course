@@ -26,6 +26,10 @@ We don't explain every step along the way - working out the steps is an importan
 
 As far as possible and reasonable, we teach foundational topics _before_ teaching abstractions. The goal is that learners can re-apply their knowledge to new situations by re-combining the fundamentals, rather than simply being able to use a specific tool.
 
+- **Yes**: a project that teaches setting up & running code on a cloud VM (such as [EC2](https://aws.amazon.com/ec2/)) before a project that hides the details (such as [Lambda](https://aws.amazon.com/lambda/))
+- **Yes**: a project that introduces configuring cloud infrastructure before a project using an [IaC](https://en.m.wikipedia.org/wiki/Infrastructure_as_code) tool such as [Terraform](https://www.terraform.io/).
+- **No**: introducing concurrency with a framework like [ants](https://github.com/panjf2000/ants) without building familiarity with the basics of channels.
+
 ### Self-contained
 
 Each project here should be self-contained; projects should not extend existing projects and assume they have been built. However, projects can reference previous projects if there is incidental overlap in what is being built.
