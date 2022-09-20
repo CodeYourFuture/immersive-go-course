@@ -140,7 +140,9 @@ CREATE DATABASE "go-server-database"
     IS_TEMPLATE = False;
 ```
 
-TODO: note here introducing SQL.
+> SQL is Structured Query Language: it's pronounced either "sequel" or Ess-Queue-Ell. Both work. It's used for interacting with various data storage systems. You can find out more about it and learn how to use it [on CodeAcademy](https://www.codecademy.com/learn/learn-sql).
+
+---
 
 Data in Postgres is arranged in tables with columns, like a spreadsheet.
 
@@ -187,7 +189,7 @@ INSERT INTO public.images(
 
 If we run this ("play" button at the top) we will get an error, because we haven't provided any data.
 
-Update the SQL to look like this. We don't need to specify an ID: Postgres will do this.
+Update the SQL to look like this. We don't need to specify an ID: Postgres will create this.
 
 ```sql
 INSERT INTO public.images(title, url, alt_text)
