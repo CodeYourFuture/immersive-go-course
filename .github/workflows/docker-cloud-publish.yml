@@ -1,5 +1,5 @@
 name: docker-cloud go publish
-on: workflow_dispatch
+on: push
 jobs:
   publish:
     permissions:
