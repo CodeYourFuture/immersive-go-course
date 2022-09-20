@@ -57,7 +57,7 @@ Content-Type: text/plain; charset=utf-8
 Hello, world
 ```
 
-> 💡 See the [prep README.md](../prep/) for an explanation of this command line example.
+> 💡 See the [prep README.md](../prep/#command-line-examples) for an explanation of this command line example.
 
 A common [protocol](https://en.m.wikipedia.org/wiki/Communication_protocol) for sending data between clients and servers over the internet is HTTP. It's used for websites, for example.
 

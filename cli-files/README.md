@@ -32,7 +32,7 @@ for_you.txt
 rain.txt
 ```
 
-> 💡 See the [prep README.md](../prep/) for an explanation of this command line example.
+> 💡 See the [prep README.md](../prep/#command-line-examples) for an explanation of this command line example.
 
 While the `cat` command will output the contents of a file to you:
 
