@@ -28,9 +28,9 @@ The task will be to bring this all together to run a local application on Elasti
 - Build a simple Go server
 - Dockerise it to run locally within a container
 - Write tests that run against the docker container
+- Build GitHub actions automate CI/CD
 - Push the image to ECR (not Docker Hub)
 - Launch it in ECS using the UI
-- Build GitHub actions automate CI/CD
 
 ## Server
 
