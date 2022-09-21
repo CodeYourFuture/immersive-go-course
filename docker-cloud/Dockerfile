@@ -25,6 +25,4 @@ COPY --from=build /out /out
 
 EXPOSE 80
 
-USER nonroot:nonroot
-
 ENTRYPOINT ["/out"]
