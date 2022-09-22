@@ -5,16 +5,14 @@ FROM golang:1.19-bullseye as build
 
 WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
+COPY go.mod ./
+COPY go.sum ./
 
 RUN go mod download
 
 COPY *.go ./
 
 RUN go build -o /out
-
-CMD [ "/out" ]
 
 ## Deploy
 FROM gcr.io/distroless/base-debian11

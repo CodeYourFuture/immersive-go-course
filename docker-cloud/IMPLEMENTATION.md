@@ -39,6 +39,7 @@ Write a server in Go with this behaviour:
 ```console
 > curl localhost:8090/ping
 pong
+```
 
 Write a `Dockerfile` including a multi-stage build:
 
@@ -50,16 +51,16 @@ FROM golang:1.19-bullseye as build
 
 WORKDIR /app
 
-COPY go.mod .
-# COPY go.sum .
+COPY go.mod ./
+# This line need to be commented out until such a file exists, once we add a
+# dependency on `dockertest`.
+# COPY go.sum ./
 
 RUN go mod download
 
 COPY *.go ./
 
 RUN go build -o /out
-
-CMD [ "/out" ]
 
 ## Deploy
 FROM gcr.io/distroless/base-debian11
@@ -87,13 +88,15 @@ pong
 
 ## Tests
 
-[dockertest](https://github.com/ory/dockertest) — principle is to test against real running services, end to end
+For writing tests, we'll use [dockertest](https://github.com/ory/dockertest). The principle is to test against real running services, end to end, in containers.
 
 ```console
 go get -u github.com/ory/dockertest/v3
 ```
 
 Following [docs here](https://github.com/ory/dockertest) and [example here](https://github.com/olliefr/docker-gs-ping), write some tests.
+
+Make sure to uncomment `COPY go.sum ./` from the `Dockerfile`.
 
 ## GitHub action to run tests
 
