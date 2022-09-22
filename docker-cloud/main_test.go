@@ -18,7 +18,7 @@ func TestMain(m *testing.M) {
 	var err error
 	pool, err = dockertest.NewPool("")
 	if err != nil {
-		log.Fatalf("Could not connect to docker: %s", err)
+		log.Fatalf("Could not connect to docker daemon: %s", err)
 	}
 
 	resource, err = pool.BuildAndRun("docker-cloud-test", "./Dockerfile", nil)
@@ -26,13 +26,13 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Could not build/run: %s", err)
 	}
 
-	code := m.Run()
+	exitCode := m.Run()
 
 	if err := pool.Purge(resource); err != nil {
 		log.Fatalf("Could not cleanup: %s", err)
 	}
 
-	os.Exit(code)
+	os.Exit(exitCode)
 }
 
 func TestPing(t *testing.T) {
@@ -51,14 +51,15 @@ func TestPing(t *testing.T) {
 	})
 
 	if err != nil {
-		t.Fatalf("request: %s", err)
+		t.Fatalf("response error after retries: %s", err)
 	}
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		t.Fatalf("request: %s", err)
+		t.Fatalf("error reading response body: %s", err)
 	}
 
-	if string(body) != "pong" {
-		t.Fatal("request: response was not pong")
+	want := "pong"
+	if got := string(body); want != got {
+		t.Fatalf("bad response: want %q got %q", want, got)
 	}
 }

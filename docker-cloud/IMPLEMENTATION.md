@@ -1,13 +1,13 @@
 # docker-cloud implementation
 
-To get familiar with Docker, complete parts 1, 2 and 3 of [this tutorial](https://docs.docker.com/get-started/):
+To get familiar with Docker, complete parts 1, 2 and 3 of [this tutorial](https://docs.docker.com/get-started/), after which you should know about:
 
 - Running applications with docker: `docker run -dp 80:80 docker/getting-started`
 - Containers and images: process & filesystem isolation
 - `Dockerfile`: a text-based script of instructions that is used to create a container image
 - Starting, managing processes and images: `docker ps` and `docker rm -f`s
 
-Next work through the [Go Docker tutorial](https://docs.docker.com/language/golang/):
+Next work through the [Go Docker tutorial](https://docs.docker.com/language/golang/), after which you should know about:
 
 - Dockerising a go application
 - Starting and stopping containers
@@ -15,7 +15,7 @@ Next work through the [Go Docker tutorial](https://docs.docker.com/language/gola
 - Basics of docker-compose and CockroachDB
 - GitHub actions for pushing the image to Docker Hub
 
-To get familiar with ECS, run through the [AWS tutorial](https://aws.amazon.com/getting-started/hands-on/deploy-docker-containers/):
+To get familiar with ECS, run through the [AWS tutorial](https://aws.amazon.com/getting-started/hands-on/deploy-docker-containers/), after which you should know about:
 
 - Container & task: like a blueprint for your application
 - Service & load balancing: launches and maintains copies of the task definition in your cluster
@@ -23,7 +23,7 @@ To get familiar with ECS, run through the [AWS tutorial](https://aws.amazon.com/
 
 ---
 
-The task will be to bring this all together to run a local application on Elastic Container Service:
+The task will be to bring this all together to run an application that we've written on Elastic Container Service:
 
 - Build a simple Go server
 - Dockerise it to run locally within a container
@@ -34,12 +34,13 @@ The task will be to bring this all together to run a local application on Elasti
 
 ## Server
 
+Write a server in Go with this behaviour:
+
 ```console
 > curl localhost:8090/ping
 pong
-```
 
-`Dockerfile` inc multi-stage build:
+Write a `Dockerfile` including a multi-stage build:
 
 ```Dockerfile
 # syntax=docker/dockerfile:1
@@ -96,7 +97,7 @@ Following [docs here](https://github.com/ory/dockertest) and [example here](http
 
 ## GitHub action to run tests
 
-Follow [guide on GitHub](https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go) to get GitHub action testing the code.
+Follow [this guide on GitHub](https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go) to get a GitHub action testing the code.
 
 Pay attention to:
 
