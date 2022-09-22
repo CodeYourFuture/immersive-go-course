@@ -193,20 +193,93 @@ And:
 
 ### Github Action: publish image
 
-TODO: @tgvashworth finish this section
-
 Next, we're going build an action that creates and pushes the image to AWS Elastic Container Registry.
 
-This is complex.
+The end result will work something like this, including the steps that follow to deploy the container to Elastic Container Service (ECS):
 
-The [guide here](https://benoitboure.com/securely-access-your-aws-resources-from-github-actions) was very helpful.
+![](./readme-assets/cloud-architecture.png)
 
-Actions used:
+1. You (the developer) push code to GitHub
+2. GitHub triggers Actions that run against your code
+3. After running tests, an Action creates and publishes a Docker image to the Elastic Container Registry, identified by the [commit ID](https://git-scm.com/book/en/v2/Git-Basics-Viewing-the-Commit-History)
+4. Via the ECS UI, we will deploy this image as a container (which will also create a task, service, cluster and load balancer, amongst other things)
+5. Finally, our server will be able to receive HTTP requests from anyone on the internet!
 
-- https://github.com/aws-actions/configure-aws-credentials
-- https://github.com/aws-actions/amazon-ecr-login
+We've already managed steps 1 and 2.
 
-Consider: setting up a CYF public ECR repository with the right permissions.
+Step three requires us to do the following:
+
+- We need a repository on ECR where we'll publish our images. A repository is a collection of images. Ours will be **public**. We'll create this via the ECR user interface.
+- We need to **authorise** GitHub to push images to our repository. We don't want _anyone_ to be able to push images. Just us. We'll do this by creating an Identify Provider, two Policies, and a Role, plus making use of some standard [AWS GitHub actions](https://github.com/aws-actions).
+
+Here are the steps: figuring out the gaps is up to you. The [guide here](https://benoitboure.com/securely-access-your-aws-resources-from-github-actions) may be helpful to you, as well as [this guide on creating policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create-console.html).
+
+1. [Create a repository](https://eu-west-1.console.aws.amazon.com/ecr/repositories?region=eu-west-1). Make sure it's public.
+   <br>Make a note of the URI of the registry — something like `public.ecr.aws/w0k4j6h5/immersive-go-course/docker-cloud`. The alias (`w0k4j6h5`) and name `immersive-go-course/docker-cloud` will be useful later.
+1. Via the IAM dashboard (use the AWS navigation to find this):
+   1. Add a new OpenID Connect Identify Provider
+      - Provider URL: `https://token.actions.githubusercontent.com` (Don't forget to click Get Thumbprint)
+      - Audience: `sts.amazonaws.com`
+   1. Create two Policies, which will allow the Role to push Docker images:
+      1. Call the first Policy `GetAuthorizationToken`, and set it up to:
+         - `GetAuthorizationToken` against the `Elastic Container Registry Public` service
+         - `GetServiceBearerToken` against the `STS` service
+      1. Call the second Policy `AllowPush`, and set it up with the following against the `Elastic Container Registry Public` service:
+         - Read `BatchCheckLayerAvailability`
+         - Write `CompleteLayerUpload`, `InitiateLayerUpload`, `PutImage`, `UploadLayerPart`
+   1. Create a Role called `GitHubActionECRPublicPushImage`:
+      - Chose Web Identity, select the Identity provider you created in the previous step, and its audience
+      - Assign the `GetAuthorizationToken` and `AllowPush` policies to the Role
+   1. After you've created the role, edit it. In the Trust Relationships tab, update the `"Condition"` block so that it references **your repository**:
+      ```json
+      "Condition": {
+          "StringEquals": {
+              "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+          },
+          "StringLike": {
+              "token.actions.githubusercontent.com:sub": "repo:[YOUR_GITHUB_USERNAME]/[YOUR_GITHUB_REPO]:*"
+          }
+      }
+      ```
+
+We're now ready to create the GitHub Actions. We're going to use two actions, in order:
+
+1. [aws-actions/configure-aws-credentials](https://github.com/aws-actions/configure-aws-credentials)
+2. [aws-actions/amazon-ecr-login](https://github.com/aws-actions/amazon-ecr-login)
+
+Make sure that the action has a `write` token:
+
+```yml
+permissions:
+  id-token: write
+```
+
+And that you have correctly copied the Amazon Resource Name (ARN) for the Role you created:
+
+```yml
+- name: configure aws credentials
+  uses: aws-actions/configure-aws-credentials@v1
+  with:
+    role-to-assume: arn:aws:iam::1234567890:role/your-role-arn
+```
+
+Finally, you can push the image to ECR:
+
+```yml
+- name: Build, tag, and push docker image to Amazon ECR Public
+  env:
+    REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+    REGISTRY_ALIAS: YOUR_ALIAS
+    REPOSITORY: YOUR_REPOSITORY
+    IMAGE_TAG: ${{ github.sha }}
+  run: |
+    docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
+    docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+```
+
+Once this action is written, we can add commit it and push to GitHub to test it out. The logs from the GitHub action will look something like this:
+
+![](./readme-assets/publish-logs.png)
 
 ## Running on ECS
 
