@@ -81,8 +81,8 @@ We're going to host our application in the cloud, specifically in Amazon Web Ser
 
 The set of AWS products we're going to interact with directly are:
 
-- Elastic Container Repository (ECS): store images that can later be run as containers
-- Elastic Container Service (ECR): run containers, including all the infrastructure needed to make them accessible to the internet
+- Elastic Container Repository (ECR): store images that can later be run as containers
+- Elastic Container Service (ECS): run containers, including all the infrastructure needed to make them accessible to the internet
 - Identity & Access Management (IAM): manage security, identity and access within AWS
 
 To get familiar with ECS, run through the [AWS tutorial](https://aws.amazon.com/getting-started/hands-on/deploy-docker-containers/), after which you should know about:
@@ -93,7 +93,7 @@ To get familiar with ECS, run through the [AWS tutorial](https://aws.amazon.com/
 
 ## Building & Dockerising server
 
-The rest of this project will cover putting this all together to run an application that we've written on Elastic Container Service. The steps will be:
+The rest of this project will cover putting this all together to run an application that we've written on ECS. The steps will be:
 
 - Build a simple Go server
 - Dockerise it to run locally within a container
@@ -156,7 +156,7 @@ Make sure to `COPY go.sum ./` in the "build" portion of your `Dockerfile`. [Read
 A set of good practices exists for developing software for production use by thousands or millions of people. One example of this is Continuous Integration & Continuous Deployment, referred to as CI/CD. We're going to focus on the "CI" component of this, which means:
 
 - working with version control (Git)
-- running automated checks on the code added to Git (specifically, test)
+- running automated checks on the code added to Git (specifically, tests)
 - automating the steps required to "build" a version of the application that could be deployed to production (specifically, building a Docker image and pushing it to a shared repository)
 
 This automation runs in the cloud — _not_ on developer laptops — so that it is highly reproducible and the same for whoever writes the the code. The idea is that, should the tests fail, the code will not be built or pushed to the repository, so it's harder to push buggy code to production.
@@ -195,7 +195,7 @@ And:
 
 Next, we're going build an action that creates and pushes the image to AWS Elastic Container Registry.
 
-The end result will work something like this, including the steps that follow to deploy the container to Elastic Container Service (ECS):
+The end result will work something like this, including the steps that follow to deploy the container to ECS:
 
 ![](./readme-assets/cloud-architecture.png)
 
@@ -244,8 +244,10 @@ Here are the steps: figuring out the gaps is up to you. The [guide here](https:/
 
 We're now ready to create the GitHub Actions. We're going to use two actions, in order:
 
-1. [aws-actions/configure-aws-credentials](https://github.com/aws-actions/configure-aws-credentials)
-2. [aws-actions/amazon-ecr-login](https://github.com/aws-actions/amazon-ecr-login)
+1. [aws-actions/configure-aws-credentials](https://github.com/aws-actions/configure-aws-credentials) — this sets up environment variables so that subsequent actions can authenticate with AWS
+2. [aws-actions/amazon-ecr-login](https://github.com/aws-actions/amazon-ecr-login) — this authenticates the Docker client (`docker` commands) with the AWS container registry
+
+A couple of things that we shouldn't miss...
 
 Make sure that the action has a `write` token:
 
@@ -254,7 +256,7 @@ permissions:
   id-token: write
 ```
 
-And that you have correctly copied the Amazon Resource Name (ARN) for the Role you created:
+And that we have correctly copied the Amazon Resource Name (ARN) for the Role:
 
 ```yml
 - name: configure aws credentials
@@ -276,6 +278,8 @@ Finally, you can push the image to ECR:
     docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
     docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
 ```
+
+The `docker push` command uses the URL of the registry (`public.ecr.aws`) to figure out which credentials to use, so you don't have to explicitly refer to the AWS configuration & login steps.
 
 Once this action is written, we can add commit it and push to GitHub to test it out. The logs from the GitHub action will look something like this:
 
