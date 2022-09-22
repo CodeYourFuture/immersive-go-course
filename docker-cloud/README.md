@@ -1,12 +1,12 @@
 # Docker & Cloud Deployment
 
-In this project, you'll build a simple Go server application and Dockerise it to run within a container. You'll write tests that run against the container, and then build GitHub actions automate continuous testing and release of the application. You'll then run it in the cloud by pushing the container image to Amazon AWS Elastic Container Repository, and then launch it in Amazon AWS Elastic Container Service using the user interface.
+In this project, you'll build a simple Go server application and Dockerise it to run within a container. You'll write tests that run against the container, and then build GitHub actions to automate continuous testing and release of the application. You'll then run it in the cloud by pushing the container image to Amazon AWS Elastic Container Repository, and then launch it in Amazon AWS Elastic Container Service using the user interface.
 
 > ⚠️ This project requires you to have access to an Amazon AWS account, with permissions to configure ECS, ECR, Fargate, and Elastic Load Balancing. Ask on CYF Slack for help with that.
 
 Learning objectives:
 
-- Det up Docker locally
+- Set up Docker locally
 - `Dockerfile` syntax & how to containerise an application
 - Run applications locally using Docker
 - Push container images to a repository ([ECR](https://aws.amazon.com/ecr/))
@@ -19,7 +19,7 @@ Timebox: 2 days
 
 This project will require us to pull together information from several different guides to get an application developed locally to run in the cloud. This project will give you experience of building and deploying a real applications. Our focus here is **not** on the Go code, but on the infrastructure around it.
 
-> **Important:** You will need a GitHub repo to complete this becase we'll be using [GitHub Actions](https://docs.github.com/en/actions). If you are not already working in the `immersive-go-course` repository, now would be a good time!
+> **Important:** You will need a GitHub repo to complete this becase we'll be using [GitHub Actions](https://docs.github.com/en/actions). If you are not already working in your own fork of the `immersive-go-course` repository, now would be a good time!
 
 ### Motivation
 
@@ -31,9 +31,9 @@ A container is a "sandboxed" process on your computer that is isolated from all 
 
 When running a container, it uses an isolated filesystem. This filesystem is provided by a container image. Since the image contains the container’s filesystem, it must contain everything needed to run an application - all dependencies, configurations, scripts, binaries, etc. The image also contains other configuration for the container, such as environment variables, a default command to run, and other metadata.
 
-When you combine images and containers, we can package whole applications in way that is transferrable (we can create them completely separately from running them) and highly reproducible. Both of these are very important in a production environment.
+When you combine images and containers, we can package whole applications in a way that is transferrable (we can create them completely separately from running them) and highly reproducible. Both of these are very important in a production environment.
 
-The isolation and security allows you to run many containers simultaneously on a given host. Containers are lightweight and contain everything needed to run the application, so you do not need to rely on what is currently installed on the host. You can easily share containers while you work, and be sure that everyone you share with gets the same container that works in the same way.
+The isolation and security allows you to run many containers simultaneously on a given host. Containers are lightweight and contain everything needed to run the application, so you do not need to rely on what is currently installed on the host (and don't need to worry that it may change between deployments). You can easily share containers while you work, and be sure that everyone you share with gets the same container that works in the same way.
 
 To summarize, a container:
 
@@ -98,7 +98,7 @@ The rest of this project will cover putting this all together to run an applicat
 - Build a simple Go server
 - Dockerise it to run locally within a container
 - Write tests that run against the docker container
-- Build GitHub actions automate CI/CD
+- Build GitHub actions to automate CI/CD
 - Push the image to ECR
 - Launch it in ECS using the UI
 
@@ -120,7 +120,7 @@ Make sure that the port is configurable with an environment variable `HTTP_PORT`
 
 ### Dockerise
 
-Write a `Dockerfile` for the application. Optionally, make this a bit harder by including a multi-stage build.
+Write a `Dockerfile` for the application. Optionally, make this a bit more complete and reproducible by including a multi-stage build.
 
 It should build & run like this:
 
@@ -149,11 +149,11 @@ Following [docs here](https://github.com/ory/dockertest) and [example here](http
 
 Go dependencies are installed by `go get`.
 
-Make sure to `COPY go.sum ./` in your `Dockerfile`. [Read this guide to understand why](https://golangbyexample.com/go-mod-sum-module/).
+Make sure to `COPY go.sum ./` in the "build" portion of your `Dockerfile`. [Read this guide to understand why](https://golangbyexample.com/go-mod-sum-module/).
 
 ## CI/CD
 
-A set of good practices has exists for developing software for production use by thousands or millions of people. One example of this is Continuous Integration & Continuous Deployment, referred to as CI/CD. We're going to focus on the "CI" component of this, which means:
+A set of good practices exists for developing software for production use by thousands or millions of people. One example of this is Continuous Integration & Continuous Deployment, referred to as CI/CD. We're going to focus on the "CI" component of this, which means:
 
 - working with version control (Git)
 - running automated checks on the code added to Git (specifically, test)
