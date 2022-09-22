@@ -1,13 +1,28 @@
-name: docker-cloud go publish
-on: push
+name: docker-cloud go tests
+on: [push]
+defaults:
+  run:
+    working-directory: docker-cloud
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: "docker-cloud/go.mod"
+          cache-dependency-path: "docker-cloud/go.sum"
+          cache: true
+      - name: Build
+        run: go build -v ./...
+      - name: Test
+        run: go test -v ./...
   publish:
+    needs: test
     permissions:
       id-token: write
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: docker-cloud
     steps:
       - uses: actions/checkout@v3
       - name: Configure AWS Credentials
