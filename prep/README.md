@@ -36,6 +36,22 @@ Write a bit of Go in VS Code and experiment with these features. A small investm
 >
 > You can have more than one copy of VS Code open at a time if you need to.
 
+## Learn how to navigate Go documentation
+
+The [Go standard library](https://pkg.go.dev/std) has lots of documentation and examples, such as [net/http](https://pkg.go.dev/net/http). To find documentation, you can use the search feature or Google something like `golang net/http`, which will generally help you find what you're looking for.
+
+The website `pkg.go.dev` also hosts documentation for other go packages that you might use: again you can use the search feature or Google for it.
+
+The structure is fairly similar between different packages. Let's take `fmt` as an example:
+
+- At the start is a summary of the package, discussing what it is for and some important information.
+- The Index lists all the [functions that the package exports](https://www.callicoder.com/golang-packages/#exported-vs-unexported-names)
+- The Examples show you how to use the package (good place to start!)
+- The Variables, Functions and Types sections contain specific documentation on what the package contains
+- Lastly, Source Files is... the source code! Good Go libraries can be quite readable, so don't be scared to jump in. You'll probably learn a lot,
+
+> 💡 The best way to get familiar with a new package, particularly if the documentation is a bit dense (like for the the `fmt` package), is to look at the Examples section. It will have some basic and advanced usage that you can often use straight away.
+
 ## Conventions used in projects
 
 ### Command line examples
