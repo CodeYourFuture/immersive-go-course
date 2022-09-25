@@ -285,6 +285,27 @@ Once this action is written, we can add commit it and push to GitHub to test it 
 
 ![](./readme-assets/publish-logs.png)
 
+If it's worked, our public repository with a published image will show up [on the Amazon console](https://console.aws.amazon.com/ecr/repositories).
+
 ## Running on ECS
 
-TODO: @tgvashworth write this section
+Lastly, run your server on Amazon Elastic Container Service. The guide we went through above will give you most of what you need. Here's some things to watch out for:
+
+- We need to set up a **custom** container definition
+- The `Image` field will use the URL from your repository, under `Image URI`
+- We need to add a port mapping, using whichever port the service runs under _inside_ the container (likely `80`)
+- Edit the `Task definition name` doesn't need to change, but it's good to give it a recognisable, meaningful name. [Read more about task definitions here](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definitions.html)
+- Make sure to create an Application Load Balancer
+
+Follow the guide to find the running URL for your server. If it's working, visiting `/ping` should give you back `pong`. Nice!
+
+### Deploying changes
+
+Deploying once is great, but in reality code will change over time. Let's make some changes and get them deployed using our GitHub Actions CI process:
+
+- Change your server code (`pong` to `Hello!` for example)
+- Commit & use the full CI workflow to test and publish a version of the Docker image to ECR
+- Follow this guide to create an [updated task definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/update-task-definition.html) which points to the new image
+- Follow [this guide for updating a service](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/update-service-console-v1.html) to release the changes. We only need to change the task definition to refer to the new revision, with the new image!
+
+And... done! Well done, this was a steep learning curve.
