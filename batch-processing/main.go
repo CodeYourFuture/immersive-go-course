@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math/rand"
-	"sync"
 	"time"
 )
 
@@ -30,20 +28,6 @@ type UploadResult struct {
 	Error         error
 }
 
-func pipe[In any, Out any](in <-chan In, work func(in In) Out) chan Out {
-	out := make(chan Out)
-	go func() {
-		for inV := range in {
-			go func(inV In) {
-				out <- work(inV)
-			}(inV)
-		}
-		fmt.Printf("closing %v", out)
-		close(out)
-	}()
-	return out
-}
-
 func main() {
 	rows := []Row{
 		{"files/first"},
@@ -52,13 +36,12 @@ func main() {
 	}
 
 	urls := make(chan string, len(rows))
-	defer close(urls)
-
 	for _, row := range rows {
 		urls <- row.Url
 	}
+	close(urls)
 
-	downloads := pipe(
+	downloads := Map(
 		urls,
 		func(url string) DownloadResult {
 			log.Printf("downloading: %v\n", url)
@@ -71,7 +54,7 @@ func main() {
 		},
 	)
 
-	processes := pipe(
+	processes := Map(
 		downloads,
 		func(dR DownloadResult) ProcessResult {
 			log.Printf("processing: %v\n", dR.Filepath)
@@ -84,7 +67,7 @@ func main() {
 		},
 	)
 
-	uploads := pipe(
+	uploads := Map(
 		processes,
 		func(pR ProcessResult) UploadResult {
 			log.Printf("uploading: %v\n", pR.Filepath)
@@ -97,13 +80,7 @@ func main() {
 		},
 	)
 
-	var wg sync.WaitGroup
-	wg.Add(len(rows))
-	go func() {
-		for uR := range uploads {
-			wg.Done()
-			log.Printf("uploaded: %s\n", uR.Url)
-		}
-	}()
-	wg.Wait()
+	for uR := range uploads {
+		log.Printf("uploaded: %s\n", uR.Url)
+	}
 }
