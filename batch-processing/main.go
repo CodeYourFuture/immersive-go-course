@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/csv"
+	"flag"
 	"log"
 	"math/rand"
+	"os"
 	"time"
 )
 
@@ -59,10 +62,22 @@ func upload(pR ProcessResult) UploadResult {
 }
 
 func main() {
-	rows := []Row{
-		{"files/first"},
-		{"files/second"},
-		{"files/third"},
+	file := flag.String("file", "", "A path to a CSV with URLs of images to be processed")
+	flag.Parse()
+
+	in, err := os.Open(*file)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	r := csv.NewReader(in)
+	records, err := r.ReadAll()
+	if err != nil {
+		log.Fatal(err)
+	}
+	var rows []Row
+	for _, row := range records[1:] {
+		rows = append(rows, Row{row[0]})
 	}
 
 	// Create an initial input channel for the URLs from each (simulated) CSV row.
