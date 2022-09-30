@@ -28,6 +28,36 @@ type UploadResult struct {
 	Error         error
 }
 
+func download(url string) DownloadResult {
+	log.Printf("downloading: %v\n", url)
+	time.Sleep(time.Duration(rand.Intn(500)+200) * time.Millisecond)
+	return DownloadResult{
+		Url:      url,
+		Filepath: url,
+		Error:    nil,
+	}
+}
+
+func process(dR DownloadResult) ProcessResult {
+	log.Printf("processing: %v\n", dR.Filepath)
+	time.Sleep(time.Duration(rand.Intn(1000)+100) * time.Millisecond)
+	return ProcessResult{
+		DownloadResult: dR,
+		Filepath:       dR.Filepath,
+		Error:          nil,
+	}
+}
+
+func upload(pR ProcessResult) UploadResult {
+	log.Printf("uploading: %v\n", pR.Filepath)
+	time.Sleep(time.Duration(rand.Intn(500)+100) * time.Millisecond)
+	return UploadResult{
+		ProcessResult: pR,
+		Url:           pR.Filepath,
+		Error:         nil,
+	}
+}
+
 func main() {
 	rows := []Row{
 		{"files/first"},
@@ -48,46 +78,13 @@ func main() {
 	close(urls)
 
 	// For each URL, download the file, and pass the path to the next step.
-	downloads := Map(
-		urls,
-		func(url string) DownloadResult {
-			log.Printf("downloading: %v\n", url)
-			time.Sleep(time.Duration(rand.Intn(500)+200) * time.Millisecond)
-			return DownloadResult{
-				Url:      url,
-				Filepath: url,
-				Error:    nil,
-			}
-		},
-	)
+	downloads := Map(urls, download)
 
 	// For each downloaded file, process the image, write a new file and pass it on.
-	processes := Map(
-		downloads,
-		func(dR DownloadResult) ProcessResult {
-			log.Printf("processing: %v\n", dR.Filepath)
-			time.Sleep(time.Duration(rand.Intn(1000)+100) * time.Millisecond)
-			return ProcessResult{
-				DownloadResult: dR,
-				Filepath:       dR.Filepath,
-				Error:          nil,
-			}
-		},
-	)
+	processes := Map(downloads, process)
 
 	// For each processes file, upload the image, and pass the resulting URL on.
-	uploads := Map(
-		processes,
-		func(pR ProcessResult) UploadResult {
-			log.Printf("uploading: %v\n", pR.Filepath)
-			time.Sleep(time.Duration(rand.Intn(500)+100) * time.Millisecond)
-			return UploadResult{
-				ProcessResult: pR,
-				Url:           pR.Filepath,
-				Error:         nil,
-			}
-		},
-	)
+	uploads := Map(processes, upload)
 
 	// Iterate through the completed uploads, logging the final URL.
 	for uR := range uploads {
