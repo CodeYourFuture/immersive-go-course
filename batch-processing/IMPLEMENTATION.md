@@ -23,3 +23,11 @@ Read this as inspiration: https://go.dev/blog/pipelines
 This would be unbounded in terms of parallelism (? CPU), so we could tweak this to run a pool of workers with a configurable size. The done channel would be shared: each message would be the next task to complete. The done channel would be buffered to match the size of the list of files.
 
 Will approach this in (at least) two iterations: the first, quite simple, and then the second. Who knows if that's where we'll end up!
+
+## Sketch
+
+Started by sketching out the flow using channels. Turns out I don't know channels very well!
+
+After some iteration, we have a thing working that feels idiomatic. There's minimal use of `sync.WaitGroup` and it's isolated to the `Map` function. I've used `timer.Sleep` with some randomness to simulate interleaving to make sure it handles that OK.
+
+A question will be: should the students also be required to use channels? I think yes. If so, how to teach it? Possible: make it work (linear, blocking) then make it run in parallel (through a concurrent design) using channels.

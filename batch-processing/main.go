@@ -35,12 +35,19 @@ func main() {
 		{"files/third"},
 	}
 
+	// Create an initial input channel for the URLs from each (simulated) CSV row.
+	// Buffer the channel so that we can load it up even with no takers.
 	urls := make(chan string, len(rows))
+	// Push each input into the channel...
 	for _, row := range rows {
 		urls <- row.Url
 	}
+	// ...and then immediately close it as we know we have nothing more to add.
+	// Takers will be able to take from the channel until the buffer is empty, and then they'll
+	// see the closed value.
 	close(urls)
 
+	// For each URL, download the file, and pass the path to the next step.
 	downloads := Map(
 		urls,
 		func(url string) DownloadResult {
@@ -54,6 +61,7 @@ func main() {
 		},
 	)
 
+	// For each downloaded file, process the image, write a new file and pass it on.
 	processes := Map(
 		downloads,
 		func(dR DownloadResult) ProcessResult {
@@ -67,6 +75,7 @@ func main() {
 		},
 	)
 
+	// For each processes file, upload the image, and pass the resulting URL on.
 	uploads := Map(
 		processes,
 		func(pR ProcessResult) UploadResult {
@@ -80,6 +89,7 @@ func main() {
 		},
 	)
 
+	// Iterate through the completed uploads, logging the final URL.
 	for uR := range uploads {
 		log.Printf("uploaded: %s\n", uR.Url)
 	}
