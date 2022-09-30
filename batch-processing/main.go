@@ -9,10 +9,6 @@ import (
 	"time"
 )
 
-type Row struct {
-	Url string
-}
-
 type DownloadResult struct {
 	Url      string
 	Filepath string
@@ -62,30 +58,37 @@ func upload(pR ProcessResult) UploadResult {
 }
 
 func main() {
+	// We need a file to read from
 	file := flag.String("file", "", "A path to a CSV with URLs of images to be processed")
 	flag.Parse()
+	if *file == "" {
+		log.Fatal("supply a file using --file")
+	}
 
+	// Open the file supplied
 	in, err := os.Open(*file)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// Read the file using the encoding/csv package
 	r := csv.NewReader(in)
+	// TODO: We don't need to read all here. We can read line-by-line and put each URL to the channel.
+	//       This would come at the end so that we don't have to create a buffered channel.
 	records, err := r.ReadAll()
 	if err != nil {
 		log.Fatal(err)
 	}
-	var rows []Row
-	for _, row := range records[1:] {
-		rows = append(rows, Row{row[0]})
-	}
 
+	// Skip the header row of the CSV
+	// TODO: validate the CSV file
+	rows := records[1:]
 	// Create an initial input channel for the URLs from each (simulated) CSV row.
 	// Buffer the channel so that we can load it up even with no takers.
 	urls := make(chan string, len(rows))
 	// Push each input into the channel...
 	for _, row := range rows {
-		urls <- row.Url
+		urls <- row[0]
 	}
 	// ...and then immediately close it as we know we have nothing more to add.
 	// Takers will be able to take from the channel until the buffer is empty, and then they'll
