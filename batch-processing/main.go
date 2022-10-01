@@ -89,15 +89,18 @@ func main() {
 	uploads := Map(processes, upload)
 
 	// Push each input into the channel...
-	consume(r, func(headerRow []string) error {
-		// TODO: validate header
-		return nil
-	}, func(row []string) error {
-		// TODO: validate row
-		log.Printf("url: %v", row[0])
-		urls <- row[0]
-		return nil
-	})
+	c := NewConsumer(
+		func(headerRow []string) error {
+			// TODO: validate header
+			return nil
+		}, func(row []string) error {
+			// TODO: validate row
+			log.Printf("url: %v", row[0])
+			urls <- row[0]
+			return nil
+		},
+	)
+	c.consume(r)
 
 	// ...and then immediately close it as we know we have nothing more to add.
 	// Takers will be able to take from the channel until the buffer is empty, and then they'll

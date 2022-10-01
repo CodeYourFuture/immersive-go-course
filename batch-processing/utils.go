@@ -6,8 +6,20 @@ import (
 	"io"
 )
 
+type Consumer struct {
+	Header func([]string) error
+	Row    func([]string) error
+}
+
+func NewConsumer(headerF func([]string) error, rowF func([]string) error) *Consumer {
+	return &Consumer{
+		Header: headerF,
+		Row:    rowF,
+	}
+}
+
 // Consume each row of the CSV, running a function on the header row and each row in turn.
-func consume(r *csv.Reader, headerF func([]string) error, rowF func([]string) error) error {
+func (c *Consumer) consume(r *csv.Reader) error {
 	for {
 		// Read a line
 		row, err := r.Read()
@@ -23,17 +35,22 @@ func consume(r *csv.Reader, headerF func([]string) error, rowF func([]string) er
 		// r.Read keeps track of where we are in the file, so we use that
 		if line, _ := r.FieldPos(0); line == 1 {
 			// Process the header row
-			err = headerF(row)
+			err = c.Header(row)
 			if err != nil {
 				return fmt.Errorf("header error: %w", err)
 			}
 			continue
 		}
 		// Process a non-header row
-		err = rowF(row)
+		err = c.Row(row)
 		if err != nil {
 			return fmt.Errorf("row error: %w", err)
 		}
 	}
 	return nil
+}
+
+func consume(r *csv.Reader, headerF func([]string) error, rowF func([]string) error) error {
+	c := NewConsumer(headerF, rowF)
+	return c.consume(r)
 }
