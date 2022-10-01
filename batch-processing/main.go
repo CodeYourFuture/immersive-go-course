@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/csv"
 	"flag"
+	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"os"
@@ -57,6 +59,38 @@ func upload(pR ProcessResult) UploadResult {
 	}
 }
 
+// Consume each row of the CSV, running a function on the header row and each row in turn.
+func consume(r *csv.Reader, headerF func([]string) error, rowF func([]string) error) error {
+	for {
+		// Read a line
+		row, err := r.Read()
+		// If it's the end of the file, break out of the loop
+		if err == io.EOF {
+			break
+		}
+		// Some other error is a problem, so we should return it
+		if err != nil {
+			// Wrap the error using %w
+			return fmt.Errorf("could not read row: %w", err)
+		}
+		// r.Read keeps track of where we are in the file, so we use that
+		if line, _ := r.FieldPos(0); line == 1 {
+			// Process the header row
+			err = headerF(row)
+			if err != nil {
+				return err
+			}
+			continue
+		}
+		// Process a non-header row
+		err = rowF(row)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func main() {
 	// We need a file to read from
 	file := flag.String("file", "", "A path to a CSV with URLs of images to be processed")
@@ -73,27 +107,11 @@ func main() {
 
 	// Read the file using the encoding/csv package
 	r := csv.NewReader(in)
-	// TODO: We don't need to read all here. We can read line-by-line and put each URL to the channel.
-	//       This would come at the end so that we don't have to create a buffered channel.
-	records, err := r.ReadAll()
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	// Skip the header row of the CSV
-	// TODO: validate the CSV file
-	rows := records[1:]
 	// Create an initial input channel for the URLs from each (simulated) CSV row.
 	// Buffer the channel so that we can load it up even with no takers.
-	urls := make(chan string, len(rows))
-	// Push each input into the channel...
-	for _, row := range rows {
-		urls <- row[0]
-	}
-	// ...and then immediately close it as we know we have nothing more to add.
-	// Takers will be able to take from the channel until the buffer is empty, and then they'll
-	// see the closed value.
-	close(urls)
+	// We push into it at the end.
+	urls := make(chan string)
 
 	// For each URL, download the file, and pass the path to the next step.
 	downloads := Map(urls, download)
@@ -103,6 +121,22 @@ func main() {
 
 	// For each processes file, upload the image, and pass the resulting URL on.
 	uploads := Map(processes, upload)
+
+	// Push each input into the channel...
+	consume(r, func(headerRow []string) error {
+		// TODO: validate header
+		return nil
+	}, func(row []string) error {
+		// TODO: validate row
+		log.Printf("url: %v", row[0])
+		urls <- row[0]
+		return nil
+	})
+
+	// ...and then immediately close it as we know we have nothing more to add.
+	// Takers will be able to take from the channel until the buffer is empty, and then they'll
+	// see the closed value.
+	close(urls)
 
 	// Iterate through the completed uploads, logging the final URL.
 	for uR := range uploads {
