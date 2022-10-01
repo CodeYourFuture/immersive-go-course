@@ -54,3 +54,12 @@ func consume(r *csv.Reader, headerF func([]string) error, rowF func([]string) er
 	c := NewConsumer(headerF, rowF)
 	return c.consume(r)
 }
+
+// Consume the channel, returning a slice of the output values
+func chanToSlice[T any](in chan T) []T {
+	out := make([]T, 0, 100)
+	for v := range in {
+		out = append(out, v)
+	}
+	return out
+}

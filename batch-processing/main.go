@@ -57,6 +57,17 @@ func upload(pR ProcessResult) UploadResult {
 	}
 }
 
+func pipeline(urls chan string) chan UploadResult {
+	// For each URL, download the file, and pass the path to the next step.
+	downloads := Map(urls, download)
+
+	// For each downloaded file, process the image, write a new file and pass it on.
+	processes := Map(downloads, process)
+
+	// For each processes file, upload the image, and pass the resulting URL on.
+	return Map(processes, upload)
+}
+
 func main() {
 	// We need a file to read from
 	file := flag.String("file", "", "A path to a CSV with URLs of images to be processed")
@@ -79,27 +90,24 @@ func main() {
 	// We push into it at the end.
 	urls := make(chan string)
 
-	// For each URL, download the file, and pass the path to the next step.
-	downloads := Map(urls, download)
-
-	// For each downloaded file, process the image, write a new file and pass it on.
-	processes := Map(downloads, process)
-
-	// For each processes file, upload the image, and pass the resulting URL on.
-	uploads := Map(processes, upload)
-
-	// Push each input into the channel...
+	// Build a Consumer that will process the header and rows from the CSV
 	c := NewConsumer(
 		func(headerRow []string) error {
 			// TODO: validate header
 			return nil
-		}, func(row []string) error {
+		},
+		func(row []string) error {
 			// TODO: validate row
 			log.Printf("url: %v", row[0])
 			urls <- row[0]
 			return nil
 		},
 	)
+
+	// Set up the processing pipeline
+	uploads := pipeline(urls)
+
+	// Consume the CSV, pushing each input into the channel...
 	c.consume(r)
 
 	// ...and then immediately close it as we know we have nothing more to add.
@@ -108,7 +116,7 @@ func main() {
 	close(urls)
 
 	// Iterate through the completed uploads, logging the final URL.
-	for uR := range uploads {
-		log.Printf("uploaded: %s\n", uR.Url)
-	}
+	uploadResults := chanToSlice(uploads)
+
+	log.Printf("output: %v", uploadResults)
 }
