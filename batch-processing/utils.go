@@ -6,6 +6,8 @@ import (
 	"io"
 )
 
+// Consumer consumes a CSV reader with a given context
+// Each internal function runs against a row or header, and the context
 type Consumer[Ctx any] struct {
 	Header func([]string, Ctx) error
 	Row    func([]string, Ctx) error
@@ -50,6 +52,8 @@ func (c *Consumer[Ctx]) consume(r *csv.Reader, context Ctx) error {
 	return nil
 }
 
+// Shortcut for consuming a csv.Reader with two functions and no Context
+// Useful for tests!
 func consume(r *csv.Reader, headerF func([]string, any) error, rowF func([]string, any) error) error {
 	c := NewConsumer(headerF, rowF)
 	return c.consume(r, nil)

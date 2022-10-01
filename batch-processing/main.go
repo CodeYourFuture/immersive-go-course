@@ -42,6 +42,13 @@ func download(url string) DownloadResult {
 }
 
 func process(dR DownloadResult) ProcessResult {
+	if dR.Error != nil {
+		return ProcessResult{
+			DownloadResult: dR,
+			Filepath:       "",
+			Error:          dR.Error,
+		}
+	}
 	log.Printf("processing: %v\n", dR.Filepath)
 	time.Sleep(time.Duration(rand.Intn(1000)+100) * time.Millisecond)
 	return ProcessResult{
@@ -52,6 +59,13 @@ func process(dR DownloadResult) ProcessResult {
 }
 
 func upload(pR ProcessResult) UploadResult {
+	if pR.Error != nil {
+		return UploadResult{
+			ProcessResult: pR,
+			Url:           "",
+			Error:         pR.Error,
+		}
+	}
 	log.Printf("uploading: %v\n", pR.Filepath)
 	time.Sleep(time.Duration(rand.Intn(500)+100) * time.Millisecond)
 	return UploadResult{
@@ -61,15 +75,11 @@ func upload(pR ProcessResult) UploadResult {
 	}
 }
 
-func pipeline(ctx Context) chan UploadResult {
-	// For each URL, download the file, and pass the path to the next step.
-	downloads := Map(ctx.Input, download)
-
-	// For each downloaded file, process the image, write a new file and pass it on.
-	processes := Map(downloads, process)
-
-	// For each processes file, upload the image, and pass the resulting URL on.
-	return Map(processes, upload)
+func pipeline(url string) UploadResult {
+	dR := download(url)
+	pR := process(dR)
+	uR := upload(pR)
+	return uR
 }
 
 func consumeHeader(headerRow []string, ctx Context) error {
@@ -107,7 +117,7 @@ func main() {
 	}
 
 	// Set up the processing pipeline
-	uploads := pipeline(ctx)
+	uploads := Map(ctx.Input, pipeline)
 
 	// Build a Consumer that will process the header and rows from the CSV.
 	// The (implied) Context for the consumer contains the Input channel that the processing pipeline
