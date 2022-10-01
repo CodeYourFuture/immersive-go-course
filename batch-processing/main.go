@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 )
@@ -12,7 +13,12 @@ type Context struct {
 }
 
 func consumeHeader(headerRow []string, ctx Context) error {
-	// TODO: validate header
+	if len(headerRow) != 1 {
+		return fmt.Errorf("CSV header is incorrect length, expected 1, got %d", len(headerRow))
+	}
+	if headerRow[0] != "url" {
+		return fmt.Errorf("CSV header is incorrect, expected \"url\", got \"%s\"", headerRow[0])
+	}
 	return nil
 }
 
@@ -40,7 +46,7 @@ func main() {
 	// Read the file using the encoding/csv package
 	r := csv.NewReader(in)
 
-	// Create an initial input channel for the URLs from each (simulated) CSV row.
+	// Create an initial input channel for the URLs from each CSV row.
 	ctx := Context{
 		Input: make(chan string),
 	}
@@ -54,7 +60,10 @@ func main() {
 	c := NewConsumer(consumeHeader, consumeRow)
 
 	// Consume the CSV, pushing each input into the channel...
-	c.consume(r, ctx)
+	err = c.consume(r, ctx)
+	if err != nil {
+		log.Fatalf("could not read CSV: %v", err)
+	}
 
 	// ...and then immediately close it as we know we have nothing more to add.
 	// Takers will be able to take from the channel until the buffer is empty, and then they'll

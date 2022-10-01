@@ -26,6 +26,47 @@ func TestPipeline(t *testing.T) {
 	}
 }
 
+func TestConsumeHeader(t *testing.T) {
+	input := []string{"url"}
+	c := make(chan string)
+	err := consumeHeader(input, Context{
+		Input: c,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestConsumeHeaderErrorColumnName(t *testing.T) {
+	input := []string{"error"}
+	expected := "CSV header is incorrect, expected \"url\", got \"error\""
+	c := make(chan string)
+	err := consumeHeader(input, Context{
+		Input: c,
+	})
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	if err.Error() != expected {
+		t.Fatalf("incorrect error: expected \"%s\", got \"%s\"", expected, err.Error())
+	}
+}
+
+func TestConsumeHeaderErrorLength(t *testing.T) {
+	input := []string{"url", "error"}
+	expected := "CSV header is incorrect length, expected 1, got 2"
+	c := make(chan string)
+	err := consumeHeader(input, Context{
+		Input: c,
+	})
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	if err.Error() != expected {
+		t.Fatalf("incorrect error: expected \"%s\", got \"%s\"", expected, err.Error())
+	}
+}
+
 func TestConsumeRow(t *testing.T) {
 	input := []string{"test"}
 	expected := "test"
