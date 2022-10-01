@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+type Context struct {
+	Input chan string
+}
+
 type DownloadResult struct {
 	Url      string
 	Filepath string
@@ -57,15 +61,27 @@ func upload(pR ProcessResult) UploadResult {
 	}
 }
 
-func pipeline(urls chan string) chan UploadResult {
+func pipeline(ctx Context) chan UploadResult {
 	// For each URL, download the file, and pass the path to the next step.
-	downloads := Map(urls, download)
+	downloads := Map(ctx.Input, download)
 
 	// For each downloaded file, process the image, write a new file and pass it on.
 	processes := Map(downloads, process)
 
 	// For each processes file, upload the image, and pass the resulting URL on.
 	return Map(processes, upload)
+}
+
+func consumeHeader(headerRow []string, ctx Context) error {
+	// TODO: validate header
+	return nil
+}
+
+func consumeRow(row []string, ctx Context) error {
+	// TODO: validate row
+	log.Printf("url: %v", row[0])
+	ctx.Input <- row[0]
+	return nil
 }
 
 func main() {
@@ -86,37 +102,27 @@ func main() {
 	r := csv.NewReader(in)
 
 	// Create an initial input channel for the URLs from each (simulated) CSV row.
-	// Buffer the channel so that we can load it up even with no takers.
-	// We push into it at the end.
-	urls := make(chan string)
-
-	// Build a Consumer that will process the header and rows from the CSV
-	c := NewConsumer(
-		func(headerRow []string) error {
-			// TODO: validate header
-			return nil
-		},
-		func(row []string) error {
-			// TODO: validate row
-			log.Printf("url: %v", row[0])
-			urls <- row[0]
-			return nil
-		},
-	)
+	ctx := Context{
+		Input: make(chan string),
+	}
 
 	// Set up the processing pipeline
-	uploads := pipeline(urls)
+	uploads := pipeline(ctx)
+
+	// Build a Consumer that will process the header and rows from the CSV.
+	// The (implied) Context for the consumer contains the Input channel that the processing pipeline
+	// will take values from.
+	c := NewConsumer(consumeHeader, consumeRow)
 
 	// Consume the CSV, pushing each input into the channel...
-	c.consume(r)
+	c.consume(r, ctx)
 
 	// ...and then immediately close it as we know we have nothing more to add.
 	// Takers will be able to take from the channel until the buffer is empty, and then they'll
 	// see the closed value.
-	close(urls)
+	close(ctx.Input)
 
-	// Iterate through the completed uploads, logging the final URL.
+	// Iterate through the completed uploads, logging the final URLs.
 	uploadResults := chanToSlice(uploads)
-
 	log.Printf("output: %v", uploadResults)
 }

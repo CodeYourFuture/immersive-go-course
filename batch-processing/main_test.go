@@ -47,7 +47,7 @@ func TestConsume(t *testing.T) {
 		r := csv.NewReader(strings.NewReader(testCase.In))
 
 		calls := 0
-		consume(r, func(s []string) error {
+		consume(r, func(s []string, ctx any) error {
 			if len(s) != len(testCase.ExpectedHeader) {
 				t.Fatalf("%v: header row: incorrect length, expected %v, got %v", testCase.Name, len(testCase.ExpectedHeader), len(s))
 			}
@@ -55,7 +55,7 @@ func TestConsume(t *testing.T) {
 				t.Fatalf("%v: header row: incorrect value, expected %v, got %v", testCase.Name, testCase.ExpectedHeader, s)
 			}
 			return nil
-		}, func(s []string) error {
+		}, func(s []string, ctx any) error {
 			if len(s) != len(testCase.ExpectedRows[calls]) {
 				t.Fatalf("%v: row: incorrect length, expected 1, got %v", testCase.Name, len(s))
 			}
@@ -76,9 +76,9 @@ func TestHeaderError(t *testing.T) {
 	r := csv.NewReader(strings.NewReader("a\nb"))
 
 	expected := "inner header error"
-	err := consume(r, func(s []string) error {
+	err := consume(r, func(s []string, ctx any) error {
 		return errors.New(expected)
-	}, func(s []string) error {
+	}, func(s []string, ctx any) error {
 		t.Fatal("row processing function called unexpectedly")
 		return nil
 	})
@@ -100,9 +100,9 @@ func TestRowError(t *testing.T) {
 	r := csv.NewReader(strings.NewReader("a\nb"))
 
 	expected := "inner row error"
-	err := consume(r, func(s []string) error {
+	err := consume(r, func(s []string, ctx any) error {
 		return nil
-	}, func(s []string) error {
+	}, func(s []string, ctx any) error {
 		return errors.New(expected)
 	})
 
@@ -151,7 +151,7 @@ func TestConsumeWithConsumer(t *testing.T) {
 		r := csv.NewReader(strings.NewReader(testCase.In))
 
 		calls := 0
-		c := NewConsumer(func(s []string) error {
+		c := NewConsumer(func(s []string, ctx any) error {
 			if len(s) != len(testCase.ExpectedHeader) {
 				t.Fatalf("%v: header row: incorrect length, expected %v, got %v", testCase.Name, len(testCase.ExpectedHeader), len(s))
 			}
@@ -159,7 +159,7 @@ func TestConsumeWithConsumer(t *testing.T) {
 				t.Fatalf("%v: header row: incorrect value, expected %v, got %v", testCase.Name, testCase.ExpectedHeader, s)
 			}
 			return nil
-		}, func(s []string) error {
+		}, func(s []string, ctx any) error {
 			if len(s) != len(testCase.ExpectedRows[calls]) {
 				t.Fatalf("%v: row: incorrect length, expected 1, got %v", testCase.Name, len(s))
 			}
@@ -169,7 +169,7 @@ func TestConsumeWithConsumer(t *testing.T) {
 			calls += 1
 			return nil
 		})
-		c.consume(r)
+		c.consume(r, nil)
 
 		if calls != len(testCase.ExpectedRows) {
 			t.Fatalf("%v: incorrect num calls to row processing function, expected %v, got %v", testCase.Name, len(testCase.ExpectedRows), calls)

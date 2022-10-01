@@ -6,20 +6,20 @@ import (
 	"io"
 )
 
-type Consumer struct {
-	Header func([]string) error
-	Row    func([]string) error
+type Consumer[Ctx any] struct {
+	Header func([]string, Ctx) error
+	Row    func([]string, Ctx) error
 }
 
-func NewConsumer(headerF func([]string) error, rowF func([]string) error) *Consumer {
-	return &Consumer{
+func NewConsumer[Ctx any](headerF func([]string, Ctx) error, rowF func([]string, Ctx) error) *Consumer[Ctx] {
+	return &Consumer[Ctx]{
 		Header: headerF,
 		Row:    rowF,
 	}
 }
 
 // Consume each row of the CSV, running a function on the header row and each row in turn.
-func (c *Consumer) consume(r *csv.Reader) error {
+func (c *Consumer[Ctx]) consume(r *csv.Reader, context Ctx) error {
 	for {
 		// Read a line
 		row, err := r.Read()
@@ -35,14 +35,14 @@ func (c *Consumer) consume(r *csv.Reader) error {
 		// r.Read keeps track of where we are in the file, so we use that
 		if line, _ := r.FieldPos(0); line == 1 {
 			// Process the header row
-			err = c.Header(row)
+			err = c.Header(row, context)
 			if err != nil {
 				return fmt.Errorf("header error: %w", err)
 			}
 			continue
 		}
 		// Process a non-header row
-		err = c.Row(row)
+		err = c.Row(row, context)
 		if err != nil {
 			return fmt.Errorf("row error: %w", err)
 		}
@@ -50,9 +50,9 @@ func (c *Consumer) consume(r *csv.Reader) error {
 	return nil
 }
 
-func consume(r *csv.Reader, headerF func([]string) error, rowF func([]string) error) error {
+func consume(r *csv.Reader, headerF func([]string, any) error, rowF func([]string, any) error) error {
 	c := NewConsumer(headerF, rowF)
-	return c.consume(r)
+	return c.consume(r, nil)
 }
 
 // Consume the channel, returning a slice of the output values
