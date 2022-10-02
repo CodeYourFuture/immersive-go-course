@@ -1,28 +1,48 @@
 package main
 
 import (
-	"reflect"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"strings"
 	"testing"
 )
 
 func TestPipeline(t *testing.T) {
-	input := "test"
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		f, err := os.Open("assets/dog.jpg")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		_, err = io.Copy(w, f)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}))
+	defer ts.Close()
+
+	input := ts.URL
 	expected := UploadResult{
 		ProcessResult: ProcessResult{
 			DownloadResult: DownloadResult{
-				Url:      "test",
+				Url:      ts.URL,
 				Filepath: "test",
 				Error:    nil,
 			},
 			Filepath: "test",
 			Error:    nil,
 		},
-		Url:   "test",
+		Url:   ts.URL,
 		Error: nil,
 	}
 	result := pipeline(input)
-	if !reflect.DeepEqual(result, expected) {
-		t.Fatalf("expected %v, got %v", expected, result)
+	if !strings.HasSuffix(result.ProcessResult.Filepath, ".jpg") {
+		t.Fatalf("ProcessResult.Filepath: is not .jpg, got %s", result.ProcessResult.Filepath)
+	}
+	if result.ProcessResult.DownloadResult.Url != expected.ProcessResult.DownloadResult.Url {
+		t.Fatalf("ProcessResult.DownloadResult.Url: expected %+v, got %+v", expected, result)
 	}
 }
 

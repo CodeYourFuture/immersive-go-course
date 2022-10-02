@@ -1,8 +1,12 @@
 package main
 
 import (
+	"fmt"
+	"io"
 	"log"
 	"math/rand"
+	"net/http"
+	"os"
 	"time"
 )
 
@@ -24,12 +28,51 @@ type UploadResult struct {
 	Error         error
 }
 
+func genFilepath(suffix string) string {
+	return fmt.Sprintf("/tmp/%d-%d.%s", time.Now().UnixMilli(), rand.Int(), suffix)
+}
+
 func download(url string) DownloadResult {
 	log.Printf("downloading: %v\n", url)
-	time.Sleep(time.Duration(rand.Intn(500)+200) * time.Millisecond)
+	filepath := genFilepath("jpg")
+
+	// Create a new file that we will write to
+	out, err := os.Create(filepath)
+	if err != nil {
+		return DownloadResult{
+			Url:      url,
+			Filepath: "",
+			Error:    err,
+		}
+	}
+	defer out.Close()
+
+	// Get it from the internet!
+	res, err := http.Get(url)
+	if err != nil {
+		return DownloadResult{
+			Url:      url,
+			Filepath: "",
+			Error:    err,
+		}
+	}
+	defer res.Body.Close()
+
+	// TODO: check status code
+
+	// Copy the body of the response to the created file
+	_, err = io.Copy(out, res.Body)
+	if err != nil {
+		return DownloadResult{
+			Url:      url,
+			Filepath: "",
+			Error:    err,
+		}
+	}
+
 	return DownloadResult{
 		Url:      url,
-		Filepath: url,
+		Filepath: filepath,
 		Error:    nil,
 	}
 }
