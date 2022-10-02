@@ -31,3 +31,25 @@ Started by sketching out the flow using channels. Turns out I don't know channel
 After some iteration, we have a thing working that feels idiomatic. There's minimal use of `sync.WaitGroup` and it's isolated to the `Map` function. I've used `timer.Sleep` with some randomness to simulate interleaving to make sure it handles that OK.
 
 A question will be: should the students also be required to use channels? I think yes. If so, how to teach it? Possible: make it work (linear, blocking) then make it run in parallel (through a concurrent design) using channels.
+
+## Key components
+
+The fundamentals are simple:
+
+1. Read the CSV
+2. Download the images to a location (`/tmp`?)
+3. Use imagemagick to monochrome them
+4. Upload them to S3
+5. Return the URL
+
+### Stages
+
+The first step will be to build this linearly, and to write tests:
+
+1. Mock the `jpg` get (or run a container with file server?)
+2. Write a real file
+3. Mock S3 methods using [s3iface](https://docs.aws.amazon.com/sdk-for-go/api/service/s3/s3iface/)
+
+Then use goroutines to run it in parallel, likely by wrapping the output in a mutex and locking/unlocking as the goroutine completes: https://pkg.go.dev/sync#Mutex
+
+Lastly, as an extension, go concurrent with channels: https://go.dev/blog/pipelines
