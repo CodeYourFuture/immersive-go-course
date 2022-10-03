@@ -54,6 +54,26 @@ Which can then be built by specifying the `--target`:
 > docker build --target test -t test .
 ```
 
+## Developing locally
+
+We can run locally. A few things are needed.
+
+In VSCode settings, if using the go extension:
+
+```json
+"gopls": {
+    "build.env": {
+        "CGO_CFLAGS_ALLOW": "-Xpreprocessor"
+    }
+}
+```
+
+On the CLI:
+
+```console
+export PKG_CONFIG_PATH="/usr/local/opt/imagemagick@6/lib/pkgconfig"
+```
+
 ### Developing in Docker
 
 To develop the app with Docker, we need a slightly fancier command:

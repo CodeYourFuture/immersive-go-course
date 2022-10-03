@@ -48,7 +48,7 @@ func main() {
 		inputFilepath := fmt.Sprintf("/tmp/%d-%d.%s", time.Now().UnixMilli(), rand.Int(), "jpg")
 		outputFilepath := fmt.Sprintf("/tmp/%d-%d.%s", time.Now().UnixMilli(), rand.Int(), "jpg")
 
-		log.Printf("downloading: row %d (%q) to %q", i, url, inputFilepath)
+		log.Printf("downloading: row %d (%q) to %q\n", i, url, inputFilepath)
 
 		// Create a new file that we will write to
 		inputFile, err := os.Create(inputFilepath)
