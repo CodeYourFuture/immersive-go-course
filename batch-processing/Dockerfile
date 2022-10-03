@@ -57,6 +57,7 @@ ENTRYPOINT [ "go", "test", "-v" ]
 ##
 FROM base as develop
 
+COPY .bash_history /root/.bash_history
 ENTRYPOINT [ "/bin/bash" ]
 
 ##
