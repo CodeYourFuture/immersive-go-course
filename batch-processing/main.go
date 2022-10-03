@@ -23,6 +23,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Set up imagemagick
+	imagick.Initialize()
+	defer imagick.Terminate()
+
 	// Open the file supplied
 	in, err := os.Open(*input)
 	if err != nil {
@@ -41,16 +45,17 @@ func main() {
 	for i, row := range records[1:] {
 		url := row[0]
 
-		filepath := fmt.Sprintf("/tmp/%d-%d.%s", time.Now().UnixMilli(), rand.Int(), "jpg")
+		inputFilepath := fmt.Sprintf("/tmp/%d-%d.%s", time.Now().UnixMilli(), rand.Int(), "jpg")
+		outputFilepath := fmt.Sprintf("/tmp/%d-%d.%s", time.Now().UnixMilli(), rand.Int(), "jpg")
 
-		log.Printf("downloading: row %d (%q) to %q", i, url, filepath)
+		log.Printf("downloading: row %d (%q) to %q", i, url, inputFilepath)
 
 		// Create a new file that we will write to
-		out, err := os.Create(filepath)
+		inputFile, err := os.Create(inputFilepath)
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer out.Close()
+		defer inputFile.Close()
 
 		// Get it from the internet!
 		res, err := http.Get(url)
@@ -62,13 +67,21 @@ func main() {
 		// TODO: check status code
 
 		// Copy the body of the response to the created file
-		_, err = io.Copy(out, res.Body)
+		_, err = io.Copy(inputFile, res.Body)
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		// Convert the image to grayscale using imagemagick
+		// We are directly calling the convert command
+		imagick.ConvertImageCommand([]string{
+			"convert", inputFilepath, "-set", "colorspace", "Gray", outputFilepath,
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Printf("processed: row %d (%q) to %q", i, url, outputFilepath)
 	}
 
-	// Set up imagemagick
-	imagick.Initialize()
-	defer imagick.Terminate()
 }

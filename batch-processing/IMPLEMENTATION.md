@@ -65,3 +65,7 @@ develop:
     docker run -it --mount type=bind,source="$$(pwd)",target=/app --mount type=bind,source="/tmp",target=/tmp --rm develop
     rm -rf ./mount
 ```
+
+## Grayscale
+
+`convert`, accessed via `ConvertImageCommand`, with `-set colorspace Gray -separate -average` seems to work well.
