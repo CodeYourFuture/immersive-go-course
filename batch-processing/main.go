@@ -75,17 +75,17 @@ func main() {
 
 	// Read the file using the encoding/csv package
 	r := csv.NewReader(in)
-	records, err := r.ReadAll()
+	inputRecords, err := r.ReadAll()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// TODO: validate `records`
 
-	outputRecords := make([][]string, 0, len(records)-1)
+	outputRecords := make([][]string, 0, len(inputRecords)-1)
 	outputRecords = append(outputRecords, []string{"url", "input", "output", "s3url"})
 
-	for i, row := range records[1:] {
+	for i, row := range inputRecords[1:] {
 		url := row[0]
 
 		inputFilepath := fmt.Sprintf("/tmp/%d-%d.%s", time.Now().UnixMilli(), rand.Int(), "jpg")
@@ -96,26 +96,30 @@ func main() {
 		// Create a new file that we will write to
 		inputFile, err := os.Create(inputFilepath)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("error: row %d (%q): %v\n", i, url, err)
+			continue
 		}
 		defer inputFile.Close()
 
 		// Get it from the internet!
 		res, err := http.Get(url)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("error: row %d (%q): %v\n", i, url, err)
+			continue
 		}
 		defer res.Body.Close()
 
 		// Ensure we got success from the server
 		if res.StatusCode != http.StatusOK {
-			log.Fatalf("download failed: row %d (%q): %s\n", i, url, res.Status)
+			log.Printf("error: download failed: row %d (%q): %s\n", i, url, res.Status)
+			continue
 		}
 
 		// Copy the body of the response to the created file
 		_, err = io.Copy(inputFile, res.Body)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("error: row %d (%q): %v\n", i, url, err)
+			continue
 		}
 
 		// Convert the image to grayscale using imagemagick
@@ -124,14 +128,16 @@ func main() {
 			"convert", inputFilepath, "-set", "colorspace", "Gray", outputFilepath,
 		})
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("error: row %d (%q): %v\n", i, url, err)
+			continue
 		}
 
 		log.Printf("processed: row %d (%q) to %q\n", i, url, outputFilepath)
 
 		outputFile, err := os.Open(outputFilepath)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("error: row %d (%q): %v\n", i, url, err)
+			continue
 		}
 
 		// Upload just using the final part of the output filepath
@@ -145,14 +151,13 @@ func main() {
 			Body:   outputFile,
 		})
 		if err != nil {
-			log.Fatalf("failed to upload object: %v\n", err)
+			log.Printf("failed to upload object: %v\n", err)
 		}
 
-		log.Printf("uploaded: row %d (%q) to %s/%s\n", i, url, s3Bucket, s3Key)
-
 		outputUrl := fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", s3Bucket, awsRegion, s3Key)
-
 		outputRecords = append(outputRecords, []string{url, inputFilepath, outputFilepath, outputUrl})
+
+		log.Printf("uploaded: row %d (%q) to %s\n", i, url, outputUrl)
 	}
 
 	// Turn the output records into a CSV
@@ -168,4 +173,5 @@ func main() {
 	}
 
 	log.Printf("output: %q", *outputCsv)
+	log.Printf("summary: %d of %d uploaded", len(outputRecords), len(inputRecords))
 }
