@@ -170,3 +170,7 @@ AWS_REGION=eu-west-1
 AWS_ROLE_URN=arn:aws:iam::[ID]:role/GoCourseLambdaUserReadWriteS3
 S3_BUCKET=[ID]
 ```
+
+## Output
+
+Write CSV with the input and output together.

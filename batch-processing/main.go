@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/csv"
 	"flag"
@@ -21,10 +22,13 @@ import (
 )
 
 func main() {
-	// We need a file to read from
-	input := flag.String("input", "", "A path to a CSV with a `url` column, containing URLs for images to be processed")
+	// We need a file to read from...
+	inputCsv := flag.String("input", "", "A path to a CSV with a `url` column, containing URLs for images to be processed")
+	// ... and a file to write to
+	outputCsv := flag.String("output", "", "Location that the output of this command should be written")
+
 	flag.Parse()
-	if *input == "" {
+	if *inputCsv == "" || *outputCsv == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -32,6 +36,10 @@ func main() {
 	awsRoleUrn := os.Getenv("AWS_ROLE_URN")
 	if awsRoleUrn == "" {
 		log.Fatalln("Please set AWS_ROLE_URN environment variable")
+	}
+	awsRegion := os.Getenv("AWS_REGION")
+	if awsRoleUrn == "" {
+		log.Fatalln("Please set AWS_REGION environment variable")
 	}
 	s3Bucket := os.Getenv("S3_BUCKET")
 	if awsRoleUrn == "" {
@@ -60,7 +68,7 @@ func main() {
 	defer imagick.Terminate()
 
 	// Open the file supplied
-	in, err := os.Open(*input)
+	in, err := os.Open(*inputCsv)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,6 +81,9 @@ func main() {
 	}
 
 	// TODO: validate `records`
+
+	outputRecords := make([][]string, 0, len(records)-1)
+	outputRecords = append(outputRecords, []string{"url", "input", "output", "s3url"})
 
 	for i, row := range records[1:] {
 		url := row[0]
@@ -138,6 +149,23 @@ func main() {
 		}
 
 		log.Printf("uploaded: row %d (%q) to %s/%s\n", i, url, s3Bucket, s3Key)
+
+		outputUrl := fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", s3Bucket, awsRegion, s3Key)
+
+		outputRecords = append(outputRecords, []string{url, inputFilepath, outputFilepath, outputUrl})
 	}
 
+	// Turn the output records into a CSV
+	buf := new(bytes.Buffer)
+	w := csv.NewWriter(buf)
+	err = w.WriteAll(outputRecords)
+	if err != nil {
+		log.Fatalf("failed to create CSV from output records: %v\n", err)
+	}
+	err = os.WriteFile(*outputCsv, buf.Bytes(), os.FileMode(0644))
+	if err != nil {
+		log.Fatalf("failed to write output records to file: %v\n", err)
+	}
+
+	log.Printf("output: %q", *outputCsv)
 }
