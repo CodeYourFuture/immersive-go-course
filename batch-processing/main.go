@@ -96,7 +96,10 @@ func main() {
 		}
 		defer res.Body.Close()
 
-		// TODO: check status code
+		// Ensure we got success from the server
+		if res.StatusCode != http.StatusOK {
+			log.Fatalf("download failed: row %d (%q): %s\n", i, url, res.Status)
+		}
 
 		// Copy the body of the response to the created file
 		_, err = io.Copy(inputFile, res.Body)
