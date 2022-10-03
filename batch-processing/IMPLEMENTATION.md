@@ -89,3 +89,84 @@ develop:
 ## Grayscale
 
 `convert`, accessed via `ConvertImageCommand`, with `-set colorspace Gray -separate -average` seems to work well.
+
+## Upload to S3
+
+- Get credentials set up — https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
+- `brew install awscli`
+- `aws configure`
+
+Follow upload example here: `https://github.com/aws/aws-sdk-go`
+
+We need to mount creds from host: `--mount type=bind,source="$$(echo $$HOME)/.aws",target=/root/.aws`
+
+Create `S3ReadWriteGoCourse` policy for IAM role:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListObjectsInBucket",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::[ID]"]
+    },
+    {
+      "Sid": "AllObjectActions",
+      "Effect": "Allow",
+      "Action": "s3:*Object",
+      "Resource": ["arn:aws:s3:::[ID]/*"]
+    }
+  ]
+}
+```
+
+Create `GoCourseLambdaUserReadWriteS3` Role allowing accounts + Lambda to read/write, trust policy:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::[ID]:root"
+      },
+      "Action": "sts:AssumeRole"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+```
+
+We can then load using URN passed via env:
+
+```go
+// Set up S3 session
+// All clients require a Session. The Session provides the client with
+// shared configuration such as region, endpoint, and credentials.
+sess := session.Must(session.NewSession())
+
+// Create the credentials from AssumeRoleProvider to assume the role
+// referenced by the ARN.
+creds := stscreds.NewCredentials(sess, awsRoleUrn)
+
+// Create service client value configured for credentials
+// from assumed role.
+svc := s3.New(sess, &aws.Config{Credentials: creds})
+```
+
+Need to create a `docker_env` file with config:
+
+```env
+AWS_REGION=eu-west-1
+AWS_ROLE_URN=arn:aws:iam::[ID]:role/GoCourseLambdaUserReadWriteS3
+S3_BUCKET=[ID]
+```

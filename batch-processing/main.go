@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/csv"
 	"flag"
 	"fmt"
@@ -9,8 +10,13 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"gopkg.in/gographics/imagick.v2/imagick"
 )
 
@@ -22,6 +28,32 @@ func main() {
 		flag.Usage()
 		os.Exit(1)
 	}
+
+	awsRoleUrn := os.Getenv("AWS_ROLE_URN")
+	if awsRoleUrn == "" {
+		log.Fatalln("Please set AWS_ROLE_URN environment variable")
+	}
+	s3Bucket := os.Getenv("S3_BUCKET")
+	if awsRoleUrn == "" {
+		log.Fatalln("Please set S3_BUCKET environment variable")
+	}
+
+	// Set up S3 session
+	// All clients require a Session. The Session provides the client with
+	// shared configuration such as region, endpoint, and credentials.
+	sess := session.Must(session.NewSession())
+
+	// Create the credentials from AssumeRoleProvider to assume the role
+	// referenced by the ARN.
+	creds := stscreds.NewCredentials(sess, awsRoleUrn)
+
+	// Create service client value configured for credentials
+	// from assumed role.
+	svc := s3.New(sess, &aws.Config{Credentials: creds})
+
+	// Create a context with a timeout that will abort the upload if it takes
+	// more than the passed in timeout.
+	ctx := context.Background()
 
 	// Set up imagemagick
 	imagick.Initialize()
@@ -81,7 +113,28 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fmt.Printf("processed: row %d (%q) to %q", i, url, outputFilepath)
+		log.Printf("processed: row %d (%q) to %q\n", i, url, outputFilepath)
+
+		outputFile, err := os.Open(outputFilepath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Upload just using the final part of the output filepath
+		s3Key := filepath.Base(outputFilepath)
+
+		// Uploads the object to S3. The Context will interrupt the request if the
+		// timeout expires.
+		_, err = svc.PutObjectWithContext(ctx, &s3.PutObjectInput{
+			Bucket: aws.String(s3Bucket),
+			Key:    aws.String(s3Key),
+			Body:   outputFile,
+		})
+		if err != nil {
+			log.Fatalf("failed to upload object: %v\n", err)
+		}
+
+		log.Printf("uploaded: row %d (%q) to %s/%s\n", i, url, s3Bucket, s3Key)
 	}
 
 }

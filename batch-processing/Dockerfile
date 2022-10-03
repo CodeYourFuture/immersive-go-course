@@ -45,6 +45,11 @@ COPY inputs /inputs
 # This is required for test and run, but for develop it ensures we have a build cache
 RUN go build -o /out
 
+# Set up environment
+ENV AWS_REGION ""
+ENV AWS_ROLE_URN ""
+ENV S3_BUCKET ""
+
 ##
 ## TEST
 ##
@@ -57,6 +62,7 @@ ENTRYPOINT [ "go", "test", "-v" ]
 ##
 FROM base as develop
 
+RUN mkdir -p /root/.aws /root/.cache/go-build
 COPY .bash_history /root/.bash_history
 ENTRYPOINT [ "/bin/bash" ]
 
@@ -66,4 +72,4 @@ ENTRYPOINT [ "/bin/bash" ]
 FROM base as run
 
 WORKDIR /
-ENTRYPOINT ["/out", "--input", "/inputs/example.csv"]
+ENTRYPOINT /out --input /inputs/example.csv
