@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"gopkg.in/gographics/imagick.v2/imagick"
 )
 
 func main() {
@@ -65,4 +67,8 @@ func main() {
 			log.Fatal(err)
 		}
 	}
+
+	// Set up imagemagick
+	imagick.Initialize()
+	defer imagick.Terminate()
 }

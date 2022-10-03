@@ -23,3 +23,11 @@ The first step will be to build this linearly, and to write tests as we go. Beca
 Then use goroutines to run it in parallel, likely by wrapping the output in a mutex and locking/unlocking as the goroutine completes: https://pkg.go.dev/sync#Mutex
 
 A possible last extension would be to use channels: https://go.dev/blog/pipelines
+
+### Downloads
+
+The download is simple — create a file in a temporary location, and `http.Get` into it with `io.Copy`.
+
+### `imagemagick`
+
+To run ImageMagick (and this whole thing) in a repeatable way, we will do it all in a Docker container based on `dpokidov/imagemagick:latest-bullseye` using multi-stage build. This will give us the `magick` command.
