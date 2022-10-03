@@ -24,11 +24,11 @@ Then use goroutines to run it in parallel, likely by wrapping the output in a mu
 
 A possible last extension would be to use channels: https://go.dev/blog/pipelines
 
-### Downloads
+## Downloads
 
 The download is simple — create a file in a temporary location, and `http.Get` into it with `io.Copy`.
 
-### `imagemagick`
+## `imagemagick`
 
 To run ImageMagick (and this whole thing) in a repeatable way, we will do it all in a Docker container based on `dpokidov/imagemagick:latest-bullseye` using multi-stage build. This will give us the `magick` command.
 
@@ -54,7 +54,11 @@ Which can then be built by specifying the `--target`:
 > docker build --target test -t test .
 ```
 
-## Developing locally
+## Grayscale
+
+`convert`, accessed via `ConvertImageCommand`, with `-set colorspace Gray -separate -average` seems to work well.
+
+## Developing
 
 We can run locally. A few things are needed.
 
@@ -85,10 +89,6 @@ develop:
     docker run -it --mount type=bind,source="$$(pwd)",target=/app --mount type=bind,source="/tmp",target=/tmp --rm develop
     rm -rf ./mount
 ```
-
-## Grayscale
-
-`convert`, accessed via `ConvertImageCommand`, with `-set colorspace Gray -separate -average` seems to work well.
 
 ## Upload to S3
 
