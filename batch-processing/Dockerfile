@@ -42,20 +42,27 @@ RUN go mod download
 COPY *.go ./
 COPY inputs /inputs
 
+# This is required for test and run, but for develop it ensures we have a build cache
+RUN go build -o /out
 
 ##
 ## TEST
 ##
 FROM base as test
 
-RUN go build -o /out
 ENTRYPOINT [ "go", "test", "-v" ]
+
+##
+## DEVELOP
+##
+FROM base as develop
+
+ENTRYPOINT [ "/bin/bash" ]
 
 ##
 ## RUN
 ##
 FROM base as run
 
-RUN go build -o /out
 WORKDIR /
 ENTRYPOINT ["/out", "--input", "/inputs/example.csv"]

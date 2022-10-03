@@ -31,3 +31,37 @@ The download is simple — create a file in a temporary location, and `http.Get`
 ### `imagemagick`
 
 To run ImageMagick (and this whole thing) in a repeatable way, we will do it all in a Docker container based on `dpokidov/imagemagick:latest-bullseye` using multi-stage build. This will give us the `magick` command.
+
+To be able to run the tests and the app, we end up with multiple targets:
+
+```Dockerfile
+FROM golang:1.19-bullseye as base
+
+# ... install dependencies & build ...
+
+FROM base as test
+
+# ... run tests ...
+
+FROM base as run
+
+# ... run app ...
+```
+
+Which can then be built by specifying the `--target`:
+
+```console
+> docker build --target test -t test .
+```
+
+### Developing in Docker
+
+To develop the app with Docker, we need a slightly fancier command:
+
+```Makefile
+develop:
+    mkdir -p mount
+    docker build --target develop -t develop .
+    docker run -it --mount type=bind,source="$$(pwd)",target=/app --mount type=bind,source="/tmp",target=/tmp --rm develop
+    rm -rf ./mount
+```
