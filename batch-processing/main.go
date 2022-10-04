@@ -21,6 +21,25 @@ import (
 	"gopkg.in/gographics/imagick.v2/imagick"
 )
 
+func readAndValidateCsv(in io.Reader) ([][]string, error) {
+	r := csv.NewReader(in)
+	records, err := r.ReadAll()
+	if err != nil {
+		return [][]string{}, err
+	}
+
+	if len(records) <= 1 {
+		return [][]string{}, fmt.Errorf("empty csv")
+	}
+
+	headerRow := records[0]
+	if len(headerRow) == 0 || headerRow[0] != "url" {
+		return [][]string{}, fmt.Errorf("incorrect column name: expected \"url\", got %q", headerRow[0])
+	}
+
+	return records, nil
+}
+
 func main() {
 	// We need a file to read from...
 	inputCsv := flag.String("input", "", "A path to a CSV with a `url` column, containing URLs for images to be processed")
@@ -74,13 +93,10 @@ func main() {
 	}
 
 	// Read the file using the encoding/csv package
-	r := csv.NewReader(in)
-	inputRecords, err := r.ReadAll()
+	inputRecords, err := readAndValidateCsv(in)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// TODO: validate `records`
 
 	outputRecords := make([][]string, 0, len(inputRecords)-1)
 	outputRecords = append(outputRecords, []string{"url", "input", "output", "s3url"})
