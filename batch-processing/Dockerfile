@@ -41,6 +41,7 @@ RUN go mod download
 
 COPY *.go ./
 COPY inputs /inputs
+RUN mkdir -p /outputs
 
 # This is required for test and run, but for develop it ensures we have a build cache
 RUN go build -o /out
@@ -72,4 +73,4 @@ ENTRYPOINT [ "/bin/bash" ]
 FROM base as run
 
 WORKDIR /
-ENTRYPOINT /out --input /inputs/example.csv --output result.csv
+ENTRYPOINT /out --input /inputs/example.csv --output outputs/example-result.csv
