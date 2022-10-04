@@ -72,4 +72,4 @@ ENTRYPOINT [ "/bin/bash" ]
 FROM base as run
 
 WORKDIR /
-ENTRYPOINT /out --input /inputs/example.csv
+ENTRYPOINT /out --input /inputs/example.csv --output result.csv
