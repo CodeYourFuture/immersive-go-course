@@ -140,7 +140,7 @@ func main() {
 
 		// Convert the image to grayscale using imagemagick
 		// We are directly calling the convert command
-		imagick.ConvertImageCommand([]string{
+		_, err = imagick.ConvertImageCommand([]string{
 			"convert", inputFilepath, "-set", "colorspace", "Gray", outputFilepath,
 		})
 		if err != nil {

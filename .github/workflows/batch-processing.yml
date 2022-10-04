@@ -13,7 +13,5 @@ jobs:
         with:
           go-version-file: "batch-processing/go.mod"
           cache: false
-      - name: Build
-        run: go build -v ./...
       - name: Test
-        run: go test -v ./...
+        run: make test
