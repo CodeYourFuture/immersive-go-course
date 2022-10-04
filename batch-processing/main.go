@@ -104,8 +104,9 @@ func main() {
 	for i, row := range inputRecords[1:] {
 		url := row[0]
 
-		inputFilepath := fmt.Sprintf("/tmp/%d-%d.%s", time.Now().UnixMilli(), rand.Int(), "jpg")
-		outputFilepath := fmt.Sprintf("/tmp/%d-%d.%s", time.Now().UnixMilli(), rand.Int(), "jpg")
+		prefix := fmt.Sprintf("/tmp/%d-%d", time.Now().UnixMilli(), rand.Int())
+		inputFilepath := fmt.Sprintf("%s.%s", prefix, "jpg")
+		outputFilepath := fmt.Sprintf("%s-out.%s", prefix, "jpg")
 
 		log.Printf("downloading: row %d (%q) to %q\n", i, url, inputFilepath)
 
