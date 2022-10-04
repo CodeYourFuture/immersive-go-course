@@ -15,7 +15,6 @@ run: outputs
 test: outputs
 	docker build --target test -t test .
 	docker run \
-		--env-file docker_env \
 		--rm test
 
 develop: outputs

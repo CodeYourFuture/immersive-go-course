@@ -20,6 +20,21 @@ import (
 	"gopkg.in/gographics/imagick.v2/imagick"
 )
 
+type Config struct {
+	AwsRoleArn string
+	AwsRegion  string
+	S3Bucket   string
+}
+
+type Row struct {
+	index          int
+	url            string
+	inputFilepath  string
+	outputFilepath string
+	outputKey      string
+	outputUrl      string
+}
+
 func readAndValidateCsv(in io.Reader) ([][]string, error) {
 	r := csv.NewReader(in)
 	records, err := r.ReadAll()
@@ -37,6 +52,64 @@ func readAndValidateCsv(in io.Reader) ([][]string, error) {
 	}
 
 	return records, nil
+}
+
+func (row Row) handleRow(svc *s3.S3, config *Config) error {
+	i, url, inputFilepath, outputFilepath := row.index, row.url, row.inputFilepath, row.outputFilepath
+	// Create a new file that we will write to
+	inputFile, err := os.Create(inputFilepath)
+	if err != nil {
+		return fmt.Errorf("error: row %d (%q): %v", i, url, err)
+	}
+	defer inputFile.Close()
+
+	// Get it from the internet!
+	res, err := http.Get(url)
+	if err != nil {
+		return fmt.Errorf("error: row %d (%q): %v", i, url, err)
+	}
+	defer res.Body.Close()
+
+	// Ensure we got success from the server
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("error: download failed: row %d (%q): %s", i, url, res.Status)
+	}
+
+	// Copy the body of the response to the created file
+	_, err = io.Copy(inputFile, res.Body)
+	if err != nil {
+		return fmt.Errorf("error: row %d (%q): %v", i, url, err)
+	}
+
+	// Convert the image to grayscale using imagemagick
+	// We are directly calling the convert command
+	_, err = imagick.ConvertImageCommand([]string{
+		"convert", inputFilepath, "-set", "colorspace", "Gray", outputFilepath,
+	})
+	if err != nil {
+		return fmt.Errorf("error: row %d (%q): %v", i, url, err)
+	}
+
+	log.Printf("processed: row %d (%q) to %q\n", i, url, outputFilepath)
+
+	outputFile, err := os.Open(outputFilepath)
+	if err != nil {
+		return fmt.Errorf("error: row %d (%q): %v", i, url, err)
+	}
+
+	// Uploads the object to S3. The Context will interrupt the request if the
+	// timeout expires.
+	_, err = svc.PutObject(&s3.PutObjectInput{
+		Bucket: aws.String(config.S3Bucket),
+		Key:    aws.String(row.outputKey),
+		Body:   outputFile,
+	})
+
+	if err != nil {
+		return fmt.Errorf("error: row %d (%q): %v", i, url, err)
+	}
+
+	return nil
 }
 
 func main() {
@@ -64,6 +137,12 @@ func main() {
 		log.Fatalln("Please set S3_BUCKET environment variable")
 	}
 
+	config := &Config{
+		AwsRoleArn: awsRoleArn,
+		AwsRegion:  awsRegion,
+		S3Bucket:   s3Bucket,
+	}
+
 	// Set up S3 session
 	// All clients require a Session. The Session provides the client with
 	// shared configuration such as region, endpoint, and credentials.
@@ -71,7 +150,7 @@ func main() {
 
 	// Create the credentials from AssumeRoleProvider to assume the role
 	// referenced by the ARN.
-	creds := stscreds.NewCredentials(sess, awsRoleArn)
+	creds := stscreds.NewCredentials(sess, config.AwsRoleArn)
 
 	// Create service client value configured for credentials
 	// from assumed role.
@@ -102,72 +181,28 @@ func main() {
 		prefix := fmt.Sprintf("/tmp/%d-%d", time.Now().UnixMilli(), rand.Int())
 		inputFilepath := fmt.Sprintf("%s.%s", prefix, "jpg")
 		outputFilepath := fmt.Sprintf("%s-out.%s", prefix, "jpg")
+		// Upload just using the final part of the output filepath
+		outputKey := filepath.Base(outputFilepath)
+		outputUrl := fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", config.S3Bucket, config.AwsRegion, outputKey)
 
 		log.Printf("downloading: row %d (%q) to %q\n", i, url, inputFilepath)
 
-		// Create a new file that we will write to
-		inputFile, err := os.Create(inputFilepath)
-		if err != nil {
-			log.Printf("error: row %d (%q): %v\n", i, url, err)
-			continue
+		row := Row{
+			index:          i,
+			url:            url,
+			inputFilepath:  inputFilepath,
+			outputFilepath: outputFilepath,
+			outputKey:      outputKey,
+			outputUrl:      outputUrl,
 		}
-		defer inputFile.Close()
 
-		// Get it from the internet!
-		res, err := http.Get(url)
+		err := row.handleRow(svc, config)
 		if err != nil {
-			log.Printf("error: row %d (%q): %v\n", i, url, err)
-			continue
-		}
-		defer res.Body.Close()
-
-		// Ensure we got success from the server
-		if res.StatusCode != http.StatusOK {
-			log.Printf("error: download failed: row %d (%q): %s\n", i, url, res.Status)
+			log.Printf("error: row %d (%q): %v", i, url, err)
 			continue
 		}
 
-		// Copy the body of the response to the created file
-		_, err = io.Copy(inputFile, res.Body)
-		if err != nil {
-			log.Printf("error: row %d (%q): %v\n", i, url, err)
-			continue
-		}
-
-		// Convert the image to grayscale using imagemagick
-		// We are directly calling the convert command
-		_, err = imagick.ConvertImageCommand([]string{
-			"convert", inputFilepath, "-set", "colorspace", "Gray", outputFilepath,
-		})
-		if err != nil {
-			log.Printf("error: row %d (%q): %v\n", i, url, err)
-			continue
-		}
-
-		log.Printf("processed: row %d (%q) to %q\n", i, url, outputFilepath)
-
-		outputFile, err := os.Open(outputFilepath)
-		if err != nil {
-			log.Printf("error: row %d (%q): %v\n", i, url, err)
-			continue
-		}
-
-		// Upload just using the final part of the output filepath
-		s3Key := filepath.Base(outputFilepath)
-
-		// Uploads the object to S3. The Context will interrupt the request if the
-		// timeout expires.
-		_, err = svc.PutObject(&s3.PutObjectInput{
-			Bucket: aws.String(s3Bucket),
-			Key:    aws.String(s3Key),
-			Body:   outputFile,
-		})
-		if err != nil {
-			log.Printf("failed to upload object: %v\n", err)
-		}
-
-		outputUrl := fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", s3Bucket, awsRegion, s3Key)
-		outputRecords = append(outputRecords, []string{url, inputFilepath, outputFilepath, outputUrl})
+		outputRecords = append(outputRecords, []string{row.url, row.inputFilepath, row.outputFilepath, row.outputUrl})
 
 		log.Printf("uploaded: row %d (%q) to %s\n", i, url, outputUrl)
 	}
