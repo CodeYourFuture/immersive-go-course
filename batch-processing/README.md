@@ -145,3 +145,235 @@ ok  	github.com/CodeYourFuture/immersive-go-course/batch-processing	0.011s
 This will have run much faster, because all the steps are cached by Docker. This is called the [build cache](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#leverage-build-cache).
 
 Neat! We've now got the application and the tests running in Docker.
+
+## Specificiation
+
+So now we've got some running code, let's get started.
+
+We want a **CLI tool** that:
+
+- reads an input CSV containing URLs
+- downloads images by URL
+- processes them using ImageMagick to make them monochrome/grayscale
+- uploads the results to [Amazon AWS S3 cloud storage](https://aws.amazon.com/s3/)
+- writes an output CSV describing what it did
+
+It should run like this: `go run . --input input.csv --output output.csv`
+
+An example input CSV file would look like this:
+
+```csv
+url
+https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80
+https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80
+https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80
+```
+
+Or as a table:
+
+| url                                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80 |
+| https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80 |
+| https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80    |
+
+An example output CSV would look like this:
+
+```csv
+url,input,output,s3url
+https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80,/tmp/1664885100393-5577006791947779410.jpg,/tmp/1664885100394-8674665223082153551.jpg,https://immersive-go-course-batch-processing.s3.eu-west-1.amazonaws.com/1664885100394-8674665223082153551.jpg
+https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80,/tmp/1664885101726-6129484611666145821.jpg,/tmp/1664885101726-4037200794235010051.jpg,https://immersive-go-course-batch-processing.s3.eu-west-1.amazonaws.com/1664885101726-4037200794235010051.jpg
+https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80,/tmp/1664885102225-3916589616287113937.jpg,/tmp/1664885102225-6334824724549167320.jpg,https://immersive-go-course-batch-processing.s3.eu-west-1.amazonaws.com/1664885102225-6334824724549167320.jpg
+```
+
+Or as a table:
+
+| url                                                                                                                                                            | input                                      | output                                     | s3url                                                                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| https://images.unsplash.com/photo-1506815444479-bfdb1e96c566?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80 | /tmp/1664885100393-5577006791947779410.jpg | /tmp/1664885100394-8674665223082153551.jpg | https://immersive-go-course-batch-processing.s3.eu-west-1.amazonaws.com/1664885100394-8674665223082153551.jpg |
+| https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80 | /tmp/1664885101726-6129484611666145821.jpg | /tmp/1664885101726-4037200794235010051.jpg | https://immersive-go-course-batch-processing.s3.eu-west-1.amazonaws.com/1664885101726-4037200794235010051.jpg |
+| https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80    | /tmp/1664885102225-3916589616287113937.jpg | /tmp/1664885102225-6334824724549167320.jpg | https://immersive-go-course-batch-processing.s3.eu-west-1.amazonaws.com/1664885102225-6334824724549167320.jpg |
+
+The tool should (in order of priority):
+
+1. Write thorough logs (`log.Println` and `log.Printf`) to describe what it is doing, including errors
+1. Validate the input CSV to ensure it only has **one** column, `url`
+1. Gracefully handle failures & continue to process the input CSV even if one row fails
+1. Support a configurable AWS region and S3 bucket via environment variables `AWS_REGION` and `S3_BUCKET`
+
+### Project extension
+
+To take this project further, add these requirements:
+
+1. The tool should not upload the same image twice
+1. The tool should not process the same image twice
+1. The tool should process and upload in parallel, using [goroutines](https://go.dev/tour/concurrency/1)
+
+## How-to
+
+Most of getting this project build is up to you. However, here are some pointers for things you are going to need.
+
+### Reading a CSV
+
+The built-in [`encoding/csv`](https://pkg.go.dev/encoding/csv) package is the one to use to read and write the CSV files.
+
+### Image processing
+
+Most of the ImageMagick code, which grayscales the image, is written for you. This shouldn't change too much.
+
+### Cloud storage (S3)
+
+The specification asks you to upload the images to [Amazon AWS S3 cloud storage](https://aws.amazon.com/s3/). S3 is a cloud service designed to store huge amounts of data and files in a secure, scalable and cost-effective way.
+
+The basic organisation of S3 is simple. At the top level of S3 is the **bucket**. Data ("objects") are stored within these buckets in folders, like a normal file system. Read the [high-level guide to S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html).
+
+You will need to create a bucket — call it anything you like. Pay attention to which [AWS region](https://cloudacademy.com/blog/aws-regions-and-availability-zones-the-simplest-explanation-you-will-ever-find-around/#:~:text=What%20are%20AWS%20Regions%3F,host%20their%20cloud%20infrastructure%20there.) you create it in – you will need this later.
+
+You can make it publically accessible to the internet, so that you or anyone can view the images that are uploaded, with a policy like this:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicAccess",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": ["s3:GetObject", "s3:GetObjectVersion"],
+      "Resource": "arn:aws:s3:::[NAME OF BUCKET]/*"
+    }
+  ]
+}
+```
+
+> ⚠️ Public means public. **DO NOT** upload anything sensitive to the bucket.
+
+Use the [AWS SDK for Go](https://github.com/aws/aws-sdk-go) to interact with Amazon S3.
+
+You will need to set up credentials so that your docker image can write to S3. The best way to do that is to:
+
+- Create a role + policy to allow uploads to the bucket
+- Allow your AWS user account to use the role
+- Make your AWS credentials available to the Docker image
+
+#### Role + policy
+
+[Create a Policy](https://us-east-1.console.aws.amazon.com/iamv2/home#/policies) `S3ReadWriteGoCourse` with the following configuration, which allows reading and writing to the bucket.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListObjectsInBucket",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::[NAME OF BUCKET]"]
+    },
+    {
+      "Sid": "AllObjectActions",
+      "Effect": "Allow",
+      "Action": "s3:*Object",
+      "Resource": ["arn:aws:s3:::[NAME OF BUCKET]/*"]
+    }
+  ]
+}
+```
+
+[Create a Role](https://us-east-1.console.aws.amazon.com/iamv2/home#/roles) `GoCourseLambdaUserReadWriteS3` associated with the `S3ReadWriteGoCourse` Policy. Set up the Trust Relationships of this policy as follows:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::[YOUR AWS USER ID]:root"
+      },
+      "Action": "sts:AssumeRole"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+```
+
+One that's done, you need local credentials:
+
+1. Install the [AWS CLI](https://aws.amazon.com/cli/)
+1. [Follow this guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) to set up your credentials locally
+
+Then change the `Makefile` to [mount](https://docs.docker.com/storage/bind-mounts/) your `.aws` directory into the Docker container, in the `root` user's home directory. When using the Go SDK, it will automatically find these credentials and use them:
+
+```Makefile
+run: outputs
+	docker ...
+        ...
+        --mount type=bind,source="$$(echo $$HOME)/.aws",target=/root/.aws \
+		...
+```
+
+You'll need to say which AWS region the S3 bucket is located in. Do that with the `AWS_REGION` environment variable.
+
+In your `Dockerfile`:
+
+```
+# Set up environment
+ENV AWS_REGION ""
+```
+
+You can then supply environment variables to the Docker commands directly in the `Makefile`...
+
+```Makefile
+run: outputs
+	docker ...
+        ...
+        -e AWS_REGION=eu-west-1 \
+		...
+```
+
+... or use an [env file](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file):
+
+```Makefile
+run: outputs
+	docker ...
+        ...
+		--env-file docker_env \
+        ...
+```
+
+Here's an example `docker_env` file:
+
+```env
+AWS_REGION=eu-west-1
+```
+
+### Session
+
+We'll need to set up an AWS session using your Role. To do that, we give it the [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of the Role, which you can from the Role's page in the [AWS IAM dashboard](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/roles). It's best to also pass this to the Docker container via the environment, as we did with the `AWS_REGION`:
+
+```go
+// Get the Role ARN
+awsRoleArn := ???
+
+// Set up S3 session
+sess := ???
+
+// Create the credentials from AssumeRoleProvider to assume the role
+// referenced by the ARN.
+creds := stscreds.NewCredentials(sess, awsRoleArn)
+
+// Create service client value configured for credentials
+// from assumed role.
+svc := s3.New(sess, &aws.Config{Credentials: creds})
+```
+
+### Uploading
+
+The example code on the [AWS SDK for Go](https://github.com/aws/aws-sdk-go) README will be helpful!
