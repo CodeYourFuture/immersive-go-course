@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"encoding/csv"
 	"flag"
 	"fmt"
@@ -77,10 +76,6 @@ func main() {
 	// Create service client value configured for credentials
 	// from assumed role.
 	svc := s3.New(sess, &aws.Config{Credentials: creds})
-
-	// Create a context with a timeout that will abort the upload if it takes
-	// more than the passed in timeout.
-	ctx := context.Background()
 
 	// Set up imagemagick
 	imagick.Initialize()
@@ -162,7 +157,7 @@ func main() {
 
 		// Uploads the object to S3. The Context will interrupt the request if the
 		// timeout expires.
-		_, err = svc.PutObjectWithContext(ctx, &s3.PutObjectInput{
+		_, err = svc.PutObject(&s3.PutObjectInput{
 			Bucket: aws.String(s3Bucket),
 			Key:    aws.String(s3Key),
 			Body:   outputFile,
