@@ -18,7 +18,7 @@ Timebox: 2 days
 
 ## Project
 
-This project starts with some scaffolding. We'll be using a tool called [ImageMagick](https://imagemagick.org/) to process the images. The specific details of it are not important, so this is provided for us.
+This project starts with some scaffolding code already written. We'll be using a tool called [ImageMagick](https://imagemagick.org/) to process the images. The specific details of it are not important, so this is provided for us.
 
 ImageMagick is software written in C. We're going to call out to this code from Go using a package called [imagick](https://github.com/gographics/imagick), which acts an an interface between our Go code and the ImageMagick code.
 
@@ -36,7 +36,17 @@ Read a [quick introduction to Make](https://www.gnu.org/software/make/) and then
 
 ### Run the scaffolding code
 
-Now we can run the code:
+Now we can run the code, using `make run`. This command looks in the `Makefile` for a "target" called `run`, and then executes the code it finds there. In our case, that looks something like this:
+
+```Makefile
+run:
+	docker build --target run -t run .
+	docker run --rm run
+```
+
+We build a docker image and tag it `run`, and then run it.
+
+Let's do that:
 
 ```console
 > make run
@@ -78,13 +88,13 @@ docker run \
 2022/10/04 10:45:32 processed: "/inputs/gradient.jpg" to "/outputs/gradient_bw.jpg"
 ```
 
-Here we can see the docker image building. The first time we run this, it will take a while and we won't see lots of `CACHED` messaged. The time is spent installing ImageMagick into the Docker container, and building the app for the first time.
+Here we can see the docker image building. The first time we run this, it will take a while and we won't see lots of `CACHED` messages. The time is spent installing ImageMagick into the Docker container and building the app.
 
-Should now have a new directory — `outputs` — which contains an image `gradient_bw.jpg` which is a grayscale version of the `gradient.jpg` file that's in the `inputs` directory. Something interesting has happened here! Our docker container wrote the file back to _our_ filesystem. It was able to do this because our docker command [mounted](https://docs.docker.com/storage/bind-mounts/) the `outputs` directory from our host (your computer) onto the `/outputs` directory inside the docker container. When the go application wrote the processed file to `/outputs/gradient_bw.jpg`, it was actually writing to your files.
+One it's run, we should now have a new local directory — `outputs` — which contains an image `gradient_bw.jpg` which is a grayscale version of the `gradient.jpg` file that's in the `inputs` directory.
 
-This feature allows us to test the code and see the outputs. Otherwise, they'd be stuck inside the Docker container.
+Something interesting has happened here! Our docker container wrote the file back to _our_ filesystem. It was able to do this because our docker command [mounted](https://docs.docker.com/storage/bind-mounts/) the `outputs` directory from our host (your computer) onto the `/outputs` directory inside the docker container. When the go application wrote the processed file to `/outputs/gradient_bw.jpg`, it was actually writing to your filesystem, outside of the container.
 
-To find out more about this, read the [managing data with Docker](https://docs.docker.com/storage/) guide.
+This mount feature allows us to test the code and see the outputs. Otherwise, they'd be stuck inside the Docker container. To find out more about this, read the [managing data with Docker](https://docs.docker.com/storage/) guide.
 
 ### Test the scaffolding code
 
