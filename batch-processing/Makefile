@@ -16,7 +16,6 @@ test: outputs
 	docker build --target test -t test .
 	docker run \
 		--env-file docker_env \
-		--mount type=bind,source="$$(echo $$HOME)/.aws",target=/root/aws \
 		--rm test
 
 develop: outputs

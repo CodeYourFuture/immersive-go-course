@@ -48,7 +48,7 @@ RUN go build -o /out
 
 # Set up environment
 ENV AWS_REGION ""
-ENV AWS_ROLE_URN ""
+ENV AWS_ROLE_ARN ""
 ENV S3_BUCKET ""
 
 ##

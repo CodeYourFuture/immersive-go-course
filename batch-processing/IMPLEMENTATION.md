@@ -146,7 +146,7 @@ Create `GoCourseLambdaUserReadWriteS3` Role allowing accounts + Lambda to read/w
 }
 ```
 
-We can then load using URN passed via env:
+We can then load using ARN passed via env:
 
 ```go
 // Set up S3 session
@@ -156,7 +156,7 @@ sess := session.Must(session.NewSession())
 
 // Create the credentials from AssumeRoleProvider to assume the role
 // referenced by the ARN.
-creds := stscreds.NewCredentials(sess, awsRoleUrn)
+creds := stscreds.NewCredentials(sess, awsRoleArn)
 
 // Create service client value configured for credentials
 // from assumed role.
@@ -167,7 +167,7 @@ Need to create a `docker_env` file with config:
 
 ```env
 AWS_REGION=eu-west-1
-AWS_ROLE_URN=arn:aws:iam::[ID]:role/GoCourseLambdaUserReadWriteS3
+AWS_ROLE_ARN=arn:aws:iam::[ID]:role/GoCourseLambdaUserReadWriteS3
 S3_BUCKET=[ID]
 ```
 

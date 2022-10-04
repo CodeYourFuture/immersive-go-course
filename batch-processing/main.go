@@ -52,16 +52,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	awsRoleUrn := os.Getenv("AWS_ROLE_URN")
-	if awsRoleUrn == "" {
-		log.Fatalln("Please set AWS_ROLE_URN environment variable")
+	awsRoleArn := os.Getenv("AWS_ROLE_ARN")
+	if awsRoleArn == "" {
+		log.Fatalln("Please set AWS_ROLE_ARN environment variable")
 	}
 	awsRegion := os.Getenv("AWS_REGION")
-	if awsRoleUrn == "" {
+	if awsRegion == "" {
 		log.Fatalln("Please set AWS_REGION environment variable")
 	}
 	s3Bucket := os.Getenv("S3_BUCKET")
-	if awsRoleUrn == "" {
+	if s3Bucket == "" {
 		log.Fatalln("Please set S3_BUCKET environment variable")
 	}
 
@@ -72,7 +72,7 @@ func main() {
 
 	// Create the credentials from AssumeRoleProvider to assume the role
 	// referenced by the ARN.
-	creds := stscreds.NewCredentials(sess, awsRoleUrn)
+	creds := stscreds.NewCredentials(sess, awsRoleArn)
 
 	// Create service client value configured for credentials
 	// from assumed role.
