@@ -1,6 +1,6 @@
 # Batch Processing
 
-In this project, you'll build a simple image processing pipeline: reading from a CSV file, downloading an image, processing it, and uploading it to cloud storage.
+In this project, you'll build a simple image processing pipeline: reading a list of image URLs from a CSV file, downloading each image, processing it, and uploading it to cloud storage.
 
 > ⚠️ This project requires you to have access to an Amazon AWS account, with permissions to configure IAM and S3. Ask on CYF Slack for help with that.
 
@@ -24,15 +24,15 @@ ImageMagick is software written in C. We're going to call out to this code from 
 
 As a result of this dependency on ImageMagick, we're going to run this whole project in Docker. That means, rather than use `go run` or `go test`, we'll build and run a Docker container that has ImageMagick correctly installed.
 
-> It's possible to install ImageMagick on your computer to run this, but you don't _need_ to do that.
+> It's possible to install ImageMagick on your computer to run this outside of docker, but you don't _need_ to do that.
 
 The Docker commands get a bit complex so we can do things like run tests and _see_ the output of the code, so we're not going to type the Docker commands ourselves.
 
-Instead, to run the code, we use a tool called [Make](https://www.gnu.org/software/make/). Make enables us to build code without knowing the details of how that is done, because these details are recorded in the `Makefile`. In that way it's similar to Docker: the complexity of how to run the code in a container is supplied in the `Dockerfile`.
+Instead, to run the code, we use a tool called [Make](https://www.gnu.org/software/make/). Make enables us to build code without knowing the details of how that is done, because these details are recorded in the `Makefile`. In that way it's similar to Docker - when using Make you store the complexity of what to run in a `Makefile`, and when using Docker you store the complexity of how to run the code in a container in a `Dockerfile`.
 
-Read a [quick introduction to Make](https://www.gnu.org/software/make/) and then install it for your computer. On macOS, it's likely that you have it already — try typing `make` into your termincal. If not, you need to [install the command-line tools](https://www.freecodecamp.org/news/install-xcode-command-line-tools/).
+Read a [quick introduction to Make](https://www.gnu.org/software/make/) and then install it for your computer. On macOS, it's likely that you have it already — try typing `make` into your terminal. It should output something like `make: no target specified`. If not (e.g. it says something like `command not found: make`), you need to [install the command-line tools](https://www.freecodecamp.org/news/install-xcode-command-line-tools/).
 
-> **Important**: you don't need to understand `make` in depth. We're only going to use the very simplest features.
+> **Important**: you don't need to understand `make` in depth. We're only going to use the very simplest features. In particular, you shouldn't have to edit the `Makefile` we've supplied other than exactly as we describe (but feel free if you want to!)
 
 ### Run the scaffolding code
 
@@ -160,6 +160,8 @@ We want a **CLI tool** that:
 
 It should run like this: `go run . --input input.csv --output output.csv`
 
+You should modify and extend the `main.go` file we've supplied in this directory, re-using some bits of it.
+
 An example input CSV file would look like this:
 
 ```csv
@@ -254,7 +256,7 @@ You will need to set up credentials so that your docker image can write to S3. T
 
 - Create a role + policy to allow uploads to the bucket
 - Allow your AWS user account to use the role
-- Make your AWS credentials available to the Docker image
+- Make your AWS credentials available to the Docker container
 
 #### Role + policy
 
@@ -304,12 +306,12 @@ You will need to set up credentials so that your docker image can write to S3. T
 }
 ```
 
-One that's done, you need local credentials:
+Once that's done, you need local credentials:
 
 1. Install the [AWS CLI](https://aws.amazon.com/cli/)
 1. [Follow this guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html) to set up your credentials locally
 
-Then change the `Makefile` to [mount](https://docs.docker.com/storage/bind-mounts/) your `.aws` directory into the Docker container, in the `root` user's home directory. When using the Go SDK, it will automatically find these credentials and use them:
+Then change the `Makefile` to [mount](https://docs.docker.com/storage/bind-mounts/) your `.aws` directory into the Docker container, in the `root` user's home directory (`/root/.aws`). When using the Go SDK, it will automatically find these credentials and use them:
 
 ```Makefile
 run: outputs
