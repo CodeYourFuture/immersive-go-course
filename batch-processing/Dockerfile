@@ -19,7 +19,9 @@ ENV IMAGEMAGICK_VERSION=6.9.10-11
 
 # Install ImageMagick
 RUN cd && \
-    wget https://github.com/ImageMagick/ImageMagick6/archive/${IMAGEMAGICK_VERSION}.tar.gz && \
+    wget https://github.com/ImageMagick/ImageMagick6/archive/${IMAGEMAGICK_VERSION}.tar.gz
+
+RUN cd && \
     tar xvzf ${IMAGEMAGICK_VERSION}.tar.gz && \
     cd ImageMagick* && \
     ./configure \
@@ -27,9 +29,14 @@ RUN cd && \
     --without-perl \
     --disable-openmp \
     --with-gvc=no \
-    --disable-docs && \
+    --disable-docs
+
+RUN cd && cd ImageMagick* && \
     make -j$(nproc) && make install && \
     ldconfig /usr/local/lib
+
+# Clean up the image
+RUN cd && rm -rf ${IMAGEMAGICK_VERSION}.tar.gz ImageMagick6-${IMAGEMAGICK_VERSION}
 
 # Build the app
 WORKDIR /app

@@ -9,10 +9,11 @@ In this project, you'll build a simple image processing pipeline: reading a list
 Learning objectives:
 
 - What is batch processing and how does it differ from building servers?
-- How do we build resilience into batch processing software?
 - How do we use Go to use run existing software to complete tasks?
 - What is cloud storage technology and how do we read from it & upload data to it?
-<!-- * How do we deploy batch processing tasks in the cloud? -->
+- How do we read, modify and extend existing code?
+  <!-- - How do we build resilience into batch processing software? -->
+  <!-- - How do we deploy batch processing tasks in the cloud? -->
 
 Timebox: 2 days
 
@@ -321,16 +322,7 @@ run: outputs
 		...
 ```
 
-You'll need to say which AWS region the S3 bucket is located in. Do that with the `AWS_REGION` environment variable.
-
-In your `Dockerfile`:
-
-```
-# Set up environment
-ENV AWS_REGION ""
-```
-
-You can then supply environment variables to the Docker commands directly in the `Makefile`...
+You'll need to say which AWS region the S3 bucket is located in. Do that with the `AWS_REGION` environment variable. You can supply environment variables to the Docker commands directly in the `Makefile`...
 
 ```Makefile
 run: outputs
