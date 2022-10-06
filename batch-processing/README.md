@@ -208,9 +208,13 @@ The tool should (in order of priority):
 
 To take this project further, add these requirements:
 
-1. The tool should not upload the same image twice
-1. The tool should not process the same image twice
-1. The tool should process and upload in parallel, using [goroutines](https://go.dev/tour/concurrency/1)
+1. The tool should write an output CSV with the URLs that failed, in a format that could be used as input: `go run . --input input.csv --output output.csv --output-failed failed.csv`
+1. Failures in downloading and uploading the images can be temporary: introduce a retry-with-backoff strategy to make the tool more resilient to temporary failures
+1. Do not re-upload the same image to S3
+   - Can you do this without storing anything in a database?
+1. Do not download & process the same image
+   - Can you also do this without storing anything in a database?
+1. To speed up the tool, process and upload in parallel using [goroutines](https://go.dev/tour/concurrency/1)
 
 ## How-to
 
@@ -219,6 +223,14 @@ Most of getting this project build is up to you. However, here are some pointers
 ### Reading a CSV
 
 The built-in [`encoding/csv`](https://pkg.go.dev/encoding/csv) package is the one to use to read and write the CSV files.
+
+### Downloading the file
+
+We can use the the standard `http` package to download the image. Things to watch out for:
+
+- HTTP requests can fail - remember to catch the error!
+- HTTP requests can "succeed" but with a non-200 status code. Think about what that could mean!
+- How can you make sure the downloaded data is an image, and not some other of file?
 
 ### Image processing
 
