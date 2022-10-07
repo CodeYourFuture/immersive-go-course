@@ -26,6 +26,8 @@ Each project has its own directory with a README.md file that has instructions. 
    <br>Build and run file & API servers behind nginx in a simple multi-server architecture.
 1. [Docker & Cloud Deployment](./docker-cloud/)
    <br>Use containers to reproducibly deploy applications into the cloud
+1. [Batch Processing](./batch-processing/)
+   <br>Build an image processing pipeline with cloud storage
 
 ## Contributing
 
