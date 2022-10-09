@@ -268,10 +268,10 @@ fetchImages(true).then(
 
     images.forEach((img) => {
       const imgElem$ = document.createElement("img");
-      imgElem$.src = img.URL;
-      imgElem$.alt = img.AltText;
+      imgElem$.src = img.url;
+      imgElem$.alt = img.alt_text;
       const titleElem$ = document.createElement("h3");
-      titleElem$.textContent = img.Title;
+      titleElem$.textContent = img.title;
       const wrapperElem$ = document.createElement("div");
       wrapperElem$.classList.add("gallery-image");
       wrapperElem$.appendChild(titleElem$);
