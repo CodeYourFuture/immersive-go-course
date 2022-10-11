@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "github.com/CodeYourFuture/immersive-go-course/buggy-app/auth/service";
+
+package service;
+
+service Auth {
+    rpc Verify(Input) returns (Result) {}
+}
+
+message Input {
+    string id = 1;
+    string password = 2;
+}
+
+message Result {
+    bool allow = 1;
+}
