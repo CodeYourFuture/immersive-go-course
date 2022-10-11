@@ -146,7 +146,13 @@ prober_server to accept a frequency argument instead of the old `repetitions` pa
 and continue running probes every N seconds forever. 
 
 You will need to use a [goroutine](https://gobyexample.com/goroutines) to keep running probes in the background.
+
 Now, add a new client operation to get the value of the last probe run.
+To make this work, you will need to pass a value to your prober goroutine that it can use to store the most recent latency.
+You can store this value in your `server` struct.
+You will also need to use a `sync.Mutex` to guarantee that the goroutine that serves your client request sees the last value 
+written by the prober goroutine. A Tour of Go has a good example of [using a sync.Mutex](https://go.dev/tour/concurrency/9).
+
 
 ### Part 3: Add Prometheus Metrics
 If you still have time, then let's learn something about how to monitor applications.
