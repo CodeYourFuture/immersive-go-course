@@ -3,7 +3,7 @@
 The goals of this project are: 
  * to use gRPC requests, and understand how they differ from REST
  * to use deadlines with gRPCs
- * to build a simple prober
+ * to build a simple prober and understand how this might be used in production
  * optionally, gain experience with instrumenting an application and running Prometheus
 
 ## What is gRPC?
