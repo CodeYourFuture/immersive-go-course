@@ -2,7 +2,9 @@ package auth
 
 import (
 	"context"
+	"sync"
 	"testing"
+	"time"
 
 	pb "github.com/CodeYourFuture/immersive-go-course/buggy-app/auth/service"
 	"google.golang.org/grpc"
@@ -13,21 +15,41 @@ func TestRun(t *testing.T) {
 	config := Config{
 		Port: 8010,
 	}
-	s, err := Run(config)
+	as := NewAuthService()
+
+	var err error
+	var wg sync.WaitGroup
+	ctx, cancel := context.WithCancel(context.Background())
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		err = as.Run(ctx, config)
+	}()
+
+	<-time.After(1000 * time.Millisecond)
+	cancel()
+
+	wg.Wait()
 	if err != nil {
 		t.Fatal(err)
 	}
-	s.GracefulStop()
 }
 
 func TestSimpleVerify(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
 	config := Config{
 		Port: 8010,
 	}
-	s, err := Run(config)
-	if err != nil {
-		t.Fatal(err)
-	}
+	as := NewAuthService()
+
+	var runErr error
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		runErr = as.Run(ctx, config)
+	}()
 
 	conn, err := grpc.Dial("localhost:8010", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -44,5 +66,9 @@ func TestSimpleVerify(t *testing.T) {
 		t.Fatalf("failed to verify, expected false, got %v", result.Allow)
 	}
 
-	s.GracefulStop()
+	cancel()
+	wg.Wait()
+	if runErr != nil {
+		t.Fatalf("runErr: %v", err)
+	}
 }
