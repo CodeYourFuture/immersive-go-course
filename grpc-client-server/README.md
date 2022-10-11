@@ -128,7 +128,6 @@ Maybe the site you are probing is very slow, or the number of repetitions is ver
 Either way, you don't want your program to wait forever. 
 
 On the client side, add a [timeout](https://pkg.go.dev/context#WithTimeout) to stop waiting after 1 second].
-```
 
 Run your client against some website - how many repetitions do you need to see your client timeout?
 
@@ -166,7 +165,7 @@ Add a `label` specifying the endpoint being probed.
 The [Prometheus Guide to Instrumenting a Go Application](https://prometheus.io/docs/guides/go-application/) has all the information you need to do this.
 
 Once you've run your program, use your client to execute periodic probes against some endpoint. 
-Now use the `curl` program or your browser to view the metrics. 
+Now use the `curl` program or your browser to view the metrics on the port that you've chosen to serve them on.
 You should see a number of built-in Go metrics, plus your new gauge.
 
 If you use your client to start probing a second endpoint, you should see a second labelled metric appear.
@@ -174,8 +173,10 @@ If you use your client to start probing a second endpoint, you should see a seco
 ### Part 3: Scrape Prometheus Metrics
 The final step is to set up the Prometheus application to periodically pull metrics from your `prober_server`.
 
-Run Prometheus in Docker locally - see [Prometheus Installation](https://prometheus.io/docs/prometheus/latest/installation/).
 You'll need to set up a simple configuration to scrape your `prober_server`. Prometheus [configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) is quite complex but you can adapt this [example configuration](https://github.com/prometheus/prometheus/blob/main/documentation/examples/prometheus.yml).
+
+Run Prometheus in Docker locally - see [Prometheus Installation](https://prometheus.io/docs/prometheus/latest/installation/).
+Use a shared volume for the configuration file, as suuggested in the guide above.
 
 Next, find your custom gauge metric from your `prober_server` in http://localhost:9090/metrics.
 Graph it in http://localhost:9090/graph.
