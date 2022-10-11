@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"log"
 	"sync"
 	"testing"
 	"time"
@@ -14,6 +15,7 @@ import (
 func TestRun(t *testing.T) {
 	config := Config{
 		Port: 8010,
+		Log:  *log.Default(),
 	}
 	as := NewAuthService()
 
@@ -40,6 +42,7 @@ func TestSimpleVerify(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	config := Config{
 		Port: 8010,
+		Log:  *log.Default(),
 	}
 	as := NewAuthService()
 
@@ -62,8 +65,8 @@ func TestSimpleVerify(t *testing.T) {
 	if err != nil {
 		t.Fatalf("fail to dial: %v", err)
 	}
-	if result.Allow != false {
-		t.Fatalf("failed to verify, expected false, got %v", result.Allow)
+	if result.State != pb.State_DENY {
+		t.Fatalf("failed to verify, expected State_DENY, got %v", result.State)
 	}
 
 	cancel()
