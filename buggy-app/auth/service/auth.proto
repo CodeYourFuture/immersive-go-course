@@ -4,6 +4,9 @@ option go_package = "github.com/CodeYourFuture/immersive-go-course/buggy-app/aut
 
 package service;
 
+// The Auth service provides verification of authentication inputs for
+// other services.
+// Callers should deny access to resouces unless the Result is ALLOW
 service Auth {
     rpc Verify(Input) returns (Result) {}
 }
@@ -14,5 +17,10 @@ message Input {
 }
 
 message Result {
-    bool allow = 1;
+    State state = 1;
+}
+
+enum State {
+    DENY = 0;
+    ALLOW = 1;
 }

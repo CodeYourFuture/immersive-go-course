@@ -20,6 +20,7 @@ func main() {
 	as := auth.NewAuthService()
 	if err := as.Run(ctx, auth.Config{
 		Port: *port,
+		Log:  *log.Default(),
 	}); err != nil {
 		log.Fatal(err)
 	}
