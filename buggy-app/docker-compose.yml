@@ -1,5 +1,26 @@
 version: "3.9"
 services:
+
+  # Postgres
+  database:
+    image: postgres
+    restart: always
+    volumes:
+      # Data storage
+      - type: bind
+        source: volumes/data
+        target: /var/lib/postgresql/data
+      # Secrets (passwords etc.)
+      - type: bind
+        source: volumes/secrets
+        target: /run/secrets
+      # Initialisation scripts (only run if data volume is empty)
+      - type: bind
+        source: volumes/init
+        target: /docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
+
   auth:
     build: .
     ports:
