@@ -37,7 +37,7 @@ services:
         read_only: true
     environment:
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
-    command: /out/migrate --path /migrations
+    command: /out/migrate --path /migrations up
 
   auth:
     build: .
