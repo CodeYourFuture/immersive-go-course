@@ -10,9 +10,10 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set up Go
         uses: actions/setup-go@v3
-        with:
-          go-version-file: "buggy-app/go.mod"
-          cache-dependency-path: "buggy-app/go.sum"
-          cache: true
+        # Remove due to "There are no cache folders on the disk" error
+        # with:
+        #   go-version-file: "buggy-app/go.mod"
+        #   cache-dependency-path: "buggy-app/go.sum"
+        #   cache: true
       - name: Test
-        run: go test ./...
+        run: make migrate test

@@ -19,6 +19,7 @@ services:
       - type: bind
         source: volumes/init
         target: /docker-entrypoint-initdb.d
+        read_only: true
     environment:
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
       - POSTGRES_HOST=postgres
@@ -46,6 +47,14 @@ services:
       - "8000:8080"
     depends_on:
       - postgres
+    volumes:
+      # Secrets (passwords etc.)
+      - type: bind
+        source: volumes/secrets
+        target: /run/secrets
+        read_only: true
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
     command: /out/auth
     profiles: ["run"]
 
@@ -53,5 +62,13 @@ services:
     build: .
     depends_on:
       - postgres
+    volumes:
+      # Secrets (passwords etc.)
+      - type: bind
+        source: volumes/secrets
+        target: /run/secrets
+        read_only: true
     command: go test /app/...
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
     profiles: ["test"]
