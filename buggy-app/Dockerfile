@@ -17,13 +17,9 @@ COPY . .
 RUN mkdir -p /out
 RUN go build -o /out ./...
 
-##
-## Deploy
-##
-FROM gcr.io/distroless/base-debian11
-
-WORKDIR /
-
-COPY --from=base /out /out
+COPY bin /bin
+COPY migrations /migrations
 
 EXPOSE 8080
+
+ENTRYPOINT [ "/bin/wait-for-it.sh", "postgres:5432", "-t", "10", "--" ]

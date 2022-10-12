@@ -38,5 +38,11 @@ test: protoc
 ## RUN
 ##
 
-run: protoc volumes
-	docker-compose up --build
+build: protoc volumes
+	docker-compose build
+
+run:
+	docker-compose up
+
+build-run: build
+	docker-compose up

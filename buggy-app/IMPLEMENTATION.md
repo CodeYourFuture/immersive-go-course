@@ -17,3 +17,8 @@ Configuration:
 - For running locally, we want to mount a directory on the host machine
 - Startup order will be important: https://docs.docker.com/compose/startup-order/
 - We need to generate secrets for the postgres user
+
+For migrations, `golang-migrate`:
+
+- `brew install golang-migrate` for the global executable
+- We'll run them directly from go: `https://pkg.go.dev/github.com/golang-migrate/migrate`
