@@ -6,4 +6,4 @@ protoc: auth/service/auth.proto
 		auth/service/auth.proto
 
 test: protoc
-	go test -v ./auth
+	go test -v ./...
