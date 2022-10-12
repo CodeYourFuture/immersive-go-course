@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -67,17 +68,26 @@ func main() {
 		log.Fatalln("path is empty directory")
 	}
 
+	// TODO: this is hack to make the migration wait for Postgres to be ready. The correct
+	// thing is to detect the retryable error ("pq: the database system is starting up") and
+	// retry, with exponential backoff.
+	<-time.After(500 * time.Millisecond)
+
 	for _, entry := range contents {
+		// We only want to migrate directories
 		if !entry.IsDir() {
 			continue
 		}
+		// Build a file:// and a postres:// URL to migrate into
 		dir := fmt.Sprintf("file://%s/%s", *path, entry.Name())
 		url := fmt.Sprintf("postgres://postgres:%s@%s/%s?sslmode=disable", passwd, *hostport, entry.Name())
-		log.Printf("migrating: %q into %q database", dir, entry.Name())
+		log.Printf("migrate: %q into %q database", dir, entry.Name())
+		// Prepare the migration
 		m, err := migrate.New(dir, url)
 		if err != nil {
 			log.Fatal(err)
 		}
+		// Do it, according to the argument
 		switch flag.Arg(0) {
 		case "up":
 			err = m.Up()
@@ -87,8 +97,14 @@ func main() {
 			log.Fatal("expected one of up or down")
 		}
 		if err != nil {
-			log.Fatal(err)
+			// The NoChange error is not a problem
+			if errors.Is(err, migrate.ErrNoChange) {
+				log.Printf("migrate: %s: no change", dir)
+			} else {
+				log.Fatal(err)
+			}
 		}
 	}
 
+	log.Println("migrate: complete")
 }
