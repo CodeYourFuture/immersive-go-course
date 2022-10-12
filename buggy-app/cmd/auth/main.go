@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	port := flag.Int("port", 8081, "port the server will listen on")
+	port := flag.Int("port", 8080, "port the server will listen on")
 	flag.Parse()
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)

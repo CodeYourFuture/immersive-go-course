@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  auth:
+    build: .
+    ports:
+      - "8000:8080"
+    entrypoint: /out/auth
