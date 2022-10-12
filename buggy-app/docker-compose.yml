@@ -2,7 +2,7 @@ version: "3.9"
 services:
 
   # Postgres
-  database:
+  postgres:
     image: postgres
     restart: always
     volumes:
@@ -20,9 +20,28 @@ services:
         target: /docker-entrypoint-initdb.d
     environment:
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
+      - POSTGRES_HOST=postgres
+    ports:
+      - "5432:5432"
+
+  migrate:
+    build: .
+    depends_on:
+      - postgres
+    volumes:
+      # Secrets (passwords etc.)
+      - type: bind
+        source: volumes/secrets
+        target: /run/secrets
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
+    command: /out/migrate --path /migrations
 
   auth:
     build: .
     ports:
       - "8000:8080"
-    entrypoint: /out/auth
+    depends_on:
+      - migrate
+      - postgres
+    command: /out/auth
