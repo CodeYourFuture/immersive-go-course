@@ -23,4 +23,4 @@ COPY migrations /migrations
 
 # The entrypoint will, by default, wait for postgres to become available at `postgres://postgres:5432` before
 # running the command that follows
-ENTRYPOINT [ "/bin/wait-for-it.sh", "postgres:5432", "-t", "10", "--" ]
+ENTRYPOINT [ "/bin/wait-for-it.sh", "postgres:5432", "-t", "60", "--" ]

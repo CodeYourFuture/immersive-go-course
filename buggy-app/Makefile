@@ -15,7 +15,7 @@ volumes: volumes/secrets/postgres-passwd
 # Run this to completely reset the database state
 # Be careful not to run this while the containers are runing
 volumes-reset:
-	rm -rf volumes/data volumes/secrets
+	rm -rf volumes/data
 
 ##
 ## BUILD
@@ -46,3 +46,11 @@ run:
 
 build-run: build
 	docker-compose up
+
+migrate:
+	POSTGRES_PASSWORD_FILE=volumes/secrets/postgres-passwd \
+		go run ./cmd/migrate --hostport localhost:5432 --path migrations up
+
+migrate-down:
+	POSTGRES_PASSWORD_FILE=volumes/secrets/postgres-passwd \
+		go run ./cmd/migrate --hostport localhost:5432 --path migrations down

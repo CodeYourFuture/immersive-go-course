@@ -39,8 +39,10 @@ func readDir(path string) ([]os.DirEntry, error) {
 
 func main() {
 	path := flag.String("path", "", "Path to migrations directory")
+	hostport := flag.String("hostport", "postgres:5432", "Host:port of Postgres")
+
 	flag.Parse()
-	if *path == "" {
+	if len(flag.Args()) == 0 || *path == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -70,13 +72,23 @@ func main() {
 			continue
 		}
 		dir := fmt.Sprintf("file://%s/%s", *path, entry.Name())
-		url := fmt.Sprintf("postgres://postgres:%s@postgres:5432/%s?sslmode=disable", passwd, entry.Name())
+		url := fmt.Sprintf("postgres://postgres:%s@%s/%s?sslmode=disable", passwd, *hostport, entry.Name())
 		log.Printf("migrating: %q into %q database", dir, entry.Name())
 		m, err := migrate.New(dir, url)
 		if err != nil {
 			log.Fatal(err)
 		}
-		m.Up()
+		switch flag.Arg(0) {
+		case "up":
+			err = m.Up()
+		case "down":
+			err = m.Down()
+		default:
+			log.Fatal("expected one of up or down")
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 }
