@@ -14,6 +14,7 @@ services:
       - type: bind
         source: volumes/secrets
         target: /run/secrets
+        read_only: true
       # Initialisation scripts (only run if data volume is empty)
       - type: bind
         source: volumes/init
@@ -33,6 +34,7 @@ services:
       - type: bind
         source: volumes/secrets
         target: /run/secrets
+        read_only: true
     environment:
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
     command: /out/migrate --path /migrations
