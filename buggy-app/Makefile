@@ -31,26 +31,30 @@ protoc: auth/service/auth.proto
 ## TEST
 ##
 
-test: protoc
-	go test -v ./...
+test: protoc volumes
+	docker compose --profile test build
+	docker compose --profile test run test
 
 ##
 ## RUN
 ##
 
 build: protoc volumes
-	docker-compose build
+	docker compose --profile run build
+
+migrate: protoc volumes
+	docker compose --profile migrate build
+	docker compose run migrate
 
 run:
-	docker-compose up
+	docker compose --profile run up
 
-build-run: build
-	docker-compose up
+build-run: | build migrate run
 
-migrate:
+migrate-local:
 	POSTGRES_PASSWORD_FILE=volumes/secrets/postgres-passwd \
 		go run ./cmd/migrate --hostport localhost:5432 --path migrations up
 
-migrate-down:
+migrate-local-down:
 	POSTGRES_PASSWORD_FILE=volumes/secrets/postgres-passwd \
 		go run ./cmd/migrate --hostport localhost:5432 --path migrations down

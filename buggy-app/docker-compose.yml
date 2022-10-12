@@ -38,12 +38,20 @@ services:
     environment:
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
     command: /out/migrate --path /migrations up
+    profiles: ["migrate"]
 
   auth:
     build: .
     ports:
       - "8000:8080"
     depends_on:
-      - migrate
       - postgres
     command: /out/auth
+    profiles: ["run"]
+
+  test:
+    build: .
+    depends_on:
+      - postgres
+    command: go test /app/...
+    profiles: ["test"]
