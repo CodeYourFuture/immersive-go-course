@@ -11,6 +11,8 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+
+	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util"
 )
 
 func readDir(path string) ([]os.DirEntry, error) {
@@ -48,16 +50,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	passwordFile := os.Getenv("POSTGRES_PASSWORD_FILE")
-	if passwordFile == "" {
-		log.Fatalln("please set POSTGRES_PASSWORD_FILE environment variable")
-	}
-
-	pwdFile, err := os.ReadFile(passwordFile)
+	passwd, err := util.ReadPasswdFile()
 	if err != nil {
 		log.Fatal(err)
 	}
-	passwd := string(pwdFile)
 
 	contents, err := readDir(*path)
 	if err != nil {

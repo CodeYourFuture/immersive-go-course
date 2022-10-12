@@ -13,7 +13,10 @@ COPY go.sum ./
 
 RUN go mod download
 
-COPY . .
+COPY auth ./auth
+COPY cmd ./cmd
+COPY migrations ./migrations
+COPY util ./util
 
 RUN mkdir -p /out
 RUN go build -o /out ./...

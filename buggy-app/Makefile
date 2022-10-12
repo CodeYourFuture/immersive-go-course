@@ -31,7 +31,7 @@ protoc: auth/service/auth.proto
 ## TEST
 ##
 
-test: protoc volumes
+test: volumes
 	docker compose --profile test build
 	docker compose --profile test run test
 
@@ -39,10 +39,10 @@ test: protoc volumes
 ## RUN
 ##
 
-build: protoc volumes
+build: volumes
 	docker compose --profile run build
 
-migrate: protoc volumes
+migrate: volumes
 	docker compose --profile migrate build
 	docker compose run migrate
 
