@@ -19,11 +19,12 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer stop()
 
-	as := api.NewApiService()
-	if err := as.Run(ctx, api.Config{
-		Port: *port,
-		Log:  log.Default(),
-	}); err != nil {
+	as := api.New(api.Config{
+		Port:           *port,
+		Log:            log.Default(),
+		AuthServiceUrl: "auth:8090",
+	})
+	if err := as.Run(ctx); err != nil {
 		log.Fatal(err)
 	}
 }

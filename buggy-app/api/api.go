@@ -11,19 +11,26 @@ import (
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util"
 )
 
-type ApiService struct {
-	util.Service
-
-	authClient auth.Client
-}
-
 type Config struct {
 	Port           int
 	Log            *log.Logger
 	AuthServiceUrl string
 }
 
-func (as *ApiService) handleMyNotes(w http.ResponseWriter, r *http.Request) {
+type Service struct {
+	util.Service
+
+	config     Config
+	authClient auth.Client
+}
+
+func New(config Config) *Service {
+	return &Service{
+		config: config,
+	}
+}
+
+func (as *Service) handleMyNotes(w http.ResponseWriter, r *http.Request) {
 	id, passwd, ok := r.BasicAuth()
 	// Malformed basic auth is not OK
 	if !ok {
@@ -52,10 +59,10 @@ func (as *ApiService) handleMyNotes(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "{}")
 }
 
-func (as *ApiService) Run(ctx context.Context, config Config) error {
-	listen := fmt.Sprintf("localhost:%d", config.Port)
+func (as *Service) Run(ctx context.Context) error {
+	listen := fmt.Sprintf("localhost:%d", as.config.Port)
 
-	client, err := auth.NewClient(ctx, config.AuthServiceUrl)
+	client, err := auth.NewClient(ctx, as.config.AuthServiceUrl)
 	if err != nil {
 		return err
 	}
@@ -74,15 +81,11 @@ func (as *ApiService) Run(ctx context.Context, config Config) error {
 		runErr = server.ListenAndServe()
 	}()
 
-	config.Log.Printf("api service: listening: %s", listen)
+	as.config.Log.Printf("api service: listening: %s", listen)
 
 	<-ctx.Done()
 	server.Shutdown(context.TODO())
 
 	wg.Wait()
 	return runErr
-}
-
-func NewApiService() *ApiService {
-	return &ApiService{}
 }

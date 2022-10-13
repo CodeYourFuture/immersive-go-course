@@ -5,5 +5,5 @@ import (
 )
 
 type Service interface {
-	Run(ctx context.Context, config any) error
+	Run(ctx context.Context) error
 }
