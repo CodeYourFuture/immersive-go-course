@@ -1,0 +1,40 @@
+name: Docker cloud tests and deploy
+on: [push]
+defaults:
+  run:
+    working-directory: docker-cloud
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: "docker-cloud/go.mod"
+          cache-dependency-path: docker-cloud/go.sum
+          cache: true
+
+      - name: Checkout code
+      - uses: actions/checkout@v3
+
+      - name: Fetch required Go modules
+        run: go mod download
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          tags: ${{ github.event.repository.name }}:latest, ${{ github.repository }}:latest
+
+      - name: Test
+        run: go test -v ./...
+
+      - name: Upload Go test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Go-results-${{ matrix.go-version }}
+          path: TestResults-${{ matrix.go-version }}.json
