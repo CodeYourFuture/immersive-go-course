@@ -13,13 +13,14 @@ import (
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/auth"
 )
 
-func TestRun(t *testing.T) {
+var defaultConfig Config = Config{
+	Port:           8090,
+	Log:            log.Default(),
+	AuthServiceUrl: "auth:8080",
+}
 
-	config := Config{
-		Log:            log.Default(),
-		AuthServiceUrl: "auth:8080",
-	}
-	as := NewApiService()
+func TestRun(t *testing.T) {
+	as := New(defaultConfig)
 
 	var runErr error
 	var wg sync.WaitGroup
@@ -28,7 +29,7 @@ func TestRun(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		runErr = as.Run(ctx, config)
+		runErr = as.Run(ctx)
 	}()
 
 	<-time.After(1000 * time.Millisecond)
@@ -41,13 +42,7 @@ func TestRun(t *testing.T) {
 }
 
 func TestSimpleRequest(t *testing.T) {
-
-	config := Config{
-		Port:           8090,
-		Log:            log.Default(),
-		AuthServiceUrl: "auth:8080",
-	}
-	as := NewApiService()
+	as := New(defaultConfig)
 
 	var runErr error
 	var wg sync.WaitGroup
@@ -56,7 +51,7 @@ func TestSimpleRequest(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		runErr = as.Run(ctx, config)
+		runErr = as.Run(ctx)
 	}()
 
 	<-time.After(1000 * time.Millisecond)
@@ -83,7 +78,7 @@ func TestSimpleRequest(t *testing.T) {
 }
 
 func TestMyNotesAuthFail(t *testing.T) {
-	as := NewApiService()
+	as := New(defaultConfig)
 	as.authClient = auth.NewMockClient(auth.VerifyResult{
 		State: auth.StateDeny,
 	})
@@ -102,7 +97,7 @@ func TestMyNotesAuthFail(t *testing.T) {
 }
 
 func TestMyNotesAuthFailWithAuth(t *testing.T) {
-	as := NewApiService()
+	as := New(defaultConfig)
 	as.authClient = auth.NewMockClient(auth.VerifyResult{
 		State: auth.StateDeny,
 	})
@@ -122,7 +117,7 @@ func TestMyNotesAuthFailWithAuth(t *testing.T) {
 }
 
 func TestMyNotesAuthFailMalformedAuth(t *testing.T) {
-	as := NewApiService()
+	as := New(defaultConfig)
 	as.authClient = auth.NewMockClient(auth.VerifyResult{
 		State: auth.StateDeny,
 	})
@@ -142,7 +137,7 @@ func TestMyNotesAuthFailMalformedAuth(t *testing.T) {
 }
 
 func TestMyNotesAuthPass(t *testing.T) {
-	as := NewApiService()
+	as := New(defaultConfig)
 	as.authClient = auth.NewMockClient(auth.VerifyResult{
 		State: auth.StateAllow,
 	})
