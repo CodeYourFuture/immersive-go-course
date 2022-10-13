@@ -4,15 +4,20 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"net/http/httptest"
+	"strings"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/CodeYourFuture/immersive-go-course/buggy-app/auth"
 )
 
 func TestRun(t *testing.T) {
 
 	config := Config{
-		Log: log.Default(),
+		Log:            log.Default(),
+		AuthServiceUrl: "auth:8080",
 	}
 	as := NewApiService()
 
@@ -38,8 +43,9 @@ func TestRun(t *testing.T) {
 func TestSimpleRequest(t *testing.T) {
 
 	config := Config{
-		Port: 8090,
-		Log:  log.Default(),
+		Port:           8090,
+		Log:            log.Default(),
+		AuthServiceUrl: "auth:8080",
 	}
 	as := NewApiService()
 
@@ -73,5 +79,84 @@ func TestSimpleRequest(t *testing.T) {
 	wg.Wait()
 	if runErr != http.ErrServerClosed {
 		t.Fatal(runErr)
+	}
+}
+
+func TestMyNotesAuthFail(t *testing.T) {
+	as := NewApiService()
+	as.authClient = auth.NewMockClient(auth.VerifyResult{
+		State: auth.StateDeny,
+	})
+
+	req, err := http.NewRequest("GET", "/1/my/notes.json", strings.NewReader(""))
+	if err != nil {
+		log.Fatal(err)
+	}
+	res := httptest.NewRecorder()
+	handler := http.HandlerFunc(as.handleMyNotes)
+	handler.ServeHTTP(res, req)
+
+	if res.Code != http.StatusUnauthorized {
+		t.Fatalf("expected status %d, got %d", http.StatusUnauthorized, res.Code)
+	}
+}
+
+func TestMyNotesAuthFailWithAuth(t *testing.T) {
+	as := NewApiService()
+	as.authClient = auth.NewMockClient(auth.VerifyResult{
+		State: auth.StateDeny,
+	})
+
+	req, err := http.NewRequest("GET", "/1/my/notes.json", strings.NewReader(""))
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Add("Authorization", "Basic ZXhhbXBsZTpleGFtcGxl")
+	res := httptest.NewRecorder()
+	handler := http.HandlerFunc(as.handleMyNotes)
+	handler.ServeHTTP(res, req)
+
+	if res.Code != http.StatusUnauthorized {
+		t.Fatalf("expected status %d, got %d", http.StatusUnauthorized, res.Code)
+	}
+}
+
+func TestMyNotesAuthFailMalformedAuth(t *testing.T) {
+	as := NewApiService()
+	as.authClient = auth.NewMockClient(auth.VerifyResult{
+		State: auth.StateDeny,
+	})
+
+	req, err := http.NewRequest("GET", "/1/my/notes.json", strings.NewReader(""))
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Add("Authorization", "Basic nope")
+	res := httptest.NewRecorder()
+	handler := http.HandlerFunc(as.handleMyNotes)
+	handler.ServeHTTP(res, req)
+
+	if res.Code != http.StatusUnauthorized {
+		t.Fatalf("expected status %d, got %d", http.StatusUnauthorized, res.Code)
+	}
+}
+
+func TestMyNotesAuthPass(t *testing.T) {
+	as := NewApiService()
+	as.authClient = auth.NewMockClient(auth.VerifyResult{
+		State: auth.StateAllow,
+	})
+
+	req, err := http.NewRequest("GET", "/1/my/notes.json", strings.NewReader(""))
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Add("Authorization", "Basic ZXhhbXBsZTpleGFtcGxl")
+	res := httptest.NewRecorder()
+	handler := http.HandlerFunc(as.handleMyNotes)
+	handler.ServeHTTP(res, req)
+
+	if res.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusUnauthorized, res.Code)
 	}
 }
