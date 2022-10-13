@@ -33,7 +33,7 @@ func main() {
 	if err := as.Run(ctx, auth.Config{
 		Port:        *port,
 		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/auth", passwd),
-		Log:         *log.Default(),
+		Log:         log.Default(),
 	}); err != nil {
 		log.Fatal(err)
 	}

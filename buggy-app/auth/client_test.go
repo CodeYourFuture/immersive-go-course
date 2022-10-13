@@ -13,7 +13,7 @@ import (
 func TestClientCreate(t *testing.T) {
 	config := Config{
 		Port: 8010,
-		Log:  *log.Default(),
+		Log:  log.Default(),
 	}
 	as := NewAuthService()
 

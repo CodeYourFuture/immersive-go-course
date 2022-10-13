@@ -1,9 +1,9 @@
 package util
 
-import "context"
-
-type Config interface{}
+import (
+	"context"
+)
 
 type Service interface {
-	Run(ctx context.Context, config Config) error
+	Run(ctx context.Context, config any) error
 }
