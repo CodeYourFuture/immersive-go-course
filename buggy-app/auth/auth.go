@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	pb "github.com/CodeYourFuture/immersive-go-course/buggy-app/auth/service"
+	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
@@ -15,12 +16,16 @@ import (
 )
 
 type Config struct {
+	util.Config
+
 	Port        int
 	DatabaseUrl string
 	Log         log.Logger
 }
 
 type AuthService struct {
+	util.Service
+
 	service *authService
 }
 
