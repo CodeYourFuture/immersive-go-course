@@ -25,16 +25,7 @@ jobs:
         run: go build -v ./...
 
       - name: Build Docker image
-        uses: docker/build-push-action@v2
-        with:
-          push: false
-          tags: ${{ github.event.repository.name }}:latest, ${{ github.repository }}:latest
+        run: docker build -t docker-cloud:latest
 
       - name: Test
         run: go test -v ./...
-
-      - name: Upload Go test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: Go-results-${{ matrix.go-version }}
-          path: TestResults-${{ matrix.go-version }}.json
