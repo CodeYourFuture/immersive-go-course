@@ -26,7 +26,7 @@ func TestRun(t *testing.T) {
 		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/auth", passwd),
 		Log:         log.Default(),
 	}
-	as := NewAuthService()
+	as := New(config)
 
 	var runErr error
 	var wg sync.WaitGroup
@@ -35,7 +35,7 @@ func TestRun(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		runErr = as.Run(ctx, config)
+		runErr = as.Run(ctx)
 	}()
 
 	<-time.After(1000 * time.Millisecond)
@@ -59,14 +59,14 @@ func TestSimpleVerifyDeny(t *testing.T) {
 		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/auth", passwd),
 		Log:         log.Default(),
 	}
-	as := NewAuthService()
+	as := New(config)
 
 	var runErr error
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		runErr = as.Run(ctx, config)
+		runErr = as.Run(ctx)
 	}()
 
 	<-time.After(100 * time.Millisecond)
@@ -110,14 +110,14 @@ func TestSimpleVerifyAllow(t *testing.T) {
 		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/auth", passwd),
 		Log:         log.Default(),
 	}
-	as := NewAuthService()
+	as := New(config)
 
 	var runErr error
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		runErr = as.Run(ctx, config)
+		runErr = as.Run(ctx)
 	}()
 
 	<-time.After(100 * time.Millisecond)

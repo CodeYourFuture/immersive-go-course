@@ -29,12 +29,12 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer stop()
 
-	as := auth.NewAuthService()
-	if err := as.Run(ctx, auth.Config{
+	as := auth.New(auth.Config{
 		Port:        *port,
 		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/auth", passwd),
 		Log:         log.Default(),
-	}); err != nil {
+	})
+	if err := as.Run(ctx); err != nil {
 		log.Fatal(err)
 	}
 }
