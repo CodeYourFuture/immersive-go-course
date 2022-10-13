@@ -21,15 +21,17 @@ type Config struct {
 	Log         *log.Logger
 }
 
-type AuthService struct {
+type Service struct {
 	util.Service
 
-	service *authService
+	config      Config
+	grpcService *grpcAuthService
 }
 
-func NewAuthService() *AuthService {
-	return &AuthService{
-		service: newAuthService(),
+func New(config Config) *Service {
+	return &Service{
+		config:      config,
+		grpcService: newGrpcService(),
 	}
 }
 
@@ -44,19 +46,19 @@ func NewAuthService() *AuthService {
 //	}); err != nil {
 //		log.Fatal(err)
 //	}
-func (as *AuthService) Run(ctx context.Context, config Config) error {
+func (as *Service) Run(ctx context.Context) error {
 	// Connect to the database via a "pool" of connections, allowing concurrency
-	pool, err := pgxpool.New(ctx, config.DatabaseUrl)
+	pool, err := pgxpool.New(ctx, as.config.DatabaseUrl)
 	if err != nil {
 		return fmt.Errorf("unable to create connection pool: %w", err)
 	}
 	defer pool.Close()
 	// Add the pool to the "inner" auth service which implements the gRPC interface
 	// and responds to RPCs
-	as.service.pool = pool
+	as.grpcService.pool = pool
 
 	// Create a TCP listener for the gRPC server to use
-	listen := fmt.Sprintf("localhost:%d", config.Port)
+	listen := fmt.Sprintf("localhost:%d", as.config.Port)
 	lis, err := net.Listen("tcp", listen)
 	if err != nil {
 		return fmt.Errorf("failed to listen: %w", err)
@@ -64,7 +66,7 @@ func (as *AuthService) Run(ctx context.Context, config Config) error {
 
 	// Set up and register the server
 	grpcServer := grpc.NewServer()
-	pb.RegisterAuthServer(grpcServer, as.service)
+	pb.RegisterAuthServer(grpcServer, as.grpcService)
 
 	// Serve on the supplied listener
 	// This call blocks, so we put it in a goroutine
@@ -76,7 +78,7 @@ func (as *AuthService) Run(ctx context.Context, config Config) error {
 		runErr = grpcServer.Serve(lis)
 	}()
 
-	config.Log.Printf("auth service: listening: %s", listen)
+	as.config.Log.Printf("auth service: listening: %s", listen)
 
 	// Wait for the context cancel (e.g. from interrupt signal) before
 	// gracefully shutting down any ongoing RPCs
@@ -88,12 +90,16 @@ func (as *AuthService) Run(ctx context.Context, config Config) error {
 	return runErr
 }
 
-// Internal authService struct that implements the gRPC server interface
-type authService struct {
+// Internal grpcAuthService struct that implements the gRPC server interface
+type grpcAuthService struct {
 	pb.UnimplementedAuthServer
 
 	// Pool is a reference to the database that we can use for queries
 	pool *pgxpool.Pool
+}
+
+func newGrpcService() *grpcAuthService {
+	return &grpcAuthService{}
 }
 
 type userRow struct {
@@ -103,7 +109,7 @@ type userRow struct {
 }
 
 // Verify checks a Input for authentication validity
-func (as *authService) Verify(ctx context.Context, in *pb.Input) (*pb.Result, error) {
+func (as *grpcAuthService) Verify(ctx context.Context, in *pb.Input) (*pb.Result, error) {
 	// Look for this user in the database
 	var row userRow
 	err := as.pool.QueryRow(ctx,
@@ -139,8 +145,4 @@ func (as *authService) Verify(ctx context.Context, in *pb.Input) (*pb.Result, er
 	return &pb.Result{
 		State: pb.State_ALLOW,
 	}, nil
-}
-
-func newAuthService() *authService {
-	return &authService{}
 }

@@ -15,7 +15,7 @@ func TestClientCreate(t *testing.T) {
 		Port: 8010,
 		Log:  log.Default(),
 	}
-	as := NewAuthService()
+	as := New(config)
 
 	var err error
 	var wg sync.WaitGroup
@@ -24,7 +24,7 @@ func TestClientCreate(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		err = as.Run(ctx, config)
+		err = as.Run(ctx)
 	}()
 
 	client, err := newClientWithOpts(ctx, "localhost:8010", defaultOpts()...)
