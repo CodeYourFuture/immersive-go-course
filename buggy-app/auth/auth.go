@@ -16,11 +16,9 @@ import (
 )
 
 type Config struct {
-	util.Config
-
 	Port        int
 	DatabaseUrl string
-	Log         log.Logger
+	Log         *log.Logger
 }
 
 type AuthService struct {

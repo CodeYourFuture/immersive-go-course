@@ -13,6 +13,7 @@ COPY go.sum ./
 
 RUN go mod download
 
+COPY api ./api
 COPY auth ./auth
 COPY cmd ./cmd
 COPY migrations ./migrations

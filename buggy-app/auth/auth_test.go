@@ -24,7 +24,7 @@ func TestRun(t *testing.T) {
 	config := Config{
 		Port:        8010,
 		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/auth", passwd),
-		Log:         *log.Default(),
+		Log:         log.Default(),
 	}
 	as := NewAuthService()
 
@@ -57,7 +57,7 @@ func TestSimpleVerifyDeny(t *testing.T) {
 	config := Config{
 		Port:        8010,
 		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/auth", passwd),
-		Log:         *log.Default(),
+		Log:         log.Default(),
 	}
 	as := NewAuthService()
 
@@ -108,7 +108,7 @@ func TestSimpleVerifyAllow(t *testing.T) {
 	config := Config{
 		Port:        8010,
 		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/auth", passwd),
-		Log:         *log.Default(),
+		Log:         log.Default(),
 	}
 	as := NewAuthService()
 
