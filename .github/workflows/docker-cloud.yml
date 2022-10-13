@@ -17,8 +17,8 @@ jobs:
           cache-dependency-path: docker-cloud/go.sum
           cache: true
 
-      - name: Build Docker image
-        run: docker build -t docker-cloud:latest
+      - name: Build
+        run: go build -v ./...
 
       - name: Test
         run: go test -v ./...
