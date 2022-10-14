@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	port := flag.Int("port", 8090, "port the server will listen on")
+	port := flag.Int("port", 80, "port the server will listen on")
 	flag.Parse()
 
 	// The NotifyContext will signal Done when these signals are sent, allowing the server
@@ -22,7 +22,7 @@ func main() {
 	as := api.New(api.Config{
 		Port:           *port,
 		Log:            log.Default(),
-		AuthServiceUrl: "auth:8090",
+		AuthServiceUrl: "auth:80",
 	})
 	if err := as.Run(ctx); err != nil {
 		log.Fatal(err)

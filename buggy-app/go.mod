@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/gleicon/go-httplogger v0.0.0-20170829021956-ab2410a250ca // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect

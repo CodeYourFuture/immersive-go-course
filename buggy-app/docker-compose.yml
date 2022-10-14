@@ -44,7 +44,7 @@ services:
   auth:
     build: .
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:80"
     depends_on:
       - postgres
     volumes:
@@ -61,7 +61,7 @@ services:
   api:
     build: .
     ports:
-      - "8090:8090"
+      - "127.0.0.1:8090:80"
     depends_on:
       - postgres
       - auth

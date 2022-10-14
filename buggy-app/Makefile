@@ -51,7 +51,10 @@ migrate: volumes
 run:
 	docker compose --profile run up
 
-build-run: | build migrate run
+run-database:
+	docker compose up
+
+build-run: | build run
 
 migrate-local:
 	POSTGRES_PASSWORD_FILE=volumes/secrets/postgres-passwd \

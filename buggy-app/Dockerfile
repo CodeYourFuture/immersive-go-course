@@ -25,6 +25,8 @@ RUN go build -o /out ./...
 COPY bin /bin
 COPY migrations /migrations
 
+EXPOSE 80
+
 # The entrypoint will, by default, wait for postgres to become available at `postgres://postgres:5432` before
 # running the command that follows
 ENTRYPOINT [ "/bin/wait-for-it.sh", "postgres:5432", "-t", "60", "--" ]

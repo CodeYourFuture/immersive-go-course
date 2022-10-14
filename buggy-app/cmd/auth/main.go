@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	port := flag.Int("port", 8080, "port the server will listen on")
+	port := flag.Int("port", 80, "port the server will listen on")
 	flag.Parse()
 
 	// Get the postgres password from a file supplied in an environment variable
