@@ -85,7 +85,7 @@ func (as *Service) Handler() http.Handler {
 }
 
 func (as *Service) Run(ctx context.Context) error {
-	listen := fmt.Sprintf("localhost:%d", as.config.Port)
+	listen := fmt.Sprintf(":%d", as.config.Port)
 
 	client, err := auth.NewClient(ctx, as.config.AuthServiceUrl)
 	if err != nil {
