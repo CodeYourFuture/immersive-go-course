@@ -3,10 +3,12 @@ package auth
 import (
 	"context"
 	"log"
+	"net"
 	"sync"
 	"testing"
 	"time"
 
+	pb "github.com/CodeYourFuture/immersive-go-course/buggy-app/auth/service"
 	"google.golang.org/grpc"
 )
 
@@ -61,5 +63,129 @@ func TestClientClose(t *testing.T) {
 	err = client.Close()
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestClientVerifyDeny(t *testing.T) {
+	listen := "localhost:8010"
+	lis, err := net.Listen("tcp", listen)
+	if err != nil {
+		t.Fatalf("failed to listen: %v", err)
+	}
+
+	pbStateExpected, stateExpected := pb.State_DENY, StateDeny
+
+	mockService := newMockGrpcService(&pb.Result{
+		State: pbStateExpected,
+	}, nil)
+
+	// Set up and register the server
+	grpcServer := grpc.NewServer()
+	pb.RegisterAuthServer(grpcServer, mockService)
+
+	var runErr error
+	var wg sync.WaitGroup
+	ctx, cancel := context.WithCancel(context.Background())
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		runErr = grpcServer.Serve(lis)
+	}()
+
+	done := func() {
+		cancel()
+		grpcServer.GracefulStop()
+		wg.Wait()
+	}
+
+	client, err := NewClient(ctx, listen)
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	res, err := client.Verify(ctx, "example", "example")
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	err = client.Close()
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	if res.State != stateExpected {
+		done()
+		t.Fatalf("verify state: expected %s, got %s\n", stateExpected, res.State)
+	}
+
+	done()
+	if runErr != nil && runErr != grpc.ErrServerStopped {
+		t.Fatal(runErr)
+	}
+}
+
+func TestClientVerifyAllow(t *testing.T) {
+	listen := "localhost:8010"
+	lis, err := net.Listen("tcp", listen)
+	if err != nil {
+		t.Fatalf("failed to listen: %v", err)
+	}
+
+	pbStateExpected, stateExpected := pb.State_ALLOW, StateAllow
+
+	mockService := newMockGrpcService(&pb.Result{
+		State: pbStateExpected,
+	}, nil)
+
+	// Set up and register the server
+	grpcServer := grpc.NewServer()
+	pb.RegisterAuthServer(grpcServer, mockService)
+
+	var runErr error
+	var wg sync.WaitGroup
+	ctx, cancel := context.WithCancel(context.Background())
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		runErr = grpcServer.Serve(lis)
+	}()
+
+	done := func() {
+		cancel()
+		grpcServer.GracefulStop()
+		wg.Wait()
+	}
+
+	client, err := NewClient(ctx, listen)
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	res, err := client.Verify(ctx, "example", "example")
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	err = client.Close()
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	if res.State != stateExpected {
+		done()
+		t.Fatalf("verify state: expected %s, got %s\n", stateExpected, res.State)
+	}
+
+	done()
+	if runErr != nil && runErr != grpc.ErrServerStopped {
+		t.Fatal(runErr)
 	}
 }

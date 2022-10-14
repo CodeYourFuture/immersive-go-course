@@ -32,6 +32,8 @@ protoc: auth/service/auth.proto
 ##
 
 test: volumes
+	@# If it doesn't build, we want to know ASAP
+	go build ./...
 	docker compose --profile test build
 	docker compose --profile test run test
 

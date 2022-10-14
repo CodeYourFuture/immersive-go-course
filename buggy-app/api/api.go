@@ -39,7 +39,7 @@ func (as *Service) handleMyNotes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Use the auth client to check if this id/password combo is approved
-	result, err := as.authClient.Verify(id, passwd)
+	result, err := as.authClient.Verify(r.Context(), id, passwd)
 	if err != nil {
 		log.Printf("api: verify error: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

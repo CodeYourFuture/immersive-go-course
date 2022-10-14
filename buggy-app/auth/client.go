@@ -11,16 +11,16 @@ import (
 
 type Client interface {
 	Close() error
-	Verify(id, passwd string) (VerifyResult, error)
+	Verify(ctx context.Context, id, passwd string) (VerifyResult, error)
 }
 
 type VerifyResult struct {
 	State string
 }
 
-const (
-	StateDeny  = "DENY"
-	StateAllow = "ALLOW"
+var (
+	StateDeny  = pb.State_name[int32(pb.State_DENY)]
+	StateAllow = pb.State_name[int32(pb.State_ALLOW)]
 )
 
 // GrpcClient is meant to be used by other services to talk with the Auth service.
@@ -44,9 +44,16 @@ func (c *GrpcClient) Close() error {
 	return c.conn.Close()
 }
 
-func (c *GrpcClient) Verify(id, passwd string) (VerifyResult, error) {
+func (c *GrpcClient) Verify(ctx context.Context, id, passwd string) (VerifyResult, error) {
+	res, err := c.aC.Verify(ctx, &pb.Input{
+		Id:       id,
+		Password: passwd,
+	})
+	if err != nil {
+		return VerifyResult{}, fmt.Errorf("failed to verify: %w", err)
+	}
 	return VerifyResult{
-		State: StateDeny,
+		State: pb.State_name[int32(res.State)],
 	}, nil
 }
 
@@ -86,6 +93,6 @@ func NewMockClient(result VerifyResult) *MockClient {
 }
 
 func (ac *MockClient) Close() error { return nil }
-func (ac *MockClient) Verify(id, passwd string) (VerifyResult, error) {
+func (ac *MockClient) Verify(ctx context.Context, id, passwd string) (VerifyResult, error) {
 	return ac.result, nil
 }

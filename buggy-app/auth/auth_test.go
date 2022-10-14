@@ -157,7 +157,7 @@ func TestSimpleVerifyAllow(t *testing.T) {
 		t.Fatalf("insert failed: %v", err)
 	}
 
-	log.Printf("got id %s\n", user.id)
+	log.Printf("TestSimpleVerifyAllow: got id %s\n", user.id)
 
 	result, err := client.Verify(ctx, &pb.Input{
 		Id:       user.id,
