@@ -64,6 +64,14 @@ services:
     depends_on:
       - postgres
       - auth
+    volumes:
+      # Secrets (passwords etc.)
+      - type: bind
+        source: volumes/secrets
+        target: /run/secrets
+        read_only: true
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
     command: /out/api
 
   test:
