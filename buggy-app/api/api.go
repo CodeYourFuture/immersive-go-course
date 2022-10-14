@@ -10,6 +10,7 @@ import (
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/auth"
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util"
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util/authctx"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	httplogger "github.com/gleicon/go-httplogger"
 )
@@ -18,6 +19,7 @@ type Config struct {
 	Port           int
 	Log            *log.Logger
 	AuthServiceUrl string
+	DatabaseUrl    string
 }
 
 type Service struct {
@@ -25,6 +27,7 @@ type Service struct {
 
 	config     Config
 	authClient auth.Client
+	pool       *pgxpool.Pool
 }
 
 func New(config Config) *Service {
@@ -86,6 +89,15 @@ func (as *Service) Handler() http.Handler {
 
 func (as *Service) Run(ctx context.Context) error {
 	listen := fmt.Sprintf(":%d", as.config.Port)
+
+	// Connect to the database via a "pool" of connections, allowing concurrency
+	pool, err := pgxpool.New(ctx, as.config.DatabaseUrl)
+	if err != nil {
+		return fmt.Errorf("unable to create connection pool: %w", err)
+	}
+	defer pool.Close()
+	// Add the pool to the the service
+	as.pool = pool
 
 	client, err := auth.NewClient(ctx, as.config.AuthServiceUrl)
 	if err != nil {
