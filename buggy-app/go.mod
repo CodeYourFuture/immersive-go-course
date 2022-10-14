@@ -3,6 +3,7 @@ module github.com/CodeYourFuture/immersive-go-course/buggy-app
 go 1.19
 
 require (
+	github.com/gleicon/go-httplogger v0.0.0-20170829021956-ab2410a250ca
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/jackc/pgx/v5 v5.0.2
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
@@ -12,7 +13,6 @@ require (
 )
 
 require (
-	github.com/gleicon/go-httplogger v0.0.0-20170829021956-ab2410a250ca // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect

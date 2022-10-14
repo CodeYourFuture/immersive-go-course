@@ -11,8 +11,8 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         # Remove due to "There are no cache folders on the disk" error
-        # with:
-        #   go-version-file: "buggy-app/go.mod"
+        with:
+          go-version-file: "buggy-app/go.mod"
         #   cache-dependency-path: "buggy-app/go.sum"
         #   cache: true
       - name: Test
