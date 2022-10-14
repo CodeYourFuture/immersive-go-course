@@ -18,7 +18,7 @@ jobs:
           cache: true
 
       - name: Build
-        run: docker build -t docker-cloud:latest
+        run: docker build -t docker-cloud:latest .
 
       - name: Test
         run: go test -v ./...
