@@ -58,7 +58,7 @@ func (as *Service) Run(ctx context.Context) error {
 	as.grpcService.pool = pool
 
 	// Create a TCP listener for the gRPC server to use
-	listen := fmt.Sprintf("localhost:%d", as.config.Port)
+	listen := fmt.Sprintf(":%d", as.config.Port)
 	lis, err := net.Listen("tcp", listen)
 	if err != nil {
 		return fmt.Errorf("failed to listen: %w", err)
