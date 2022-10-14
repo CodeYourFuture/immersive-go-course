@@ -128,7 +128,7 @@ func TestMyNotesAuthFailMalformedAuth(t *testing.T) {
 	}
 	req.Header.Add("Authorization", "Basic nope")
 	res := httptest.NewRecorder()
-	handler := http.HandlerFunc(as.handleMyNotes)
+	handler := as.Handler()
 	handler.ServeHTTP(res, req)
 
 	if res.Code != http.StatusUnauthorized {
@@ -148,10 +148,10 @@ func TestMyNotesAuthPass(t *testing.T) {
 	}
 	req.Header.Add("Authorization", "Basic ZXhhbXBsZTpleGFtcGxl")
 	res := httptest.NewRecorder()
-	handler := http.HandlerFunc(as.handleMyNotes)
+	handler := as.Handler()
 	handler.ServeHTTP(res, req)
 
 	if res.Code != http.StatusOK {
-		t.Fatalf("expected status %d, got %d", http.StatusUnauthorized, res.Code)
+		t.Fatalf("expected status %d, got %d", http.StatusOK, res.Code)
 	}
 }
