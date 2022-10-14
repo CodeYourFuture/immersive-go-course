@@ -10,12 +10,12 @@ volumes/secrets/postgres-passwd:
 	openssl rand -hex 24 | tr -d '\n' > volumes/secrets/postgres-passwd
 
 volumes: volumes/secrets/postgres-passwd
-	mkdir -p volumes/data
+	mkdir -p /tmp/buggy-app-data
 
 # Run this to completely reset the database state
 # Be careful not to run this while the containers are runing
 volumes-reset:
-	rm -rf volumes/data
+	rm -rf /tmp/buggy-app-data
 
 ##
 ## BUILD
