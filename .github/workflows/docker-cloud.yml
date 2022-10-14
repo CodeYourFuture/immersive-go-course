@@ -36,6 +36,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
+          registry-type: public
           role-to-assume: arn:aws:iam::297880250375:role/GitHubActionECRPublicPushImage
           aws-region: eu-west-2
 
