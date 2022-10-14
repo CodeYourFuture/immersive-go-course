@@ -31,7 +31,7 @@ func main() {
 
 	as := auth.New(auth.Config{
 		Port:        *port,
-		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/auth", passwd),
+		DatabaseUrl: fmt.Sprintf("postgres://postgres:%s@postgres:5432/app", passwd),
 		Log:         log.Default(),
 	})
 	if err := as.Run(ctx); err != nil {
