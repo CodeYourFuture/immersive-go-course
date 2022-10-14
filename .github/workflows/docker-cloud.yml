@@ -1,4 +1,4 @@
-name: Docker cloud tests
+name: Docker cloud test and deploy
 on: [push]
 defaults:
   run:
@@ -29,6 +29,7 @@ jobs:
       - test
     permissions:
       id-token: write
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,7 +37,6 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          registry-type: public
           role-to-assume: arn:aws:iam::297880250375:role/GitHubActionECRPublicPushImage
           aws-region: eu-west-2
 
