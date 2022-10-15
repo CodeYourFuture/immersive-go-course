@@ -2,14 +2,18 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 	"sync"
+	"time"
 
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/auth"
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util"
-	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util/authctx"
+	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util/authuserctx"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	httplogger "github.com/gleicon/go-httplogger"
@@ -34,6 +38,14 @@ func New(config Config) *Service {
 	return &Service{
 		config: config,
 	}
+}
+
+type noteRow struct {
+	Id       string    `json:"id"`
+	Owner    string    `json:"owner"`
+	Content  string    `json:"content"`
+	Created  time.Time `json:"created"`
+	Modified time.Time `json:"modified"`
 }
 
 func (as *Service) wrapAuth(handler http.HandlerFunc) http.HandlerFunc {
@@ -63,20 +75,70 @@ func (as *Service) wrapAuth(handler http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		ctx = authctx.NewAuthenticatedContext(ctx, id)
+		ctx = authuserctx.NewAuthenticatedContext(ctx, id)
 		handler(w, r.WithContext(ctx))
 	}
 }
 
+// The special type interface{} allows us to take _any_ value, not just one of a specific type.
+func marshalWithIndent(data interface{}, indent string) ([]byte, error) {
+	// Convert images to a byte-array for writing back in a response
+	var b []byte
+	var marshalErr error
+	// Allow up to 10 characters of indent
+	if i, err := strconv.Atoi(indent); err == nil && i > 0 && i <= 10 {
+		b, marshalErr = json.MarshalIndent(data, "", strings.Repeat(" ", i))
+	} else {
+		b, marshalErr = json.Marshal(data)
+	}
+	if marshalErr != nil {
+		return nil, fmt.Errorf("could not marshal data: [%w]", marshalErr)
+	}
+	return b, nil
+}
+
 func (as *Service) handleMyNotes(w http.ResponseWriter, r *http.Request) {
-	_, ok := authctx.FromAuthenticatedContext(r.Context())
+	ctx := r.Context()
+	userId, ok := authuserctx.FromAuthenticatedContext(ctx)
 	if !ok {
 		as.config.Log.Printf("api: route handler reached with invalid auth context")
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 	}
+
+	queryRows, err := as.pool.Query(ctx, "SELECT id, owner, content, created, modified FROM public.note")
+	if err != nil {
+		fmt.Printf("api: could not query notes: %v\n", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+	defer queryRows.Close()
+
+	rows := []noteRow{}
+	for queryRows.Next() {
+		row := noteRow{}
+		err = queryRows.Scan(&row.Id, &row.Owner, &row.Content, &row.Created, &row.Modified)
+		if err != nil {
+			fmt.Printf("api: query scan failed: %v\n", err)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		if row.Owner == userId {
+			rows = append(rows, row)
+		}
+	}
+
+	if queryRows.Err() != nil {
+		fmt.Printf("api: query read failed: %v\n", queryRows.Err())
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+
+	res, err := marshalWithIndent(rows, "")
+	if err != nil {
+		fmt.Printf("api: response marshal failed: %v\n", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+
 	w.Header().Add("Content-Type", "text/json")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "{}")
+	w.Write(res)
 }
 
 // Set up routes -- this can be used in tests to set up simple HTTP handling
