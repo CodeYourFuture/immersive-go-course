@@ -2,15 +2,12 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
-	"strings"
 	"sync"
-	"time"
 
+	"github.com/CodeYourFuture/immersive-go-course/buggy-app/api/model"
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/auth"
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util"
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util/authuserctx"
@@ -40,104 +37,32 @@ func New(config Config) *Service {
 	}
 }
 
-type noteRow struct {
-	Id       string    `json:"id"`
-	Owner    string    `json:"owner"`
-	Content  string    `json:"content"`
-	Created  time.Time `json:"created"`
-	Modified time.Time `json:"modified"`
-}
-
-func (as *Service) wrapAuth(handler http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithCancel(r.Context())
-		defer cancel()
-
-		id, passwd, ok := r.BasicAuth()
-		// Malformed basic auth is not OK
-		if !ok {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		// Use the auth client to check if this id/password combo is approved
-		result, err := as.authClient.Verify(ctx, id, passwd)
-		if err != nil {
-			log.Printf("api: verify error: %v\n", err)
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
-
-		// Unless we get an Allow, say no
-		if result.State != auth.StateAllow {
-			log.Printf("api: verify denied: id %v\n", id)
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		ctx = authuserctx.NewAuthenticatedContext(ctx, id)
-		handler(w, r.WithContext(ctx))
-	}
-}
-
-// The special type interface{} allows us to take _any_ value, not just one of a specific type.
-func marshalWithIndent(data interface{}, indent string) ([]byte, error) {
-	// Convert images to a byte-array for writing back in a response
-	var b []byte
-	var marshalErr error
-	// Allow up to 10 characters of indent
-	if i, err := strconv.Atoi(indent); err == nil && i > 0 && i <= 10 {
-		b, marshalErr = json.MarshalIndent(data, "", strings.Repeat(" ", i))
-	} else {
-		b, marshalErr = json.Marshal(data)
-	}
-	if marshalErr != nil {
-		return nil, fmt.Errorf("could not marshal data: [%w]", marshalErr)
-	}
-	return b, nil
-}
-
+// HTTP handler for getting notes for a particular user
 func (as *Service) handleMyNotes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	userId, ok := authuserctx.FromAuthenticatedContext(ctx)
+	// Get the authenticated user from the context -- this will have been written earlier
+	owner, ok := authuserctx.FromAuthenticatedContext(ctx)
 	if !ok {
 		as.config.Log.Printf("api: route handler reached with invalid auth context")
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 	}
 
-	queryRows, err := as.pool.Query(ctx, "SELECT id, owner, content, created, modified FROM public.note")
+	// Use the "model" layer to get a list of the owner's notes
+	rows, err := model.GetNotesForOwner(ctx, as.pool, owner)
 	if err != nil {
-		fmt.Printf("api: could not query notes: %v\n", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-	}
-	defer queryRows.Close()
-
-	rows := []noteRow{}
-	for queryRows.Next() {
-		row := noteRow{}
-		err = queryRows.Scan(&row.Id, &row.Owner, &row.Content, &row.Created, &row.Modified)
-		if err != nil {
-			fmt.Printf("api: query scan failed: %v\n", err)
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
-		if row.Owner == userId {
-			rows = append(rows, row)
-		}
-	}
-
-	if queryRows.Err() != nil {
-		fmt.Printf("api: query read failed: %v\n", queryRows.Err())
+		fmt.Printf("api: GetNotesForOwner failed: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 
-	res, err := marshalWithIndent(rows, "")
+	// Convert the []Row into JSON
+	res, err := util.MarshalWithIndent(rows, "")
 	if err != nil {
 		fmt.Printf("api: response marshal failed: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 
+	// Write it back out!
 	w.Header().Add("Content-Type", "text/json")
-	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
 
