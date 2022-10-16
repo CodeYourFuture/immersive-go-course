@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -15,6 +17,7 @@ type Note struct {
 	Content  string    `json:"content"`
 	Created  time.Time `json:"created"`
 	Modified time.Time `json:"modified"`
+	Tags     []string  `json:"tags"`
 }
 
 type Notes []Note
@@ -37,13 +40,14 @@ func GetNotesForOwner(ctx context.Context, conn dbConn, owner string) (Notes, er
 
 	notes := []Note{}
 	for queryRows.Next() {
-		row := Note{}
-		err = queryRows.Scan(&row.Id, &row.Owner, &row.Content, &row.Created, &row.Modified)
+		note := Note{}
+		err = queryRows.Scan(&note.Id, &note.Owner, &note.Content, &note.Created, &note.Modified)
 		if err != nil {
 			return nil, fmt.Errorf("model: query scan failed: %w", err)
 		}
-		if row.Owner == owner {
-			notes = append(notes, row)
+		if note.Owner == owner {
+			note.Tags = extractTags(note.Content)
+			notes = append(notes, note)
 		}
 	}
 
@@ -66,5 +70,18 @@ func GetNoteById(ctx context.Context, conn dbConn, id string) (Note, error) {
 	if err != nil {
 		return note, fmt.Errorf("model: query scan failed: %w", err)
 	}
+	note.Tags = extractTags(note.Content)
 	return note, nil
+}
+
+// Extract tags from the note. We're looking for #something. There could be
+// multiple tags, so we FindAll.
+func extractTags(input string) []string {
+	re := regexp.MustCompile(`#([^#]+)`)
+	matches := re.FindAllStringSubmatch(input, -1)
+	tags := make([]string, 0, len(matches))
+	for _, f := range matches {
+		tags = append(tags, strings.TrimSpace(f[1]))
+	}
+	return tags
 }
