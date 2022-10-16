@@ -42,6 +42,8 @@ test: volumes
 ##
 
 build: volumes
+	@# If it doesn't build, we want to know ASAP
+	go build ./...
 	docker compose --profile run build
 
 migrate: volumes
