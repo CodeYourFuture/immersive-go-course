@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/auth"
+	"github.com/pashagolub/pgxmock/v2"
 )
 
 var defaultConfig Config = Config{
@@ -79,6 +80,12 @@ func TestSimpleRequest(t *testing.T) {
 
 func TestMyNotesAuthFail(t *testing.T) {
 	as := New(defaultConfig)
+	mock, err := pgxmock.NewPool()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer mock.Close()
+	as.pool = mock
 	as.authClient = auth.NewMockClient(auth.VerifyResult{
 		State: auth.StateDeny,
 	})
@@ -98,6 +105,12 @@ func TestMyNotesAuthFail(t *testing.T) {
 
 func TestMyNotesAuthFailWithAuth(t *testing.T) {
 	as := New(defaultConfig)
+	mock, err := pgxmock.NewPool()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer mock.Close()
+	as.pool = mock
 	as.authClient = auth.NewMockClient(auth.VerifyResult{
 		State: auth.StateDeny,
 	})
@@ -118,6 +131,12 @@ func TestMyNotesAuthFailWithAuth(t *testing.T) {
 
 func TestMyNotesAuthFailMalformedAuth(t *testing.T) {
 	as := New(defaultConfig)
+	mock, err := pgxmock.NewPool()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer mock.Close()
+	as.pool = mock
 	as.authClient = auth.NewMockClient(auth.VerifyResult{
 		State: auth.StateDeny,
 	})
@@ -138,9 +157,19 @@ func TestMyNotesAuthFailMalformedAuth(t *testing.T) {
 
 func TestMyNotesAuthPass(t *testing.T) {
 	as := New(defaultConfig)
+	mock, err := pgxmock.NewPool()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer mock.Close()
+	as.pool = mock
 	as.authClient = auth.NewMockClient(auth.VerifyResult{
 		State: auth.StateAllow,
 	})
+
+	rows := mock.NewRows([]string{"id", "owner", "content"})
+
+	mock.ExpectQuery("^SELECT (.+) FROM public.note$").WillReturnRows(rows)
 
 	req, err := http.NewRequest("GET", "/1/my/notes.json", strings.NewReader(""))
 	if err != nil {

@@ -11,10 +11,18 @@ import (
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/auth"
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util"
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util/authuserctx"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	httplogger "github.com/gleicon/go-httplogger"
 )
+
+// DbClient is for talking to the database
+type DbClient interface {
+	QueryRow(context.Context, string, ...interface{}) pgx.Row
+	Query(context.Context, string, ...interface{}) (pgx.Rows, error)
+	Close()
+}
 
 type Config struct {
 	Port           int
@@ -28,7 +36,7 @@ type Service struct {
 
 	config     Config
 	authClient auth.Client
-	pool       *pgxpool.Pool
+	pool       DbClient
 }
 
 func New(config Config) *Service {
