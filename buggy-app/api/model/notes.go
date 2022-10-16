@@ -21,6 +21,7 @@ type Notes []Note
 
 type dbConn interface {
 	Query(ctx context.Context, sql string, optionsAndArgs ...interface{}) (pgx.Rows, error)
+	QueryRow(context.Context, string, ...interface{}) pgx.Row
 }
 
 func GetNotesForOwner(ctx context.Context, conn dbConn, owner string) (Notes, error) {
@@ -51,4 +52,19 @@ func GetNotesForOwner(ctx context.Context, conn dbConn, owner string) (Notes, er
 	}
 
 	return notes, nil
+}
+
+func GetNoteById(ctx context.Context, conn dbConn, id string) (Note, error) {
+	var note Note
+	if id == "" {
+		return note, errors.New("model: id not supplied")
+	}
+
+	row := conn.QueryRow(ctx, "SELECT id, owner, content, created, modified FROM public.note WHERE id = $1", id)
+
+	err := row.Scan(&note.Id, &note.Owner, &note.Content, &note.Created, &note.Modified)
+	if err != nil {
+		return note, fmt.Errorf("model: query scan failed: %w", err)
+	}
+	return note, nil
 }
