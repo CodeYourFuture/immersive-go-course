@@ -36,28 +36,28 @@ Here's how requests flow through the architecture diagram below:
 1. Once validated, the API allows request to continue to retrieve Note data from the database
 
 ```
-               ┌───────────────────────────────────────┐      ┌─────────────────┐
-               │              API Service              │      │       DB        │
-               │                                       │      │                 │
-               │ ┌────────────┐           ┌─────────┐  │      │                 │
-     ┌────┐    │ │            │           │         │  │      │ ┌─────────────┐ │
-     │HTTP│    │ │            │           │         │  │      │ │             │ │
+			   ┌───────────────────────────────────────┐      ┌─────────────────┐
+			   │              API Service              │      │       DB        │
+			   │                                       │      │                 │
+			   │ ┌────────────┐           ┌─────────┐  │      │                 │
+	 ┌────┐    │ │            │           │         │  │      │ ┌─────────────┐ │
+	 │HTTP│    │ │            │           │         │  │      │ │             │ │
 ─────┴────┴────┼▶│    Auth    │──────────▶│  Notes  │──┼──────┼▶│    Note     │ │
-               │ │            │           │         │  │      │ │             │ │
-               │ │            │           │         │  │      │ └─────────────┘ │
-               │ └────────────┘           └─────────┘  │      │                 │
-               │        ▲                              │      │                 │
-               └────────┼──────────────────────────────┘      │                 │
-                        ├────┐                                │                 │
-                        │gRPC│                                │                 │
-                        ├────┘                                │                 │
-                        ▼                                     │                 │
-                ┌──────────────┐                              │ ┌─────────────┐ │
-                │              │                              │ │             │ │
-                │ Auth Service │──────────────────────────────┼▶│    User     │ │
-                │              │                              │ │             │ │
-                └──────────────┘                              │ └─────────────┘ │
-                                                              └─────────────────┘
+			   │ │            │           │         │  │      │ │             │ │
+			   │ │            │           │         │  │      │ └─────────────┘ │
+			   │ └────────────┘           └─────────┘  │      │                 │
+			   │        ▲                              │      │                 │
+			   └────────┼──────────────────────────────┘      │                 │
+						├────┐                                │                 │
+						│gRPC│                                │                 │
+						├────┘                                │                 │
+						▼                                     │                 │
+				┌──────────────┐                              │ ┌─────────────┐ │
+				│              │                              │ │             │ │
+				│ Auth Service │──────────────────────────────┼▶│    User     │ │
+				│              │                              │ │             │ │
+				└──────────────┘                              │ └─────────────┘ │
+															  └─────────────────┘
 ```
 
 ## API
@@ -69,7 +69,7 @@ Authentication is by [basic auth](https://developer.mozilla.org/en-US/docs/Web/H
 
 ```console
 > curl 127.0.0.1:8090/1/my/notes.json \
-    -H 'Authorization: Basic QTJSUHE2VG86YmFuYW5h' -i
+	-H 'Authorization: Basic QTJSUHE2VG86YmFuYW5h' -i
 HTTP/1.1 200 OK
 Content-Type: text/json
 Date: Sun, 16 Oct 2022 09:45:03 GMT
@@ -205,3 +205,94 @@ To run migrations:
 ```
 
 **Important:** the migrations run **inside Docker**. Always run them via `make`.
+
+## Test data
+
+You can generate test data using `cmd/test`. There are two commands, `user` and `note`. These are useful for setting up test scenarios. The database needs to be running: `make run`.
+
+```console
+> go run ./cmd/test user -password banana
+	2022/10/16 16:40:56 new user created
+	2022/10/16 16:40:56 	id: FxoAB2gl
+	2022/10/16 16:40:56 	password: banana
+	2022/10/16 16:40:56 base64 for auth: RnhvQUIyZ2w6YmFuYW5h
+
+> go run ./cmd/test note -owner FxoAB2gl
+	2022/10/16 16:41:42 new note created
+	2022/10/16 16:41:42 	id: 0fxh25SJ
+	2022/10/16 16:41:42 	owner: FxoAB2gl
+	2022/10/16 16:41:42 	content: "Example note content"
+```
+
+### `user`
+
+Example that generates 3 `active` users with the password `banana`.
+
+```console
+> go run ./cmd/test user -password banana -status inactive -n 3
+2022/10/16 21:19:48 new user created
+2022/10/16 21:19:48 	id: VcKtJ4Nx
+2022/10/16 21:19:48 	status: inactive
+2022/10/16 21:19:48 	password: banana
+2022/10/16 21:19:48 base64 for auth: VmNLdEo0Tng6YmFuYW5h
+2022/10/16 21:19:48 new user created
+2022/10/16 21:19:48 	id: 73AY1VfS
+2022/10/16 21:19:48 	status: inactive
+2022/10/16 21:19:48 	password: banana
+2022/10/16 21:19:48 base64 for auth: NzNBWTFWZlM6YmFuYW5h
+2022/10/16 21:19:48 new user created
+2022/10/16 21:19:48 	id: TnKZvNFl
+2022/10/16 21:19:48 	status: inactive
+2022/10/16 21:19:48 	password: banana
+2022/10/16 21:19:48 base64 for auth: VG5LWnZORmw6YmFuYW5h
+```
+
+Usage of `user`:
+
+```
+  -db string
+		target database (default "app")
+  -hostport string
+		host:port of Postgres (default "localhost:5432")
+  -n int
+		number of entities to generate (default 1)
+  -password string
+		password of the created user (default "password")
+  -status string
+		status of the created user (default "active")
+```
+
+### `note`
+
+Example that generates 3 notes, owned by user `TnKZvNFl`, with the content `This note has a #tag`.
+
+```console
+> go run ./cmd/test note -owner TnKZvNFl -content "This note has a #tag" -n 3
+2022/10/16 21:21:01 new note created
+2022/10/16 21:21:01 	id: 7_sI25qa
+2022/10/16 21:21:01 	owner: TnKZvNFl
+2022/10/16 21:21:01 	content: "This note has a #tag"
+2022/10/16 21:21:01 new note created
+2022/10/16 21:21:01 	id: 2hcmUDzb
+2022/10/16 21:21:01 	owner: TnKZvNFl
+2022/10/16 21:21:01 	content: "This note has a #tag"
+2022/10/16 21:21:01 new note created
+2022/10/16 21:21:01 	id: dcd9kMNo
+2022/10/16 21:21:01 	owner: TnKZvNFl
+2022/10/16 21:21:01 	content: "This note has a #tag"
+```
+
+Usage of `note`:
+
+```
+  -content string
+		content of the created note (default "Example note content")
+  -db string
+		target database (default "app")
+  -hostport string
+		host:port of Postgres (default "localhost:5432")
+  -n int
+		number of entities to generate (default 1)
+  -owner string
+		owner of the created note
+```

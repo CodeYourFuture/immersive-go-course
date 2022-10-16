@@ -38,8 +38,12 @@ type Flags struct {
 	hostport string
 	db       string
 
+	// Number of entities to generate
+	n int
+
 	// User flags
 	passwd string
+	status string
 
 	// Note flags
 	content string
@@ -104,14 +108,18 @@ func main() {
 		log.Fatalf("error connecting to database: %v", err)
 	}
 
-	// Run the right command
-	switch f.cmd {
-	case "user":
-		err = userCmd(ctx, f, conn)
-	case "note":
-		err = noteCmd(ctx, f, conn)
-	default:
-		log.Fatalf("unrecognised command: %s", f.cmd)
+	i := 0
+	for i < f.n {
+		i += 1
+		// Run the right command
+		switch f.cmd {
+		case "user":
+			err = userCmd(ctx, f, conn)
+		case "note":
+			err = noteCmd(ctx, f, conn)
+		default:
+			log.Fatalf("unrecognised command: %s", f.cmd)
+		}
 	}
 
 	if err != nil {
@@ -123,12 +131,14 @@ func main() {
 func baseFlags(f *Flags, fs *flag.FlagSet) {
 	fs.StringVar(&f.hostport, "hostport", "localhost:5432", "host:port of Postgres")
 	fs.StringVar(&f.db, "db", "app", "target database")
+	fs.IntVar(&f.n, "n", 1, "number of entities to generate")
 }
 
 // Flags associated with the user command
 func userFlags(f *Flags) *flag.FlagSet {
 	fs := flag.NewFlagSet("user", flag.ExitOnError)
 	fs.StringVar(&f.passwd, "password", "password", "password of the created user")
+	fs.StringVar(&f.status, "status", "active", "status of the created user")
 	return fs
 }
 
@@ -139,13 +149,18 @@ func userCmd(ctx context.Context, f *Flags, conn *pgx.Conn) error {
 		return fmt.Errorf("user: could not hash password, %w", err)
 	}
 
+	if f.status != "active" && f.status != "inactive" {
+		return fmt.Errorf("user: invalid status, %s", f.status)
+	}
+
 	var id string
-	err = conn.QueryRow(ctx, "INSERT INTO public.user (status, password) VALUES ($1, $2) RETURNING id", "active", hash).Scan(&id)
+	err = conn.QueryRow(ctx, "INSERT INTO public.user (status, password) VALUES ($1, $2) RETURNING id", f.status, hash).Scan(&id)
 	if err != nil {
 		return fmt.Errorf("user: could not insert user, %w", err)
 	}
 	log.Printf("new user created\n")
 	log.Printf("\tid: %s\n", id)
+	log.Printf("\tstatus: %s\n", f.status)
 	log.Printf("\tpassword: %s\n", f.passwd)
 	log.Printf("base64 for auth: %s\n", util.BasicAuthValue(id, f.passwd))
 	return nil
