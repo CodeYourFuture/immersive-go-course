@@ -140,7 +140,7 @@ func userCmd(ctx context.Context, f *Flags, conn *pgx.Conn) error {
 	}
 
 	var id string
-	err = conn.QueryRow(ctx, "INSERT INTO public.user (status, password) VALUES ($1, $2) RETURNING id", 1, hash).Scan(&id)
+	err = conn.QueryRow(ctx, "INSERT INTO public.user (status, password) VALUES ($1, $2) RETURNING id", "active", hash).Scan(&id)
 	if err != nil {
 		return fmt.Errorf("user: could not insert user, %w", err)
 	}
