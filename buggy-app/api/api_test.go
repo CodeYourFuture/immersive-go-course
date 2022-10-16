@@ -237,7 +237,7 @@ func TestMyNotesOneNone(t *testing.T) {
 	data := struct {
 		Notes []model.Note `json:"notes"`
 	}{Notes: []model.Note{
-		{Id: noteId, Owner: id, Content: content, Created: created, Modified: modified},
+		{Id: noteId, Owner: id, Content: content, Created: created, Modified: modified, Tags: []string{}},
 	}}
 	assertJSON(res.Body.Bytes(), data, t)
 
@@ -283,7 +283,7 @@ func TestMyNotesNonOwnedNote(t *testing.T) {
 	data := struct {
 		Notes []model.Note `json:"notes"`
 	}{Notes: []model.Note{
-		{Id: noteId, Owner: id, Content: content, Created: created, Modified: modified},
+		{Id: noteId, Owner: id, Content: content, Created: created, Modified: modified, Tags: []string{}},
 	}}
 	assertJSON(res.Body.Bytes(), data, t)
 
@@ -327,7 +327,50 @@ func TestMyNoteById(t *testing.T) {
 
 	data := struct {
 		Note model.Note `json:"note"`
-	}{Note: model.Note{Id: noteId, Owner: id, Content: content, Created: created, Modified: modified}}
+	}{Note: model.Note{Id: noteId, Owner: id, Content: content, Created: created, Modified: modified, Tags: []string{}}}
+	assertJSON(res.Body.Bytes(), data, t)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Fatalf("unfulfilled expectations: %s", err)
+	}
+}
+
+func TestMyNoteByIdWithTags(t *testing.T) {
+	as := New(defaultConfig)
+	mock, err := pgxmock.NewPool()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer mock.Close()
+	as.pool = mock
+	as.authClient = auth.NewMockClient(&auth.VerifyResult{
+		State: auth.StateAllow,
+	})
+
+	id, password := "abc123", "password"
+	noteId, content, created, modified := "xyz789", "Note content #tag1", time.Now(), time.Now()
+
+	rows := mock.NewRows([]string{"id", "owner", "content", "created", "modified"}).
+		AddRow(noteId, id, content, created, modified)
+
+	mock.ExpectQuery("^SELECT (.+) FROM public.note WHERE id = (.+)$").WillReturnRows(rows)
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("/1/my/note/%s.json", noteId), strings.NewReader(""))
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Add("Authorization", util.BasicAuthHeaderValue(id, password))
+	res := httptest.NewRecorder()
+	handler := as.Handler()
+	handler.ServeHTTP(res, req)
+
+	if res.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, res.Code)
+	}
+
+	data := struct {
+		Note model.Note `json:"note"`
+	}{Note: model.Note{Id: noteId, Owner: id, Content: content, Created: created, Modified: modified, Tags: []string{"tag1"}}}
 	assertJSON(res.Body.Bytes(), data, t)
 
 	if err := mock.ExpectationsWereMet(); err != nil {
