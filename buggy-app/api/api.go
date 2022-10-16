@@ -34,8 +34,6 @@ type Config struct {
 }
 
 type Service struct {
-	util.Service
-
 	config     Config
 	authClient auth.Client
 	pool       DbClient
@@ -92,7 +90,10 @@ func (as *Service) handleMyNoteById(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 	}
 
-	id := strings.Replace(path.Base(r.URL.Path), ".json", "", -1)
+	// The URL.Path will be something like /1/my/notes/abc123.json.
+	// path.Base strips everything but "abc123.json". We then Replace out the ".json" to give us
+	// just the ID.
+	id := strings.Replace(path.Base(r.URL.Path), ".json", "", 1)
 	if id == "" {
 		fmt.Printf("api: no ID supplied: url path %v\n", r.URL.Path)
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
@@ -127,8 +128,8 @@ func (as *Service) handleMyNoteById(w http.ResponseWriter, r *http.Request) {
 // rather than running the whole server.
 func (as *Service) Handler() http.Handler {
 	mux := new(http.ServeMux)
-	mux.HandleFunc("/1/my/note/", as.wrapAuth(as.handleMyNoteById))
-	mux.HandleFunc("/1/my/notes.json", as.wrapAuth(as.handleMyNotes))
+	mux.HandleFunc("/1/my/note/", as.wrapAuth(as.authClient, as.handleMyNoteById))
+	mux.HandleFunc("/1/my/notes.json", as.wrapAuth(as.authClient, as.handleMyNotes))
 	return httplogger.HTTPLogger(mux)
 }
 
@@ -144,12 +145,14 @@ func (as *Service) Run(ctx context.Context) error {
 	// Add the pool to the the service
 	as.pool = pool
 
+	// Connect to the Auth service via the AuthClient
 	client, err := auth.NewClient(ctx, as.config.AuthServiceUrl)
 	if err != nil {
 		return err
 	}
 	as.authClient = client
 
+	// mux is the root Handler
 	mux := as.Handler()
 	server := &http.Server{Addr: listen, Handler: mux}
 
@@ -163,7 +166,9 @@ func (as *Service) Run(ctx context.Context) error {
 
 	as.config.Log.Printf("api service: listening: %s", listen)
 
+	// Wait for a signal to shut down...
 	<-ctx.Done()
+	// ... and then do it as gracefully as possible.
 	server.Shutdown(context.TODO())
 
 	wg.Wait()

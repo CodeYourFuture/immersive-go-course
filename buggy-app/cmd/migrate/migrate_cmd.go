@@ -15,6 +15,30 @@ import (
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util"
 )
 
+// The migrate command reads a directory (-path) for sub-directories containing .sql files.
+// Names of the sub-directories map to database names, so migrations/app will migrate into
+// the "app" database.
+//
+// The command is based around the github.com/golang-migrate/migrate package, and supports "up"
+// and "down" migrations:
+//
+//	go run ./cmd/migrate -path migrations up
+//	go run ./cmd/migrate -path migrations down
+//
+// The command does not error if the database is fully migrated already.
+//
+// If you experience an error, it's likely that the database is in a bad state. Migration status
+// is tracked in the `public.schema_migrations` table: it has a version and a dirty flag. Migrations
+// will not run if dirty is true. The most likely fix is:
+//
+//  - Undo the changes of the migration version in the schema_migrations table
+//  - Set the version to 1 less than the migration that errored
+//  - Set dirty to false
+//  - Try the migration again
+//
+// Before running this tool, make sure the password for the postgres user is available at
+// $POSTGRES_PASSWORD or $POSTGRES_PASSWORD_FILE.
+
 func readDir(path string) ([]os.DirEntry, error) {
 	// Stat the file so we can check if it's a directory or not before
 	// we try to read it as a directory using ReadDir. os.ReadDir will
@@ -50,11 +74,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	passwd, err := util.ReadPasswdFile()
+	// Get the Postgres password from the environment
+	passwd, err := util.ReadPasswd()
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// Read the migrations directory
 	contents, err := readDir(*path)
 	if err != nil {
 		log.Fatal(err)
@@ -77,12 +103,15 @@ func main() {
 		// Build a file:// and a postres:// URL to migrate into
 		dir := fmt.Sprintf("file://%s/%s", *path, entry.Name())
 		url := fmt.Sprintf("postgres://postgres:%s@%s/%s?sslmode=disable", passwd, *hostport, entry.Name())
+
 		log.Printf("migrate: %q into %q database", dir, entry.Name())
+
 		// Prepare the migration
 		m, err := migrate.New(dir, url)
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		// Do it, according to the argument
 		switch flag.Arg(0) {
 		case "up":

@@ -137,6 +137,16 @@ buggy-app-api-1       | wait-for-it.sh: postgres:5432 is available after 1 secon
 buggy-app-api-1       | 2022/10/16 09:41:49 api service: listening: :80
 ```
 
+Once it's running, the port of the API will be available (`8090`) which we can see via `docker compose ps`:
+
+```console
+> docker compose ps
+NAME                   COMMAND                  SERVICE             STATUS              PORTS
+buggy-app-api-1        "/bin/docker-entrypo…"   api                 running             127.0.0.1:8090->80/tcp
+buggy-app-auth-1       "/bin/docker-entrypo…"   auth                running             127.0.0.1:8080->80/tcp
+buggy-app-postgres-1   "docker-entrypoint.s…"   postgres            running             0.0.0.0:5432->5432/tcp
+```
+
 Under the hood, we're using `docker compose` to coordinate startup.
 
 `bin/wait-for-it.sh` is used extensively to make sure that Postgres is available before the other services are started.

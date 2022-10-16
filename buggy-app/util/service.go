@@ -1,17 +1,13 @@
 package util
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 )
 
-type Service interface {
-	Run(ctx context.Context) error
-}
-
+// Marshal any object into JSON, with an indent value for pretty-printing.
 // The special type interface{} allows us to take _any_ value, not just one of a specific type.
 func MarshalWithIndent(data interface{}, indent string) ([]byte, error) {
 	// Convert images to a byte-array for writing back in a response

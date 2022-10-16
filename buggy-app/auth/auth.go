@@ -8,7 +8,6 @@ import (
 	"sync"
 
 	pb "github.com/CodeYourFuture/immersive-go-course/buggy-app/auth/service"
-	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
@@ -22,8 +21,6 @@ type Config struct {
 }
 
 type Service struct {
-	util.Service
-
 	config      Config
 	grpcService *grpcAuthService
 }

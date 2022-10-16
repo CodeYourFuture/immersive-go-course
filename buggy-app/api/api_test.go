@@ -102,7 +102,7 @@ func TestMyNotesAuthFail(t *testing.T) {
 	}
 	defer mock.Close()
 	as.pool = mock
-	as.authClient = auth.NewMockClient(auth.VerifyResult{
+	as.authClient = auth.NewMockClient(&auth.VerifyResult{
 		State: auth.StateDeny,
 	})
 
@@ -127,7 +127,7 @@ func TestMyNotesAuthFailWithAuth(t *testing.T) {
 	}
 	defer mock.Close()
 	as.pool = mock
-	as.authClient = auth.NewMockClient(auth.VerifyResult{
+	as.authClient = auth.NewMockClient(&auth.VerifyResult{
 		State: auth.StateDeny,
 	})
 
@@ -153,7 +153,7 @@ func TestMyNotesAuthFailMalformedAuth(t *testing.T) {
 	}
 	defer mock.Close()
 	as.pool = mock
-	as.authClient = auth.NewMockClient(auth.VerifyResult{
+	as.authClient = auth.NewMockClient(&auth.VerifyResult{
 		State: auth.StateDeny,
 	})
 
@@ -179,7 +179,7 @@ func TestMyNotesAuthPass(t *testing.T) {
 	}
 	defer mock.Close()
 	as.pool = mock
-	as.authClient = auth.NewMockClient(auth.VerifyResult{
+	as.authClient = auth.NewMockClient(&auth.VerifyResult{
 		State: auth.StateAllow,
 	})
 
@@ -209,7 +209,7 @@ func TestMyNotesOneNone(t *testing.T) {
 	}
 	defer mock.Close()
 	as.pool = mock
-	as.authClient = auth.NewMockClient(auth.VerifyResult{
+	as.authClient = auth.NewMockClient(&auth.VerifyResult{
 		State: auth.StateAllow,
 	})
 
@@ -254,7 +254,7 @@ func TestMyNotesNonOwnedNote(t *testing.T) {
 	}
 	defer mock.Close()
 	as.pool = mock
-	as.authClient = auth.NewMockClient(auth.VerifyResult{
+	as.authClient = auth.NewMockClient(&auth.VerifyResult{
 		State: auth.StateAllow,
 	})
 
@@ -300,7 +300,7 @@ func TestMyNoteById(t *testing.T) {
 	}
 	defer mock.Close()
 	as.pool = mock
-	as.authClient = auth.NewMockClient(auth.VerifyResult{
+	as.authClient = auth.NewMockClient(&auth.VerifyResult{
 		State: auth.StateAllow,
 	})
 
