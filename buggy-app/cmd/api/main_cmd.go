@@ -19,7 +19,7 @@ func main() {
 	// Get the postgres password from a file supplied in an environment variable
 	// TODO: it would be better for this to come from DATABASE_URL or to "figure out"
 	// the best auth params from environment variables
-	passwd, err := util.ReadPasswdFile()
+	passwd, err := util.ReadPasswd()
 	if err != nil {
 		log.Fatal(err)
 	}

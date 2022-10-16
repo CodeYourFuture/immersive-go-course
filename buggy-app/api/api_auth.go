@@ -9,7 +9,13 @@ import (
 	"github.com/CodeYourFuture/immersive-go-course/buggy-app/util/authuserctx"
 )
 
-func (as *Service) wrapAuth(handler http.HandlerFunc) http.HandlerFunc {
+// wrapAuth takes a handler function (likely to be the API endpoint) and wraps it with an authentication
+// check using an AuthClient.
+//
+// If the authentication passes, it adds the authenticated user ID to the context using the authuserctx
+// package, and then calls the inner handler. The ID can be retrieved later using the
+// `FromAuthenticatedContext` function.
+func (as *Service) wrapAuth(client auth.Client, handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithCancel(r.Context())
 		defer cancel()
@@ -22,7 +28,7 @@ func (as *Service) wrapAuth(handler http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// Use the auth client to check if this id/password combo is approved
-		result, err := as.authClient.Verify(ctx, id, passwd)
+		result, err := client.Verify(ctx, id, passwd)
 		if err != nil {
 			log.Printf("api: verify error: %v\n", err)
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -36,6 +42,7 @@ func (as *Service) wrapAuth(handler http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
+		// Add the ID to the context and call the inner handler
 		ctx = authuserctx.NewAuthenticatedContext(ctx, id)
 		handler(w, r.WithContext(ctx))
 	}

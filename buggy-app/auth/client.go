@@ -12,7 +12,7 @@ import (
 
 type Client interface {
 	Close() error
-	Verify(ctx context.Context, id, passwd string) (VerifyResult, error)
+	Verify(ctx context.Context, id, passwd string) (*VerifyResult, error)
 }
 
 type VerifyResult struct {
@@ -46,29 +46,30 @@ func (c *GrpcClient) Close() error {
 	return c.conn.Close()
 }
 
-func (c *GrpcClient) Verify(ctx context.Context, id, passwd string) (VerifyResult, error) {
+func (c *GrpcClient) Verify(ctx context.Context, id, passwd string) (*VerifyResult, error) {
 	// Check the cache to see if we have this id/passwd combo already there
 	// If we do, return it so we don't contact the auth service twice
 	cacheKey := c.cache.Key(fmt.Sprintf("%s:%s", id, passwd))
 	if v, ok := c.cache.Get(cacheKey); ok {
-		return *v, nil
+		return v, nil
 	}
 
+	// Call the auth service to check the id/password we've been given
 	res, err := c.aC.Verify(ctx, &pb.Input{
 		Id:       id,
 		Password: passwd,
 	})
 	if err != nil {
-		return VerifyResult{}, fmt.Errorf("failed to verify: %w", err)
+		return nil, fmt.Errorf("failed to verify: %w", err)
 	}
 
 	// Looking good: turn this gRPC result into our output type
-	vR := VerifyResult{
+	vR := &VerifyResult{
 		State: pb.State_name[int32(res.State)],
 	}
 
-	// Remember this verify result
-	c.cache.Put(cacheKey, &vR)
+	// Remember this verify result for next time
+	c.cache.Put(cacheKey, vR)
 	return vR, nil
 }
 
@@ -99,16 +100,16 @@ func newClientWithOpts(ctx context.Context, target string, opts ...grpc.DialOpti
 
 // Use this in tests to Mock out the client
 type MockClient struct {
-	result VerifyResult
+	result *VerifyResult
 }
 
-func NewMockClient(result VerifyResult) *MockClient {
+func NewMockClient(result *VerifyResult) *MockClient {
 	return &MockClient{
 		result: result,
 	}
 }
 
 func (ac *MockClient) Close() error { return nil }
-func (ac *MockClient) Verify(ctx context.Context, id, passwd string) (VerifyResult, error) {
+func (ac *MockClient) Verify(ctx context.Context, id, passwd string) (*VerifyResult, error) {
 	return ac.result, nil
 }

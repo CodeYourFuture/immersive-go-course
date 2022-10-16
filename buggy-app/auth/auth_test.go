@@ -16,7 +16,7 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	passwd, err := util.ReadPasswdFile()
+	passwd, err := util.ReadPasswd()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,7 +49,7 @@ func TestRun(t *testing.T) {
 
 func TestSimpleVerifyDeny(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
-	passwd, err := util.ReadPasswdFile()
+	passwd, err := util.ReadPasswd()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -100,7 +100,7 @@ func TestSimpleVerifyDeny(t *testing.T) {
 func TestSimpleVerifyAllow(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	passwd, err := util.ReadPasswdFile()
+	passwd, err := util.ReadPasswd()
 	if err != nil {
 		t.Fatal(err)
 	}
