@@ -11,6 +11,13 @@ Learning objectives:
 - How do we ensure safe data access with authentication & authorisation?
 - What are some common architectures for services in tech companies?
 
+## Project
+
+- Read the documentation below carefully to understand the application's intended behaviour (Idea: write down what you find as you read)
+- Read the code to identify how the main pieces fit together and work
+- Make sure the main features works
+- Identify and test the access controls and [edge cases](https://en.m.wikipedia.org/wiki/Edge_case)
+
 ## Notes App
 
 There are two services and a database in this project:
