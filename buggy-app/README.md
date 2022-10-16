@@ -13,6 +13,8 @@ Learning objectives:
 
 ## Project
 
+The goal is to find and fix at least 5 bugs. There are issues in the logic, performance, and authorisation (that we know about). There could be more! Find and fix as many as you can in the time.
+
 - Read the documentation below carefully to understand the application's intended behaviour (Idea: write down what you find as you read)
 - Read the code to identify how the main pieces fit together and work
 - Make sure the main features works
