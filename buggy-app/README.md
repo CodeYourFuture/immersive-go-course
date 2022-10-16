@@ -83,7 +83,7 @@ The database is Postgres. This is the table structure:
 - `created`: timestamp
 - `modified`: timestamp
 
-Users with status 0 should not be able to authenticate or access their notes.
+Users with status `inactive` should not be able to authenticate or access their notes.
 
 ### `note`
 

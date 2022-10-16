@@ -143,7 +143,7 @@ func TestSimpleVerifyAllow(t *testing.T) {
 	user := userRow{
 		// banana
 		password: "$2y$10$O8VPlcAPa/iKHrkdyzN1cu7TvF5Goq6nRjSdaz9uXm1zPcVgRxQnK",
-		status:   0,
+		status:   "active",
 	}
 	err = dbConn.QueryRow(
 		ctx,
