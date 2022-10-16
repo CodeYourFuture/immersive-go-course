@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/base64"
 	"errors"
 	"flag"
 	"fmt"
@@ -121,7 +120,7 @@ func userCmd(ctx context.Context, f *Flags, conn *pgx.Conn) error {
 	log.Printf("new user created\n")
 	log.Printf("\tid: %s\n", id)
 	log.Printf("\tpassword: %s\n", f.passwd)
-	log.Printf("base64 for auth: %s\n", base64.URLEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", id, f.passwd))))
+	log.Printf("base64 for auth: %s\n", util.BasicAuthValue(id, f.passwd))
 	return nil
 }
 
