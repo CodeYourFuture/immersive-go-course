@@ -56,14 +56,20 @@ func (as *Service) handleMyNotes(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Use the "model" layer to get a list of the owner's notes
-	rows, err := model.GetNotesForOwner(ctx, as.pool, owner)
+	notes, err := model.GetNotesForOwner(ctx, as.pool, owner)
 	if err != nil {
 		fmt.Printf("api: GetNotesForOwner failed: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 
+	response := struct {
+		Notes model.Notes `json:"notes"`
+	}{
+		Notes: notes,
+	}
+
 	// Convert the []Row into JSON
-	res, err := util.MarshalWithIndent(rows, "")
+	res, err := util.MarshalWithIndent(response, "")
 	if err != nil {
 		fmt.Printf("api: response marshal failed: %v\n", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
