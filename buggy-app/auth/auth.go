@@ -102,7 +102,7 @@ func newGrpcService() *grpcAuthService {
 type userRow struct {
 	id       string
 	password string
-	status   int
+	status   string
 }
 
 // Verify checks a Input for authentication validity
