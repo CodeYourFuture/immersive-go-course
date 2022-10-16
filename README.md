@@ -19,15 +19,17 @@ Each project has its own directory with a README.md file that has instructions. 
 1. [CLI & Files](./cli-files)
    <br>An introduction to building things with Go by replicating the unix tools `cat` and `ls`.
 1. [Servers & HTTP requests](./http-auth)
-   <br>Learn about long-running processes, HTTP and `curl`.
+   <br>Learn about long-running processes, HTTP and `curl`
 1. [Servers & Databases](./server-database)
-   <br>Build a server that takes data from a database and serves it in `json` format.
+   <br>Build a server that takes data from a database and serves it in `json` format
 1. [Multiple Servers](./multiple-servers)
-   <br>Build and run file & API servers behind nginx in a simple multi-server architecture.
+   <br>Build and run file & API servers behind nginx in a simple multi-server architecture
 1. [Docker & Cloud Deployment](./docker-cloud/)
    <br>Use containers to reproducibly deploy applications into the cloud
 1. [Batch Processing](./batch-processing/)
    <br>Build an image processing pipeline with cloud storage
+1. [Buggy App](./buggy-app/)
+   <br>Run, debug, and fix a buggy application
 
 ## Contributing
 
