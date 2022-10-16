@@ -159,6 +159,8 @@ type mockGrpcAuthService struct {
 
 	result *pb.Result
 	err    error
+
+	Calls int
 }
 
 func newMockGrpcService(result *pb.Result, err error) *mockGrpcAuthService {
@@ -170,5 +172,6 @@ func newMockGrpcService(result *pb.Result, err error) *mockGrpcAuthService {
 
 // Verify checks a Input for authentication validity
 func (as *mockGrpcAuthService) Verify(ctx context.Context, in *pb.Input) (*pb.Result, error) {
+	as.Calls += 1
 	return as.result, as.err
 }
