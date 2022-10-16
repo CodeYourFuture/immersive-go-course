@@ -189,3 +189,81 @@ func TestClientVerifyAllow(t *testing.T) {
 		t.Fatal(runErr)
 	}
 }
+
+func TestClientVerifyCacheResult(t *testing.T) {
+	listen := "localhost:8010"
+	lis, err := net.Listen("tcp", listen)
+	if err != nil {
+		t.Fatalf("failed to listen: %v", err)
+	}
+
+	pbStateExpected, stateExpected := pb.State_ALLOW, StateAllow
+
+	mockService := newMockGrpcService(&pb.Result{
+		State: pbStateExpected,
+	}, nil)
+
+	// Set up and register the server
+	grpcServer := grpc.NewServer()
+	pb.RegisterAuthServer(grpcServer, mockService)
+
+	var runErr error
+	var wg sync.WaitGroup
+	ctx, cancel := context.WithCancel(context.Background())
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		runErr = grpcServer.Serve(lis)
+	}()
+
+	done := func() {
+		cancel()
+		grpcServer.GracefulStop()
+		wg.Wait()
+	}
+
+	client, err := NewClient(ctx, listen)
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	res1, err := client.Verify(ctx, "example", "example")
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	res2, err := client.Verify(ctx, "example", "example")
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	err = client.Close()
+	if err != nil {
+		done()
+		t.Fatal(err)
+	}
+
+	if res1.State != stateExpected {
+		done()
+		t.Fatalf("verify state in first call: expected %s, got %s\n", stateExpected, res1.State)
+	}
+
+	if res2.State != stateExpected {
+		done()
+		t.Fatalf("verify state in second call: expected %s, got %s\n", stateExpected, res2.State)
+	}
+
+	if mockService.Calls > 1 {
+		done()
+		t.Fatalf("verify did not cache result: %d calls to service, expected 1", mockService.Calls)
+	}
+
+	done()
+	if runErr != nil && runErr != grpc.ErrServerStopped {
+		t.Fatal(runErr)
+	}
+}

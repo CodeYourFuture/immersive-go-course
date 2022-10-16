@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 
+	"github.com/CodeYourFuture/immersive-go-course/buggy-app/auth/cache"
 	pb "github.com/CodeYourFuture/immersive-go-course/buggy-app/auth/service"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -28,6 +29,7 @@ type GrpcClient struct {
 	conn   *grpc.ClientConn
 	cancel context.CancelFunc
 	aC     pb.AuthClient
+	cache  *cache.Cache[VerifyResult]
 }
 
 // Create a new Client for the auth service.
@@ -45,6 +47,13 @@ func (c *GrpcClient) Close() error {
 }
 
 func (c *GrpcClient) Verify(ctx context.Context, id, passwd string) (VerifyResult, error) {
+	// Check the cache to see if we have this id/passwd combo already there
+	// If we do, return it so we don't contact the auth service twice
+	cacheKey := c.cache.Key(fmt.Sprintf("%s:%s", id, passwd))
+	if v, ok := c.cache.Get(cacheKey); ok {
+		return *v, nil
+	}
+
 	res, err := c.aC.Verify(ctx, &pb.Input{
 		Id:       id,
 		Password: passwd,
@@ -52,9 +61,15 @@ func (c *GrpcClient) Verify(ctx context.Context, id, passwd string) (VerifyResul
 	if err != nil {
 		return VerifyResult{}, fmt.Errorf("failed to verify: %w", err)
 	}
-	return VerifyResult{
+
+	// Looking good: turn this gRPC result into our output type
+	vR := VerifyResult{
 		State: pb.State_name[int32(res.State)],
-	}, nil
+	}
+
+	// Remember this verify result
+	c.cache.Put(cacheKey, &vR)
+	return vR, nil
 }
 
 func defaultOpts() []grpc.DialOption {
@@ -78,6 +93,7 @@ func newClientWithOpts(ctx context.Context, target string, opts ...grpc.DialOpti
 		conn:   conn,
 		cancel: cancel,
 		aC:     pb.NewAuthClient(conn),
+		cache:  cache.New[VerifyResult](),
 	}, nil
 }
 
