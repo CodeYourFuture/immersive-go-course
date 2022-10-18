@@ -50,7 +50,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
           REGISTRY_ALIAS: b8c6e9l3
-          REPOSITORY: immersive-go-course/docker-cloud
+          REPOSITORY: immersive-go-course/docker-cloud-rita
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
