@@ -19,6 +19,4 @@ WORKDIR /
 COPY --from=build /docker-cloud /docker-cloud
 EXPOSE 80
 
-USER nonroot:nonroot
-
 ENTRYPOINT [ "/docker-cloud" ]
