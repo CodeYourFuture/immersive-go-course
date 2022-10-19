@@ -4,18 +4,18 @@ option go_package = "github.com/CodeYourFuture/immersive-go-course/grpc-client-s
 
 package prober;
 
-// The greeting service definition.
+// The prober service definition.
 service Prober {
-  // Sends a greeting
   rpc DoProbes (ProbeRequest) returns (ProbeReply) {}
 }
 
-// 
+// The request message 
 message ProbeRequest {
   string endpoint = 1;
 }
 
-// The response message containing the greetings
+// The response message containing the result
 message ProbeReply {
   float result = 1;
 }
+
