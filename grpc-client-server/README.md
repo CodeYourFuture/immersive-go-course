@@ -44,33 +44,33 @@ In the same directory as this README you will find initial versions of:
  * prober client Go code
 
 Generate the generated protobuf code: 
-```
-protoc --go_out=. --go_opt=paths=source_relative \
+```console
+> protoc --go_out=. --go_opt=paths=source_relative \
     --go-grpc_out=. --go-grpc_opt=paths=source_relative \
     prober/prober.proto
 ```
 
 Observe the new generated files:
-```
-ls prober
-prober.pb.go		prober.proto		prober_grpc.pb.go
+```console
+> ls prober
+> prober.pb.go		prober.proto		prober_grpc.pb.go
 ```
 
-Read through `prober_grpc.pb.go` - this is the interface you will use in your code. This is how gRPC works: a `proto` format 
-gets generated into language-specific code that you can use to interact with gRPCs. If you're working with multiple programming languages
-that need to interact through RPCs, you can do this by generating from the same protocol buffer definition with the language-specific
+Read through `prober_grpc.pb.go` - this is the interface we will use in our code. This is how gRPC works: a `proto` format 
+gets generated into language-specific code that we can use to interact with gRPCs. If we're working with multiple programming languages
+that need to interact through RPCs, we can do this by generating from the same protocol buffer definition with the language-specific
 tooling. 
 
 Now run the server and client code. You should see output like this.
 
-```
-go run prober_server/main.go
-2022/10/19 17:51:32 server listening at [::]:50051
+```console
+> go run prober_server/main.go
+> 2022/10/19 17:51:32 server listening at [::]:50051
 ````
 
-```
-go run prober_client/main.go 
-2022/10/19 17:52:15 Response Time: 117.000000
+```console
+> go run prober_client/main.go 
+> 2022/10/19 17:52:15 Response Time: 117.000000
 ```
 
 We've now gained some experience with the protocol buffer format, learned 
@@ -105,8 +105,9 @@ However, under the hood `time.Duration` is an `int64`. To divide by an `int32` a
 
 ## Add a client timeout
 
-Maybe the site you are probing is very slow, or the number of repetitions is very high.
-Either way, you don't want your program to wait forever. 
+Maybe the site we are probing is very slow (which can happen for all kinds of reasons, from network problems to excessive load), 
+or perhaps the number of repetitions is very high.
+Either way, we don't want our program to wait forever. 
 
 On the client side, add a [timeout](https://pkg.go.dev/context#WithTimeout) to stop waiting after 1 second].
 ```
@@ -128,12 +129,12 @@ These sections are optional - do them for an extra challenge if time permits.
 Let's learn something about how to monitor applications.
 
 In software operations, we want to know what our software is doing and how it is performing.
-One very useful technique is to have your program export metrics. Metrics are basically values that your 
+One very useful technique is to have our program export metrics. Metrics are basically values that your 
 program makes available (the industry standard is to export and scrape over HTTP). 
 
 Specialised programs, such as Prometheus, can then fetch metrics regularly
-from all the running instances of your program, store the history of these metrics, and do useful arithmetic on them
-(like computing rates, averages, and maximums). You can use this data to do troubleshooting and to alert if things 
+from all the running instances of yur program, store the history of these metrics, and do useful arithmetic on them
+(like computing rates, averages, and maximums). We can use this data to do troubleshooting and to alert if things 
 go wrong.
 
 Read the [Overview of Prometheus](https://prometheus.io/docs/introduction/overview/).
