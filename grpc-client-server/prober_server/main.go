@@ -25,7 +25,7 @@ type server struct {
 func (s *server) DoProbes(ctx context.Context, in *pb.ProbeRequest) (*pb.ProbeReply, error) {
 	// TODO: support a number of repetitions and return average latency
 	start := time.Now()
-	_, _ = http.Get(in.GetEndpoint())
+	_, _ = http.Get(in.GetEndpoint())	// TODO: add error handling here and check the response code
 	elapsed := time.Since(start)
 	elapsedMsecs := float32(elapsed / time.Millisecond)
 

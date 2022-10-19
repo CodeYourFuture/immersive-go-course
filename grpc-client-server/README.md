@@ -78,7 +78,7 @@ how to generate Go code from protocol buffer definitions, and call that code fro
 
 ## Implement prober logic
 
-Let's modify the prober service slightly. Instead of the simple one-off probe against a hardcoded google.com, we are going to modify the service to probe a HTTP endpoint N times and return the average time to fetch that endpoint to the client. 
+Let's modify the prober service slightly. Instead of the simple one-off HTTP GET against a hardcoded google.com, we are going to modify the service to probe a HTTP endpoint N times and return the average time to GET that endpoint to the client. 
 
 Change your prober request and response to look like this and regenerate your generated go code.
 ```
@@ -101,15 +101,16 @@ The initial version of the code demonstrates how to use the standard [`net/http`
 Add up all the elapsed times, divide by the number of repetitions, and return the average to the client.
 The client should print out the average value received.
 You can do arithmetic operations like addition and division on `time.Duration` values in Go.
-However, under the hood `time.Duration` is an `int64`. To divide by an `int32` and return a `float` will need to do some [type conversions](https://go.dev/tour/basics/13).
 
 ## Add a client timeout
 
 Maybe the site we are probing is very slow (which can happen for all kinds of reasons, from network problems to excessive load), 
 or perhaps the number of repetitions is very high.
-Either way, we don't want our program to wait forever. 
+Either way, we never want our program to wait forever. 
+If we are not careful about preventing this then we can end up building systems where problems in one small part of the system 
+spread across all of the services that talk to that part of the system. 
 
-On the client side, add a [timeout](https://pkg.go.dev/context#WithTimeout) to stop waiting after 1 second].
+On the client side, add a [timeout](https://pkg.go.dev/context#WithTimeout) to stop waiting after 1 second.
 ```
 
 Run your client against some website - how many repetitions do you need to see your client timeout?
