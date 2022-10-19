@@ -1,57 +1,55 @@
 # GRPC Client and Server Communication 
 
-The goals of this project are: 
- * to use gRPC requests, and understand how they differ from REST
- * to use deadlines with gRPCs
- * to build a simple prober and understand how this might be used in production
- * optionally, gain experience with instrumenting an application and running Prometheus
+Timebox: 3 days
+
+Learning objectives:
+ * Learn what gRPC is and how it differs from HTTP
+ * Understand what kinds of issues can occur in a real system and how to defend against them
+ * Learn what observability is, and what are some kinds of observability you'd find in use in production?
 
 ## What is gRPC?
 
-RPCs aren’t the same as HTTP requests. HTTP is a text-based protocol, oriented towards resources or entities. RPCs are oriented towards calling a specific function. RPCs are highly structured; normally the request and response are encoded in efficient binary formats which are not human-readable. HTTP APIs are usually limited to CRUD (Create, Read, Update, Delete) operations and RPCs can perform any kind of operation. If you want to efficiently integrate two systems that you control, RPCs are a good choice. If you want to provide an API for use by developers outside of your organisation then HTTP APIs are generally a better choice, because they are simpler to develop against and all programming languages provide good HTTP support. gRPC, which we will use in this exercise, is a RPC implementation that is fairly common in industry. 
+We've used simple HTTP request so far, making and handling GET and POST requests
+RPC is another way to communicate between clients and servers
+It is used commonly within an organisation, where it has advantages around types, performance, and streaming
+gRPC is not used to communicate from web browsers to servers (important because this is context they have)
+
+In this course we've used HTTP requests  for making and handling GET and POST requests. RPC is another way to do 
+communication between clients and servers (or frontends and backends) within an organisation (it isn't used from browsers).
+
+ RPCs let you call a specific function on another computer. RPCs are highly structured; normally the request and response are encoded in efficient binary formats which are not human-readable. HTTP APIs are usually limited to CRUD (Create, Read, Update, Delete) operations and RPCs can perform any kind of operation. 
+ 
+ If you want to efficiently integrate two systems that you control, RPCs are a good choice. If you want to provide an API for use by developers outside of your organisation then HTTP APIs are generally a better choice, because they are simpler to develop against, all programming languages provide good HTTP support, and HTTP works in the browser. 
+ 
+ gRPC, which we will use in this exercise, is a RPC implementation that is fairly common in industry. 
 
 Read the [gRPC Introduction](https://grpc.io/docs/what-is-grpc/introduction/) and 
 [gRPC Core Concepts](https://grpc.io/docs/what-is-grpc/core-concepts/) for an overview of gRPC.
-todo stuff from primer
+todo stuff from prime
 
-## Get started with a HelloWorld gRPC example
+## Run the gRPC Quick Start Hello World Example
 
-Start by building a simple gRPC ‘hello world’ server and cli client in golang. See [gRPC Quickstart](https://grpc.io/docs/languages/go/quickstart/) for detailed instructions.
+Run through the [gRPC Hello World example](https://grpc.io/docs/languages/go/quickstart/) from the grpc.io documentation.
 
-## Change HelloWorld to Prober
+This will ensure you have the right tools on your machine and working correctly.
 
-Once you have the 'hello world' example from the gRPC Quickstart tutorial working, we will move on to implementing a prober.
 
-Rename `greeter_client` and `greeter_server` to `prober_client` and `prober_server`.   
-Change the `helloworld` subdirectory to be called `prober`,` and helloworld.proto` to `prober.proto`.
-Delete the genereted .go files in the same directory as `prober.proto`.
+## Build a gRPC based prober
 
-Now update the the prober.proto file so that the main content section looks like this:
+Next, we will implement a simple prober service. Imagine that we want to verify that our site is available and has acceptable latency from many different locations around the world. We build a program that performs HTTP gets on a provided endpoint and returns statistics about how long it took.
 
-```
-package prober;
+In a real production system could run several instances of our prober server in different regions and use one client to query all of the prober servers.
 
-// The greeting service definition.
-service Prober {
-  // Sends a greeting
-  rpc DoProbes (ProbeRequest) returns (ProbeReply) {}
-}
+In the same directory as this README you will find initial versions of:
+ * the protocol buffer definition
+ * prober server Go code
+ * prober client Go code
 
-// The request message containing the user's name.
-message ProbeRequest {
-  string name = 1;
-}
-
-// The response message containing the greetings
-message ProbeReply {
-  string message = 1;
-}
-```
-
-Regenerate the generated protobuf code: 
+Generate the generated protobuf code: 
 ```
 protoc --go_out=. --go_opt=paths=source_relative \
-    --go-grpc_out=. --go-grpc_opt=paths=source_relative prober/prober.proto
+    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+    prober/prober.proto
 ```
 
 Observe the new generated files:
@@ -65,31 +63,24 @@ gets generated into language-specific code that you can use to interact with gRP
 that need to interact through RPCs, you can do this by generating from the same protocol buffer definition with the language-specific
 tooling. 
 
-Now, update the client and server `main.go` files to use the changed package, service and message names.
-Get these running again as they did originally. The functionality will still be the same for now, just the hello world interaction.
+Now run the server and client code. You should see output like this.
 
 ```
 go run prober_server/main.go
-2022/10/09 20:20:55 server listening at [::]:50051
-2022/10/09 20:21:24 Received: world
+2022/10/19 17:51:32 server listening at [::]:50051
 ````
 
 ```
 go run prober_client/main.go 
-2022/10/09 20:21:24 Greeting: Hello world
+2022/10/19 17:52:15 Response Time: 117.000000
 ```
 
-While we haven't yet changed what the code does, we've gained some experience with the protocol buffer format, learned 
+We've now gained some experience with the protocol buffer format, learned 
 how to generate Go code from protocol buffer definitions, and call that code from Go programs.
-
-Note: in a real production system you can't rename protocol buffers as we've done here: you would run into problems because your old clients can't talk to your new servers, and vice-versa. Since we gradually release code, we would have to support both services until all old clients were turned down.
 
 ## Implement prober logic
 
-Let's modify the prober service slightly. Instead of the simple HelloWorld greeting, we are going to implement a service that will probe a HTTP endpoint N times and return the average time to fetch that endpoint to the client. 
-
-This tool could be useful in a real operational context. Imagine that we want to verify that our site is available and has acceptable latency from many different locations around the world. We might run several instances of our prober server in
-different regions. 
+Let's modify the prober service slightly. Instead of the simple one-off probe against a hardcoded google.com, we are going to modify the service to probe a HTTP endpoint N times and return the average time to fetch that endpoint to the client. 
 
 Change your prober request and response to look like this and regenerate your generated go code.
 ```
@@ -101,21 +92,13 @@ message ProbeRequest {
 
 // The response message 
 message ProbeReply {
-  float average = 1;    // Average response time (in milliseconds)
+  float result = 1;    // Average response time (in milliseconds)
 }
 ```
 
 Update your client to read the endpoint and number of repetitions from the [command line](https://gobyexample.com/command-line-arguments).
 Then update your server to execute the probe: do a HTTP fetch of `endpoint` the specified number of times.
-Use the standard [`net/http` package](https://pkg.go.dev/net/http).
-
-Time each fetch using the `time` package:
-
-```
-  	start := time.Now()
-	resp, _:= http.Get(endpoint)
-    elapsed := time.Since(start)
-```
+The initial version of the code demonstrates how to use the standard [`net/http` package](https://pkg.go.dev/net/http) and the standard time package.
 
 Add up all the elapsed times, divide by the number of repetitions, and return the average to the client.
 The client should print out the average value received.
@@ -128,38 +111,29 @@ Maybe the site you are probing is very slow, or the number of repetitions is ver
 Either way, you don't want your program to wait forever. 
 
 On the client side, add a [timeout](https://pkg.go.dev/context#WithTimeout) to stop waiting after 1 second].
+```
 
 Run your client against some website - how many repetitions do you need to see your client timeout?
 
-## Extra Challenges: Errors, Continuous Probing, Serve Prometheus Metrics
+## Handling Errors
 
-These sections are optional - do them for an extra challenge if time permits.
-
-### Part 1:
 How do we know if the HTTP fetch succeeded at the server? Add a check to make sure it did.
+
 How should we deal with errors, i.e. if the endpoint isn't found?
 Modify your code and proto format to handle these cases.
 
-### Part 2: Run probes on a schedule
-Instead of getting probe times via the gRPC client we might consider running the endpoint probes on a schedule. Change the
-prober_server to accept a frequency argument instead of the old `repetitions` parameter, 
-and continue running probes every N seconds forever. 
+## Extra Challenge: Serve and Collect Prometheus Metrics
 
-You will need to use a [goroutine](https://gobyexample.com/goroutines) to keep running probes in the background.
+These sections are optional - do them for an extra challenge if time permits.
 
-Now, add a new client operation to get the value of the last probe run.
-To make this work, you will need to pass a value to your prober goroutine that it can use to store the most recent latency.
-You can store this value in your `server` struct.
-You will also need to use a `sync.Mutex` to guarantee that the goroutine that serves your client request sees the last value 
-written by the prober goroutine. A Tour of Go has a good example of [using a sync.Mutex](https://go.dev/tour/concurrency/9).
-
-
-### Part 3: Add Prometheus Metrics
-If you still have time, then let's learn something about how to monitor applications.
+### Part 1: Add Prometheus Metrics
+Let's learn something about how to monitor applications.
 
 In software operations, we want to know what our software is doing and how it is performing.
 One very useful technique is to have your program export metrics. Metrics are basically values that your 
-program makes available (via HTTP). Specialised programs, such as Prometheus, can then fetch metrics regularly
+program makes available (the industry standard is to export and scrape over HTTP). 
+
+Specialised programs, such as Prometheus, can then fetch metrics regularly
 from all the running instances of your program, store the history of these metrics, and do useful arithmetic on them
 (like computing rates, averages, and maximums). You can use this data to do troubleshooting and to alert if things 
 go wrong.
@@ -170,19 +144,19 @@ Now add Prometheus metrics to your prober server. Every time you execute a probe
 Add a `label` specifying the endpoint being probed. 
 The [Prometheus Guide to Instrumenting a Go Application](https://prometheus.io/docs/guides/go-application/) has all the information you need to do this.
 
-Once you've run your program, use your client to execute periodic probes against some endpoint. 
-Now use the `curl` program or your browser to view the metrics on the port that you've chosen to serve them on.
+Once you've run your program, use your client to execute probes against some endpoint. 
+Now use the `curl` program or your browser to view the metrics. 
 You should see a number of built-in Go metrics, plus your new gauge.
 
 If you use your client to start probing a second endpoint, you should see a second labelled metric appear.
 
-### Part 3: Scrape Prometheus Metrics
+### Part 2: Scrape Prometheus Metrics
 The final step is to set up the Prometheus application to periodically pull metrics from your `prober_server`.
 
-You'll need to set up a simple configuration to scrape your `prober_server`. Prometheus [configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) is quite complex but you can adapt this [example configuration](https://github.com/prometheus/prometheus/blob/main/documentation/examples/prometheus.yml).
+The easiest way to run Prometheus locally is in Docker. This way we can run an up-to-date version that has been built by the Prometheus maintainers.
+See [Prometheus Installation](https://prometheus.io/docs/prometheus/latest/installation/).
 
-Run Prometheus in Docker locally - see [Prometheus Installation](https://prometheus.io/docs/prometheus/latest/installation/).
-Use a shared volume for the configuration file, as suuggested in the guide above.
+You'll need to set up a simple configuration to scrape your `prober_server`. Prometheus [configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) is quite complex but you can adapt this [example configuration](https://github.com/prometheus/prometheus/blob/main/documentation/examples/prometheus.yml).
 
 Next, find your custom gauge metric from your `prober_server` in http://localhost:9090/metrics.
 Graph it in http://localhost:9090/graph.
