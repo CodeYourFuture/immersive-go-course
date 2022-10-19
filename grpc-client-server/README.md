@@ -111,7 +111,6 @@ If we are not careful about preventing this then we can end up building systems 
 spread across all of the services that talk to that part of the system. 
 
 On the client side, add a [timeout](https://pkg.go.dev/context#WithTimeout) to stop waiting after 1 second.
-```
 
 Run your client against some website - how many repetitions do you need to see your client timeout?
 
