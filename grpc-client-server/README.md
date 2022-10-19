@@ -25,14 +25,12 @@ communication between clients and servers (or frontends and backends) within an 
 
 Read the [gRPC Introduction](https://grpc.io/docs/what-is-grpc/introduction/) and 
 [gRPC Core Concepts](https://grpc.io/docs/what-is-grpc/core-concepts/) for an overview of gRPC.
-todo stuff from prime
 
 ## Run the gRPC Quick Start Hello World Example
 
 Run through the [gRPC Hello World example](https://grpc.io/docs/languages/go/quickstart/) from the grpc.io documentation.
 
 This will ensure you have the right tools on your machine and working correctly.
-
 
 ## Build a gRPC based prober
 
