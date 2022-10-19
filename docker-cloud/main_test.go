@@ -24,7 +24,7 @@ func TestEndpoints(t *testing.T) {
 		response := httptest.NewRecorder()
 		pingHandler(response, request)
 		assertStatus(t, response.Code, 200)
-		assertResponseBody(t, response.Body.String(), "pong")
+		assertResponseBody(t, response.Body.String(), "Hello!")
 	})
 }
 
