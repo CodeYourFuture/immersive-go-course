@@ -75,7 +75,7 @@ Content-Type: text/json
 Date: Sun, 16 Oct 2022 09:45:03 GMT
 Content-Length: 162
 
-{"notes":[{"id":"JBmytGF3","owner":"A2RPq6To","content":"Example note content #exampletag","created":"2022-10-15T19:48:19.597524Z","modified":"2022-10-15T19:48:19.597524Z", "tags": ["exampletag"]}]}
+{"notes":[{"id":"JBmytGF3","owner":"A2RPq6To","content":"Example note content with tags #example and #another","created":"2022-10-15T19:48:19.597524Z","modified":"2022-10-15T19:48:19.597524Z", "tags": ["example", "another"]}]}
 ```
 
 The API exposes the "tags" associated with a Note. These are not stored, but are extracted as notes are read from the database.

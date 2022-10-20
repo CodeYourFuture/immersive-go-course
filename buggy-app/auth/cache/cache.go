@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"crypto/sha256"
+	"crypto/md5"
 	"sync"
 )
 
@@ -16,7 +16,7 @@ import (
 //		...
 // 	}
 
-type Key [32]byte
+type Key [16]byte
 
 type Entry[Value any] struct {
 	value *Value
@@ -33,7 +33,7 @@ func New[Value any]() *Cache[Value] {
 }
 
 func (c *Cache[V]) Key(k string) Key {
-	return sha256.Sum256([]byte(k))
+	return md5.Sum([]byte(k))
 }
 
 func (c *Cache[Value]) Get(k Key) (*Value, bool) {

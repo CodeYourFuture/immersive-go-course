@@ -69,7 +69,13 @@ func main() {
 	hostport := flag.String("hostport", "postgres:5432", "Host:port of Postgres")
 
 	flag.Parse()
-	if len(flag.Args()) == 0 || *path == "" {
+	if len(flag.Args()) == 0 {
+		log.Println("missing command, expected one of [up, down]")
+		log.Println("migrate up -path [...]")
+		os.Exit(1)
+	}
+
+	if *path == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
