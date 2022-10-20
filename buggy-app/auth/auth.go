@@ -148,27 +148,3 @@ func (as *grpcAuthService) Verify(ctx context.Context, in *pb.Input) (*pb.Result
 		State: pb.State_ALLOW,
 	}, nil
 }
-
-// Internal grpcAuthService struct that implements the gRPC server interface
-// for testing
-type mockGrpcAuthService struct {
-	pb.UnimplementedAuthServer
-
-	result *pb.Result
-	err    error
-
-	Calls int
-}
-
-func newMockGrpcService(result *pb.Result, err error) *mockGrpcAuthService {
-	return &mockGrpcAuthService{
-		result: result,
-		err:    err,
-	}
-}
-
-// Verify checks a Input for authentication validity
-func (as *mockGrpcAuthService) Verify(ctx context.Context, in *pb.Input) (*pb.Result, error) {
-	as.Calls += 1
-	return as.result, as.err
-}
