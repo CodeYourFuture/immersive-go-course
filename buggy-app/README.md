@@ -20,6 +20,11 @@ The goal is to find and fix at least 5 bugs. There are issues in the logic, perf
 - Make sure the main features work
 - Identify and test the access controls and [edge cases](https://en.m.wikipedia.org/wiki/Edge_case)
 
+To get you started:
+
+- An (imaginary) user of our app has reported that the note "#Monday Remember to take time for self-care" was behaving strangely... the tags didn't look right.
+- Another user reported a bug where they deactivated their account, but were still able to see their notes. What's going on there?
+
 ## Notes App
 
 There are two services and a database in this project:
