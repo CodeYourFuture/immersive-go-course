@@ -17,7 +17,7 @@ The goal is to find and fix at least 5 bugs. There are issues in the logic, perf
 
 - Read the documentation below carefully to understand the application's intended behaviour (Idea: write down what you find as you read)
 - Read the code to identify how the main pieces fit together and work
-- Make sure the main features works
+- Make sure the main features work
 - Identify and test the access controls and [edge cases](https://en.m.wikipedia.org/wiki/Edge_case)
 
 ## Notes App
@@ -30,7 +30,7 @@ There are two services and a database in this project:
 
 Here's how requests flow through the architecture diagram below:
 
-1. An HTTP request hits API service with HTTP simple auth
+1. An HTTP request hits API service with HTTP basic auth
 1. The API uses the Auth Client to check the authentication information
 1. Auth Client calls Auth Service over gRPC, which verifies credentials against User table in the database
 1. Once validated, the API allows request to continue to retrieve Note data from the database
