@@ -80,7 +80,7 @@ func TestSimpleVerifyDeny(t *testing.T) {
 	defer conn.Close()
 	client := pb.NewAuthClient(conn)
 
-	result, err := client.Verify(ctx, &pb.Input{})
+	result, err := client.Verify(ctx, &pb.VerifyRequest{})
 	if err != nil {
 		cancel()
 		wg.Wait()
@@ -159,7 +159,7 @@ func TestSimpleVerifyAllow(t *testing.T) {
 
 	log.Printf("TestSimpleVerifyAllow: got id %s\n", user.id)
 
-	result, err := client.Verify(ctx, &pb.Input{
+	result, err := client.Verify(ctx, &pb.VerifyRequest{
 		Id:       user.id,
 		Password: "banana",
 	})

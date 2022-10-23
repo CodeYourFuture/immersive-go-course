@@ -106,7 +106,7 @@ type userRow struct {
 }
 
 // Verify checks a Input for authentication validity
-func (as *grpcAuthService) Verify(ctx context.Context, in *pb.Input) (*pb.Result, error) {
+func (as *grpcAuthService) Verify(ctx context.Context, in *pb.VerifyRequest) (*pb.VerifyResponse, error) {
 	log.Printf("verify: id %v, start\n", in.Id)
 
 	// Look for this user in the database
@@ -123,7 +123,7 @@ func (as *grpcAuthService) Verify(ctx context.Context, in *pb.Input) (*pb.Result
 		}
 		log.Printf("verify: id %v, deny (query)\n", in.Id)
 		// ... either way, deny!
-		return &pb.Result{
+		return &pb.VerifyResponse{
 			State: pb.State_DENY,
 		}, nil
 	}
@@ -137,14 +137,14 @@ func (as *grpcAuthService) Verify(ctx context.Context, in *pb.Input) (*pb.Result
 			log.Printf("verify: compare error: %v\n", err)
 		}
 		log.Printf("verify: id %v, deny (password)\n", in.Id)
-		return &pb.Result{
+		return &pb.VerifyResponse{
 			State: pb.State_DENY,
 		}, nil
 	}
 
 	log.Printf("verify: id %v, allow\n", in.Id)
 	// No errors from the query or the password comparison
-	return &pb.Result{
+	return &pb.VerifyResponse{
 		State: pb.State_ALLOW,
 	}, nil
 }
