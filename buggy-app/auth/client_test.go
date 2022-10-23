@@ -17,13 +17,13 @@ import (
 type mockGrpcAuthService struct {
 	pb.UnimplementedAuthServer
 
-	result *pb.Result
+	result *pb.VerifyResponse
 	err    error
 
 	Calls int
 }
 
-func newMockGrpcService(result *pb.Result, err error) *mockGrpcAuthService {
+func newMockGrpcService(result *pb.VerifyResponse, err error) *mockGrpcAuthService {
 	return &mockGrpcAuthService{
 		result: result,
 		err:    err,
@@ -31,7 +31,7 @@ func newMockGrpcService(result *pb.Result, err error) *mockGrpcAuthService {
 }
 
 // Verify checks a Input for authentication validity
-func (as *mockGrpcAuthService) Verify(ctx context.Context, in *pb.Input) (*pb.Result, error) {
+func (as *mockGrpcAuthService) Verify(ctx context.Context, in *pb.VerifyRequest) (*pb.VerifyResponse, error) {
 	as.Calls += 1
 	return as.result, as.err
 }
@@ -99,7 +99,7 @@ func TestClientVerifyDeny(t *testing.T) {
 
 	pbStateExpected, stateExpected := pb.State_DENY, StateDeny
 
-	mockService := newMockGrpcService(&pb.Result{
+	mockService := newMockGrpcService(&pb.VerifyResponse{
 		State: pbStateExpected,
 	}, nil)
 
@@ -161,7 +161,7 @@ func TestClientVerifyAllow(t *testing.T) {
 
 	pbStateExpected, stateExpected := pb.State_ALLOW, StateAllow
 
-	mockService := newMockGrpcService(&pb.Result{
+	mockService := newMockGrpcService(&pb.VerifyResponse{
 		State: pbStateExpected,
 	}, nil)
 
@@ -223,7 +223,7 @@ func TestClientVerifyCacheResult(t *testing.T) {
 
 	pbStateExpected, stateExpected := pb.State_ALLOW, StateAllow
 
-	mockService := newMockGrpcService(&pb.Result{
+	mockService := newMockGrpcService(&pb.VerifyResponse{
 		State: pbStateExpected,
 	}, nil)
 

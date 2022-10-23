@@ -8,15 +8,15 @@ package service;
 // other services.
 // Callers should deny access to resouces unless the Result is ALLOW
 service Auth {
-    rpc Verify(Input) returns (Result) {}
+    rpc Verify(VerifyRequest) returns (VerifyResponse) {}
 }
 
-message Input {
+message VerifyRequest {
     string id = 1;
     string password = 2;
 }
 
-message Result {
+message VerifyResponse {
     State state = 1;
 }
 
