@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  memcached1:
+    image: memcached:latest
+    ports:
+        - 11212:11211
+  memcached2:
+    image: memcached:latest
+    ports:
+        - 11213:11211
+  memcached3:
+    image: memcached:latest
+    ports:
+        - 11214:11211
+  mcrouter:
+    image: docker-registry.wikimedia.org/mcrouter:latest
+    links:
+        - memcached1:memcached1
+        - memcached2:memcached2
+        - memcached3:memcached3
+    command: mcrouter --config-str='{"pools":{"A":{"servers":["memcached1:11211", "memcached2:11211", "memcached3:11211"]}},"route":{"type":"OperationSelectorRoute","operation_policies":{"add":"AllFastestRoute|Pool|A","delete":"AllFastestRoute|Pool|A","get":"AllFastestRoute|Pool|A","set":"AllFastestRoute|Pool|A"}}}' -p 11211
+    ports:
+        - 11211:11211

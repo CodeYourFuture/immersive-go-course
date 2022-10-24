@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
-	Verify(ctx context.Context, in *Input, opts ...grpc.CallOption) (*Result, error)
+	Verify(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*VerifyResponse, error)
 }
 
 type authClient struct {
@@ -33,8 +33,8 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) Verify(ctx context.Context, in *Input, opts ...grpc.CallOption) (*Result, error) {
-	out := new(Result)
+func (c *authClient) Verify(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*VerifyResponse, error) {
+	out := new(VerifyResponse)
 	err := c.cc.Invoke(ctx, "/service.Auth/Verify", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (c *authClient) Verify(ctx context.Context, in *Input, opts ...grpc.CallOpt
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
-	Verify(context.Context, *Input) (*Result, error)
+	Verify(context.Context, *VerifyRequest) (*VerifyResponse, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -54,7 +54,7 @@ type AuthServer interface {
 type UnimplementedAuthServer struct {
 }
 
-func (UnimplementedAuthServer) Verify(context.Context, *Input) (*Result, error) {
+func (UnimplementedAuthServer) Verify(context.Context, *VerifyRequest) (*VerifyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Verify not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
@@ -71,7 +71,7 @@ func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
 }
 
 func _Auth_Verify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Input)
+	in := new(VerifyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func _Auth_Verify_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: "/service.Auth/Verify",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Verify(ctx, req.(*Input))
+		return srv.(AuthServer).Verify(ctx, req.(*VerifyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

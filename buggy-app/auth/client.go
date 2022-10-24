@@ -55,7 +55,7 @@ func (c *GrpcClient) Verify(ctx context.Context, id, passwd string) (*VerifyResu
 	}
 
 	// Call the auth service to check the id/password we've been given
-	res, err := c.aC.Verify(ctx, &pb.Input{
+	res, err := c.aC.Verify(ctx, &pb.VerifyRequest{
 		Id:       id,
 		Password: passwd,
 	})
