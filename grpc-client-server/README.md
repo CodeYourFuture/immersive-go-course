@@ -34,7 +34,7 @@ This will ensure you have the right tools on your machine and working correctly.
 
 ## Build a gRPC based prober
 
-Next, we will implement a simple prober service. Imagine that we want to verify that our site is available and has acceptable latency from many different locations around the world. We build a program that performs HTTP gets on a provided endpoint and returns statistics about how long it took.
+Next, we will implement a simple prober service. Imagine that we want to verify that our site is available and has acceptable latency from many different locations around the world. We build a program that performs HTTP GETs on a provided endpoint and returns statistics about how long it took.
 
 In a real production system, we could run several instances of our prober server in different regions and use one client to query all of the prober servers.
 
