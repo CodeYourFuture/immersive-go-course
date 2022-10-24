@@ -74,7 +74,7 @@ Now run the server and client code. You should see output like this.
 ```
 
 We've now gained some experience with the protocol buffer format, learned 
-how to generate Go code from protocol buffer definitions, and call that code from Go programs.
+how to generate Go code from protocol buffer definitions, and called that code from Go programs.
 
 ## Implement prober logic
 
