@@ -29,7 +29,7 @@ func main() {
 	ctx := context.Background() // TODO: add a timeout
 
 	// TODO: endpoint should be a flag
-	// TODO: add number of time to probe
+	// TODO: add number of times to probe
 	r, err := c.DoProbes(ctx, &pb.ProbeRequest{Endpoint: "http://www.google.com"})
 	if err != nil {
 		log.Fatalf("could not probe: %v", err)
