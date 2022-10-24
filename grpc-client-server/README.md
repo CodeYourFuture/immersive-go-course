@@ -118,7 +118,7 @@ Run your client against some website - how many repetitions do you need to see y
 
 How do we know if the HTTP fetch succeeded at the server? Add a check to make sure it did.
 
-How should we deal with errors, i.e. if the endpoint isn't found?
+How should we deal with errors, e.g. if the endpoint isn't found, or says the server is in an error state?
 Modify your code and proto format to handle these cases.
 
 ## Extra Challenge: Serve and Collect Prometheus Metrics
