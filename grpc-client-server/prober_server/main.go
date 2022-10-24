@@ -29,7 +29,7 @@ func (s *server) DoProbes(ctx context.Context, in *pb.ProbeRequest) (*pb.ProbeRe
 	elapsed := time.Since(start)
 	elapsedMsecs := float32(elapsed / time.Millisecond)
 
-	return &pb.ProbeReply{Result: elapsedMsecs}, nil
+	return &pb.ProbeReply{LatencyMsecs: elapsedMsecs}, nil
 }
 
 func main() {
