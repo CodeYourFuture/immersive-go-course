@@ -34,7 +34,7 @@ Use the program `nc` (netcat) to do this. Try running these commands:
 > printf "get mykey\r\n" | nc localhost 11211
 ```
 
-The `set` command will store the value 4 key called `mykey` with a TTL of 60 seconds. 
+The `set` command will store an association between a key called `mykey` and the value 4, with a TTL of 60 seconds. 
 You should see the value 4 returned when you run the `get` command.
 The 60 second TTL means that the value will disappear after 60 seconds - TTLs are discussed further in the [Distributed Systems Primer](https://docs.google.com/document/d/1WoOTLTdtDqnL3fv3YVfI32kfySHqh7y1UfLizBJ3LXY/edit?usp=sharing). 
 
