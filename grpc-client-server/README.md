@@ -133,7 +133,7 @@ One very useful technique is to have our program export metrics. Metrics are bas
 program makes available (the industry standard is to export and scrape over HTTP). 
 
 Specialised programs, such as Prometheus, can then fetch metrics regularly
-from all the running instances of yur program, store the history of these metrics, and do useful arithmetic on them
+from all the running instances of your program, store the history of these metrics, and do useful arithmetic on them
 (like computing rates, averages, and maximums). We can use this data to do troubleshooting and to alert if things 
 go wrong.
 
