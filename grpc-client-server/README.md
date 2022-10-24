@@ -9,13 +9,13 @@ Learning objectives:
 
 ## What is gRPC?
 
-We've used simple HTTP request so far, making and handling GET and POST requests
-RPC is another way to communicate between clients and servers
-It is used commonly within an organisation, where it has advantages around types, performance, and streaming
-gRPC is not used to communicate from web browsers to servers (important because this is context they have)
+We've used simple HTTP request so far, making and handling GET and POST requests.
 
-In this course we've used HTTP requests  for making and handling GET and POST requests. RPC is another way to do 
-communication between clients and servers (or frontends and backends) within an organisation (it isn't used from browsers).
+RPC is another way to communicate between clients and servers (or frontends and backends).
+
+It is used commonly within an organisation (it isn't used from browsers), where it has advantages around types, performance, and streaming.
+
+gRPC is not used to communicate from web browsers to servers (important because this is context they have).
 
  RPCs let you call a specific function on another computer. RPCs are highly structured; normally the request and response are encoded in efficient binary formats which are not human-readable. HTTP APIs are usually limited to CRUD (Create, Read, Update, Delete) operations and RPCs can perform any kind of operation. 
  
