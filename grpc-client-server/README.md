@@ -80,19 +80,13 @@ how to generate Go code from protocol buffer definitions, and called that code f
 
 Let's modify the prober service slightly. Instead of the simple one-off HTTP GET against a hardcoded google.com, we are going to modify the service to probe a HTTP endpoint N times and return the average time to GET that endpoint to the client. 
 
-Change your prober request and response to look like this and regenerate your generated go code.
-```
-// The request message
-message ProbeRequest {
-  string endpoint = 1;    // Endpoint to probe
-  int32 repetitions = 2;  // How many probes to execute
-}
+Change your prober request and response:
+* Add a field to the `ProbeRequest` for the number of requests to make.
+* Rename the field in `ProbeReply` (and perhaps add a comment) to make clear it's the _average_ response time of the several requests.
 
-// The response message 
-message ProbeReply {
-  float result = 1;    // Average response time (in milliseconds)
-}
-```
+Note that it's ok to rename fields in protobuf (unlike when we use JSON), because the binary encoding of protobuf messages doesn't include field names. You can [read more about backward/forward compatibility with protobufs](https://earthly.dev/blog/backward-and-forward-compatibility/) if you want.
+
+Remember that you'll need to re-generate your Go code after changing your proto definitions.
 
 Update your client to read the endpoint and number of repetitions from the [command line](https://gobyexample.com/command-line-arguments).
 Then update your server to execute the probe: do a HTTP fetch of `endpoint` the specified number of times.
