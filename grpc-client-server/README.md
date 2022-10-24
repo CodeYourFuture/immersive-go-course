@@ -78,7 +78,7 @@ how to generate Go code from protocol buffer definitions, and called that code f
 
 ## Implement prober logic
 
-Let's modify the prober service slightly. Instead of the simple one-off HTTP GET against a hardcoded google.com, we are going to modify the service to probe an HTTP endpoint N times and return the average time to GET that endpoint from the client. 
+Let's modify the prober service slightly. Instead of the simple one-off HTTP GET against a hardcoded google.com, we are going to modify the service to probe an HTTP endpoint N times and return the average time to GET that endpoint to the client. 
 
 Change your prober request and response:
 * Add a field to the `ProbeRequest` for the number of requests to make.
