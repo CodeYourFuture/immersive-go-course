@@ -84,7 +84,9 @@ Change your prober request and response:
 * Add a field to the `ProbeRequest` for the number of requests to make.
 * Rename the field in `ProbeReply` (and perhaps add a comment) to make clear it's the _average_ response time of the several requests.
 
-Note that it's ok to rename fields in protobuf (unlike when we use JSON), because the binary encoding of protobuf messages doesn't include field names. You can [read more about backward/forward compatibility with protobufs](https://earthly.dev/blog/backward-and-forward-compatibility/) if you want.
+Note that it's ok to rename fields in protobuf (unlike when we use JSON), because the binary encoding of protobuf messages doesn't include field names. 
+However, do note that we need to be very careful about removing proto fields, changing their types, or changing the numerical ordering of fields. In general, these kinds of changes will break your clients because they change the binary encoding format.
+You can [read more about backward/forward compatibility with protobufs](https://earthly.dev/blog/backward-and-forward-compatibility/) if you want. 
 
 Remember that you'll need to re-generate your Go code after changing your proto definitions.
 

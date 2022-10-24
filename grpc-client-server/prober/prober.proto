@@ -16,6 +16,6 @@ message ProbeRequest {
 
 // The response message containing the result
 message ProbeReply {
-  float result = 1;
+  float latency_msecs = 1;
 }
 

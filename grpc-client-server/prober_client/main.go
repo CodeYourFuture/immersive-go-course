@@ -34,5 +34,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not probe: %v", err)
 	}
-	log.Printf("Response Time: %f", r.GetResult())
+	log.Printf("Response Time: %f", r.GetLatencyMsecs())
 }
