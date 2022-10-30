@@ -92,8 +92,8 @@ The database is Postgres. This is the table structure:
 ### `user`
 
 - `id`: primary key: randomly generated string, like `A2RPq6To`
-- `status`: 0 or 1 (inactive, active)
-- `password`: bcrypt
+- `status`: string (`inactive` or `active`)
+- `password`: bcrypt string
 - `created`: timestamp
 - `modified`: timestamp
 
