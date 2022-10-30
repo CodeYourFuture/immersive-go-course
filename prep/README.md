@@ -109,7 +109,7 @@ To work on the projects:
 
 - [Fork this repository](https://github.com/CodeYourFuture/immersive-go-course/fork) — this [creates your own copy](https://docs.github.com/en/get-started/quickstart/fork-a-repo)
 - Work through [the projects in order](../README.md) — they are designed to conceptually build on each other and increase in complexity
-- For each project, open a pull request against your own fork with your implementation of the project
+- For each project, open a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) against your own fork with your implementation of the project. Don't put code for different projects into the same PR!
 - Remember to make [small, incremental commits](https://dustinspecker.com/posts/making-smaller-git-commits/) and to only include code for a _single_ project in each commit
 
 ### Opening the right directory
