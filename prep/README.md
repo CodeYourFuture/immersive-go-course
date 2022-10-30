@@ -112,6 +112,16 @@ To work on the projects:
 - For each project, open a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) against your own fork with your implementation of the project. Don't put code for different projects into the same PR!
 - Remember to make [small, incremental commits](https://dustinspecker.com/posts/making-smaller-git-commits/) and to only include code for a _single_ project in each commit
 
+In general, work through each project like this:
+
+1. Make it **work**
+1. Make it **right**
+1. Optional: Make it **pretty** (or fast)
+
+Making it "right" means ensuring the structure is clear, reasonably simple, and documented, with error handling and tests in place. But it does't mean perfect!
+
+In other words, resist the temptation to optimise or refactor individual pieces of the project, for example to use fancy techniques like go-routines and channels, until you have project working end-to-end. Sometimes it's only when you have the whole working project in front of you that you can see how the individual pieces should _really_ work, and optimising too early can waste time.
+
 ### Opening the right directory
 
 When writing Go in VS Code, many of the helper features only work if you opened the folder directly containing the file named `go.mod`.
