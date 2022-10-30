@@ -8,7 +8,7 @@ Before you start this course, there's a few things we assume you've done:
 - You have experience with JavaScript in the browser and in [Node](https://nodejs.org/en/)
 - You've completed the [Tour of Go](https://go.dev/tour/welcome/1)
 
-This is important because we don't cover the basic language features of Go: you need to be familiar with writing Go functions and methods, plus the basics of types in Go. You'll also need to to navigate [packages and documentation](https://pkg.go.dev/).
+This is important because we don't cover the basic language features of Go: you need to be familiar with writing Go functions and methods, plus the basics of types in Go. You'll also need to know how to navigate [packages and documentation](https://pkg.go.dev/).
 
 Remember: you can _always_ Google or ask for help if you get stuck.
 
