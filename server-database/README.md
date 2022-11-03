@@ -401,9 +401,9 @@ Content-Length: 763
 ]
 ```
 
-Here's some extensions:
+## Extensions
 
-- Don't let the same image URL be uploaded twice
-- On upload, try to detect if completely useless alt-text has been supplied, and reject the request
-- On upload, have our server make sure the URL actually works and returns an image, and reject the request if it didn't
-- On upload, record the resolution of the fetched image in the database too, and return it in the JSON
+1. Don't let the same image URL be uploaded twice
+1. On upload, try to detect if completely useless alt-text has been supplied, and reject the request
+1. On upload, have our server make sure the URL actually works and returns an image, and reject the request if it didn't
+1. On upload, record the resolution of the fetched image in the database too, and return it in the JSON

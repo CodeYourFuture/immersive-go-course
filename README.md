@@ -16,6 +16,8 @@ This course is structured into self-contained projects that you can work through
 
 Each project has its own directory with a README.md file that has instructions. If you want to take a look at one way of completing an exercise, there's some code waiting on a branch prefixed `impl/` (short for "implementation") and an associated [Pull Request](https://github.com/CodeYourFuture/immersive-go-course/pulls) for you to look at. Try not to copy!
 
+Most exercises finish with a list of optional extension tasks. It's highly recommended that you try them out. Note that often the extensions are open-ended and under-specified - make sure to think about them with a curious mind: Why are they useful? What trade-offs do they have?
+
 1. [CLI & Files](./cli-files)
    <br>An introduction to building things with Go by replicating the unix tools `cat` and `ls`.
 1. [Servers & HTTP requests](./http-auth)
