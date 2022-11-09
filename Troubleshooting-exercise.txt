@@ -1,0 +1,28 @@
+> df -h
+//report file system disk space usage
+
+Logs:
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        474M     0  474M   0% /dev
+tmpfs           483M     0  483M   0% /dev/shm
+tmpfs           483M  460K  483M   1% /run
+tmpfs           483M     0  483M   0% /sys/fs/cgroup
+/dev/xvda1      8.0G  8.0G  1.4M 100% /
+tmpfs            97M     0   97M   0% /run/user/1000
+tmpfs            97M     0   97M   0% /run/user/1001
+
+I can see that /dev/xvda1 is fill
+
+> du -sch /
+// du - short for disk usage is used to estimate file space usage. 
+// The du command can be used to track the files and directories which are consuming excessive amount of space on hard disk drive.
+Logs: 
+1.6G	/
+1.6G	total
+
+//This seems like there should be free space
+
+> df -i
+
+// Inodes store information about files and directories (folders), such as file ownership, 
+// access mode (read, write, execute permissions), and file type. 
