@@ -204,18 +204,6 @@ The tool should (in order of priority):
 1. Gracefully handle failures & continue to process the input CSV even if one row fails
 1. Support a configurable AWS region and S3 bucket via environment variables `AWS_REGION` and `S3_BUCKET`
 
-### Project extension
-
-To take this project further, add these requirements:
-
-1. The tool should write an output CSV with the URLs that failed, in a format that could be used as input: `go run . --input input.csv --output output.csv --output-failed failed.csv`
-1. Failures in downloading and uploading the images can be temporary: introduce a retry-with-backoff strategy to make the tool more resilient to temporary failures
-1. Do not re-upload the same image to S3
-   - Can you do this without storing anything in a database?
-1. Do not download & process the same image
-   - Can you also do this without storing anything in a database?
-1. To speed up the tool, process and upload in parallel using [goroutines](https://go.dev/tour/concurrency/1)
-
 ## How-to
 
 Most of getting this project build is up to you. However, here are some pointers for things you are going to need.
@@ -383,3 +371,16 @@ svc := s3.New(sess, &aws.Config{Credentials: creds})
 ### Uploading
 
 The example code on the [AWS SDK for Go](https://github.com/aws/aws-sdk-go) README will be helpful!
+
+## Extensions
+
+To take this project further, add these requirements:
+
+1. The tool should write an output CSV with the URLs that failed, in a format that could be used as input: `go run . --input input.csv --output output.csv --output-failed failed.csv`
+1. Failures in downloading and uploading the images can be temporary: introduce a retry-with-backoff strategy to make the tool more resilient to temporary failures
+1. Do not re-upload the same image to S3
+   - Can you do this without storing anything in a database?
+1. Do not download & process the same image
+   - Can you also do this without storing anything in a database?
+1. To speed up the tool, process and upload in parallel using [goroutines](https://go.dev/tour/concurrency/1)
+   - Think about how many goroutines to start - what are the limiting factors?
