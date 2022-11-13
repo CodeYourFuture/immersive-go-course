@@ -20,6 +20,21 @@ The goal is to find and fix at least 5 bugs. There are issues in the logic, perf
 - Make sure the main features work
 - Identify and test the access controls and [edge cases](https://en.m.wikipedia.org/wiki/Edge_case)
 
+### Output
+
+To capture the bugs you find, fork this repository and open an issue for each bug. The issue you open should be a high-quality bug report, containing:
+
+- A summary of the issue
+- Information about your setup (operating system, how you were running it)
+- Steps to replicate the issue
+- The expected result
+- The _actual_ result you saw as a result of the bug
+- Evidence of the issue (e.g. screenshots or command output)
+
+As an extension, open a Pull Request against your repository that fixes each issue, one PR per issue. You can [link a Pull Request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) too.
+
+### Getting started
+
 Here are a couple of bug reports to get you started - feel free to read them if you want some ideas, or to save them for after you've done some bug hunting if you'd prefer:
 
 <details><summary>Bug report #1</summary>An (imaginary) user of our app has reported that the note "#Monday Remember to take time for self-care" was behaving strangely... the tags didn't look right.</details>
