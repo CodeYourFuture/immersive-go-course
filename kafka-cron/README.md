@@ -8,7 +8,7 @@ Apache Kafka distributed queue system.
 Learning Objectives
  - How can we use a distributed queue in software architecture?
  - How do distributed queues scale?
- -  How can we deal with errors in a system based on distributed queues?
+ - How can we deal with errors in a system based on distributed queues?
  - How can we instrument a complex application with metrics? How should we design alerting?
 
 Timebox: 3 days
@@ -27,10 +27,9 @@ The `cron` tool common to Unix operating systems runs jobs on a schedule. Cron o
 Kafka is an open-source distributed queue. You can read about the core Kafka concepts in the [Kafka: a Distributed Messaging System for Log Processing paper](https://www.microsoft.com/en-us/research/wp-content/uploads/2017/09/Kafka.pdf).
 
 After reading that paper you should understand:
- * How does Kafka store data? 
- * What are producers, consumers, and brokers?
- * How do brokers manage caching?
- * What is a topic, partition?
+ * How Kafka stores data 
+ * What producers, consumers, and brokers are
+ * What topics and partitions are
 
 ### Part 1: Distributed cron with one queue
 
