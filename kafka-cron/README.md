@@ -118,7 +118,10 @@ First, consider:
  * What metrics can we add that will tell us when the system is not working as intended?
  * What metrics can we add that might help us to troubleshoot the system and understand how it is operating?
 
-Asking these questions should guide you in designing the metrics that your consumers and producer should export. Add these metrics to your programs. Verify that they work as expected using `curl` or your web browser.
+Asking these questions should guide you in designing the metrics that your consumers and producer should export.
+Think about what kinds of problems can happen both in the infrastructure - Kafka, your consumers and producers - and in the submitted jobs. 
+
+Add these metrics to your programs. Verify that they work as expected using `curl` or your web browser.
 
 Kafka doesn't export Prometheus metrics natively. However, you can use the official 
 [Prometheus JMX exporter](https://github.com/prometheus/jmx_exporter) to expose its metrics.
@@ -132,7 +135,7 @@ You'll need to set up a Prometheus configuration to scrape your producers and co
 
 Check that Prometheus is correctly scraping your metrics via http://localhost:9090/metrics.
 
-Next, write an [AlertManager configuration] and set up at least one alert. Set up PagerDuty (it has a free trial period available) and get your system to fire an alert, and notify you via PagerDuty.
+Next, write an [AlertManager configuration](https://prometheus.io/docs/alerting/latest/alertmanager/) and set up at least one alert. Set up PagerDuty (it has a free trial period available) and get your system to fire an alert, and notify you via PagerDuty.
 
 You can also build a Grafana dashboard to display your Prometheus metrics. 
 The [Grafana Fundamentals](https://grafana.com/tutorials/grafana-fundamentals/) tutorial will walk you through how to do this (although you will need to use your own application and not their sample application).
