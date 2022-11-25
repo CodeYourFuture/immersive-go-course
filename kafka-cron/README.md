@@ -138,7 +138,7 @@ Try running multiple Kafka brokers and Zookeeper servers with your producers and
 How many containers being down can your system tolerate?
 What happens to the Kafka system logs and the metrics that your binaries export? Did your alerts fire?
 
-### Part 6: (Optional) Dealing with long-running jobs and load
+### Part 6: (Optional, challenging) Dealing with long-running jobs and load
 
 What does your system do if someone submits a very long-running job? Try testing this with the `sleep` command. 
 If this is an issue for the stable operation of your system, or for running jobs in a timely fashion, what can you do about this?
@@ -146,7 +146,7 @@ If your system had problems, did your alerts fire?
 
 How can we prevent our consumers getting overloaded if compute-intensive jobs are submitted?
 
-### Part 6: (Optional, difficult) Security using Firecracker VMs
+### Part 6: (Optional, challenging) Security using Firecracker VMs
 
 In an earlier note it was mentioned that there are security issues with simply `exec`-ing code in this way. 
 
@@ -158,4 +158,4 @@ Here are some demos and examples of projects built with Firecracker:
  * https://stanislas.blog/2021/08/firecracker/
  * https://jvns.ca/blog/2021/01/23/firecracker--start-a-vm-in-less-than-a-second/
 
-There is a [Firecracker SDK for Golang](https://github.com/firecracker-microvm/firecracker-go-sdk). If you have a significant amount of extra time available, reimplementing the system to run cron jobs in Firecracker VMs would be a good challenge.
+There is a [Firecracker SDK for Golang](https://github.com/firecracker-microvm/firecracker-go-sdk). If you have a significant amount of extra time available, updating the system to run commands in Firecracker VMs instead of exec-ing the commands provided would be a very good challenge.
