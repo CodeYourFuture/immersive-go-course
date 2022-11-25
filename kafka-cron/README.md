@@ -146,7 +146,7 @@ If your system had problems, did your alerts fire?
 
 How can we prevent our consumers getting overloaded if compute-intensive jobs are submitted?
 
-### Part 6: (Optional, challenging) Security using Firecracker VMs
+### Part 7: (Optional, challenging) Security using Firecracker VMs
 
 In an earlier note it was mentioned that there are security issues with simply `exec`-ing code in this way. 
 
