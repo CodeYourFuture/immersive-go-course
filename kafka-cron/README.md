@@ -52,29 +52,22 @@ Your consumer program needs to be able to do the following things:
  * Execute the commands to run the jobs (assume this is a simple one-line command that you can `exec` for now)
  * Because the consumer is writing jobs to the queue when they are ready to run, your consumer does not need to do any scheduling or to parse crontab format
 
- We want to run two consumers - therefore, when you create your topic, you should create two partitions of the topic. 
+ We want to run two consumers - therefore, when you create your topic, you should create two partitions of the topic. You will also need to specify a key for each Kafka
+ message that you produce - Kafka assigns messages to partitions based on a hash of the message ID. You can use a package such as [google's UUID package](https://pkg.go.dev/github.com/google/UUID) to generate keys. 
 
 You can build Docker containers for your producer and consumer and add these to your docker-compose configuration. You should create a Makefile or script to make this repeatable.
 
 Test your implementation and observe both of your consumers running jobs scheduled by your producer. What happens if you only create one partition in your topic? What happens if you create three?
 
 > **Note:** For the purposes of keeping this project scope tractable, we are ignoring two things. The first is security: simply run commands as the user that your consumer runs as. The second thing is that we are assuming the jobs to be run consist of commands available on the consumers. You may address these concerns later in an optional extension of the project if you have time.
+ 
+### Part 2: Distributed cron with multiple queues
 
-### Part 2: Status
+A new requirement: your distributed cron system needs to be able to schedule jobs to run in multiple clusters. Imagine that you want to support users who have
+data stored in specific clusters and they want to make sure their cron jobs are running near their data.
+You don't really need to set up any clusters - just write your program as though you had multiple sets of consumer workers in different clusters.
 
-You should now have a working program that runs scheduled jobs across multiple consumers.
-However, this system lacks a way for operators to understand what is happening to scheduled jobs.
-
-You can fix this by:
- * Running a database - any database you are familiar with is fine. Add it to your docker-compose configuration
- * Your producer should write job execution information to this database, and the consumers should update the database when they start and finish the job. 
- * It will be easiest to generate a unique ID for each job and add this to your job definition
- * Write a CLI that can display details of running and recently completed jobs. Did jobs succeed? How long did they take? 
-
-### Part 3: Distributed cron with multiple queues
-
-A new requirement: your distributed cron system needs to be able to schedule jobs to run in multiple clusters. 
- * Define a set of clusters in your program (two is fine, `cluster-a` and `cluster-b`)
+ * Define a set of clusters in your program (two is fine, `cluster-a` and `cluster-b`) 
  * Each cluster should have its own Kafka topic
  * Update the job format so that jobs must specify what cluster to run in
  * Run separate consumers that are configured to read from each cluster specific topic 
@@ -83,22 +76,19 @@ Test that your new program and Kafka configuration works as expected.
 
 How would you do this sort of a migration in a running production environment, where you could not drop existing jobs?
 
-### Part 4: Handling errors
+### Part 3: Handling errors
 
 What happens if there is a problem running a job? Maybe the right thing is retry it. 
 This should be a configurable property of your cron jobs: update your program to add this to the job configurations and message format.
 
 However: you don't want to risk retry jobs displacing first-time runs of other jobs. This is why some queue-based systems [use separate queues for retries](https://www.uber.com/en-IE/blog/reliable-reprocessing/).
 
-You can create a second set of topics for jobs that fail the first time and need to be retried (we need one for each cluster). If a job fails, the consumer should write the job to the corresponding retry queue (and decrement the remaining allowed attempts in the job definition). If there are no more allowed attempts, then discard the job.
+You can create a second set of topics for jobs that fail the first time and need to be retried (we need one retry topic for each cluster). If a job fails, the consumer should write the job to the corresponding retry topic for the cluster (and decrement the remaining allowed attempts in the job definition). 
 
-Run some instances of your consumer program that read from your retry queues. Define a job that fails and observe your retry consumers retrying and eventually discarding it.
+Run some instances of your consumer program that read from your retry queues (you can make this a command-line option in your consumer). 
+Define a job that fails and observe your retry consumers retrying and eventually discarding it.
 
-But what about if a job cannot be parsed, or is otherwise invalid? In that case, it cannot be run. It should be written to special 'dead-letter queue' which is set aside for this purpose. This is useful for debugging systems. 
-
-Implement a dead-letter queue, and introduce an invalid message into your system (you can write Golang code to do this or try one of the [Kafka command-line tools](https://medium.com/@TimvanBaarsen/apache-kafka-cli-commands-cheat-sheet-a6f06eac01b)). Observe your invalid message being written to the dead-letter queue.
-
-### Part 5: Monitoring and Alerting
+### Part 4: Monitoring and Alerting
 
 In software operations, we want to know what our software is doing and how it is performing.
 One very useful technique is to have our program export metrics. Metrics are basically values that your 
@@ -114,7 +104,8 @@ Read the [Overview of Prometheus](https://prometheus.io/docs/introduction/overvi
 The [Prometheus Guide to Instrumenting a Go Application](https://prometheus.io/docs/guides/go-application/) describes how to add metrics to a Golang application.
 
 First, consider:
- * What kinds of things may go wrong with your system?
+ * What kinds of things may go wrong with your system? (it is useful to look at errors your code is handling)
+ * What would users' expectations be of this system?
  * What metrics can we add that will tell us when the system is not working as intended?
  * What metrics can we add that might help us to troubleshoot the system and understand how it is operating?
 
@@ -129,7 +120,7 @@ Set this up (it is probably best as another container in your `docker-compose` c
 
 Next, you can add Prometheus, AlertManager, and Grafana, a common monitoring stack, to your `docker-compose` configuration. Here is an example configuration that you can adapt: https://dzlab.github.io/monitoring/2021/12/30/monitoring-stack-docker/. AlertManager is used for notifying operators of unexpected conditions, and Grafana is useful for building dashboards that allow you to troubleshoot and understand your systems operation.
 
-If your system is struggling to run such a complex `docker-compose` system in a performant fashion, you can cut down the number of Kafka topics and consumers that you are running to a minimum (just one consumer and one retry consumer are fine - don't run sets of these for multiple clusters if your system is under too much load). 
+If your system is struggling to run such a complex `docker-compose` system in a performant fashion, you can cut down the number of Kafka topics and consumers that you are running to a minimum (just one producer and consumer/retry consumer pair are fine - don't run sets of these for multiple clusters if your system is under too much load). 
 
 You'll need to set up a Prometheus configuration to scrape your producers and consumers. Prometheus [configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) is quite complex but you can adapt this [example configuration](https://github.com/prometheus/prometheus/blob/main/documentation/examples/prometheus.yml).
 
@@ -140,25 +131,20 @@ Next, write an [AlertManager configuration](https://prometheus.io/docs/alerting/
 You can also build a Grafana dashboard to display your Prometheus metrics. 
 The [Grafana Fundamentals](https://grafana.com/tutorials/grafana-fundamentals/) tutorial will walk you through how to do this (although you will need to use your own application and not their sample application).
 
-### Part 6: (Optional) Kafka Chaos
+### Part 5: (Optional) Kafka Chaos
 
-Try running multiple Kafka brokers and Zookeeper servers (using another of the [conduktor/kafka-stack-docker-compose](https://github.com/conduktor/kafka-stack-docker-compose)) configurations. Experiment with downing Kafka and Zookeeper containers.
+Try running multiple Kafka brokers and Zookeeper servers with your producers and consumers (using another of the [conduktor/kafka-stack-docker-compose](https://github.com/conduktor/kafka-stack-docker-compose)) configurations. Experiment with downing Kafka and Zookeeper containers.
 
 How many containers being down can your system tolerate?
-What happens to the system logs and your metrics? Did you get alerts?
+What happens to the Kafka system logs and the metrics that your binaries export? Did you get alerts?
 
-### Part 7: (Optional) Expiring data
+### Part 6: (Optional) Dealing with long-running jobs and load
 
-In Part 2, we added a datastore to track job execution. 
+What does your system do if someone submits a very long-running job? 
+If this is an issue for the operation of your system, or for running jobs in a timely fashion, what can you do about this?
+How can we prevent our consumers getting overloaded if compute-intensive jobs are submitted?
 
-In a production system this might grow very large over time.
-Do you need to keep job execution data indefinitely?
-Some datastores allow you to set an expiry time for data as it is written, and automatically deal with expiry. 
-In other systems, you may need to deal with deletion of older data in some other way - via a periodic deletion job that operates based on a per-row timestamp, or using [time-series tables](https://docs.aws.amazon.com/redshift/latest/dg/c_best-practices-time-series-tables.html). 
-
-Implement a strategy for your project to manage periodic deletion of data in your datastore. Consider how to add monitoring and alerting to make sure it continues to work.
-
-### Part 8: (Optional) Security using Firecracker VMs
+### Part 6: (Optional) Security using Firecracker VMs
 
 In an earlier note it was mentioned that there are security issues with simply `exec`-ing code in this way. 
 
