@@ -107,12 +107,12 @@ First, consider:
  * What kinds of things may go wrong with your system? (it is useful to look at errors your code is handling)
  * What would users' expectations be of this system?
  * What metrics can we add that will tell us when the system is not working as intended?
- * What metrics can we add that might help us to troubleshoot the system and understand how it is operating?
+ * What metrics can we add that might help us to troubleshoot the system and understand how it is operating? Read back through the first three parts of this exercise to try and identify the properties of the system that we might want to know about.
 
 Asking these questions should guide you in designing the metrics that your consumers and producer should export.
 Think about what kinds of problems can happen both in the infrastructure - Kafka, your consumers and producers - and in the submitted jobs. 
 
-Add these metrics to your programs. Verify that they work as expected using `curl` or your web browser.
+Add metrics to your programs. Verify that they work as expected using `curl` or your web browser.
 
 Kafka doesn't export Prometheus metrics natively. However, you can use the official 
 [Prometheus JMX exporter](https://github.com/prometheus/jmx_exporter) to expose its metrics.
@@ -136,15 +136,17 @@ The [Grafana Fundamentals](https://grafana.com/tutorials/grafana-fundamentals/) 
 Try running multiple Kafka brokers and Zookeeper servers with your producers and consumers (using another of the [conduktor/kafka-stack-docker-compose](https://github.com/conduktor/kafka-stack-docker-compose)) configurations. Experiment with downing Kafka and Zookeeper containers.
 
 How many containers being down can your system tolerate?
-What happens to the Kafka system logs and the metrics that your binaries export? Did you get alerts?
+What happens to the Kafka system logs and the metrics that your binaries export? Did your alerts fire?
 
 ### Part 6: (Optional) Dealing with long-running jobs and load
 
-What does your system do if someone submits a very long-running job? 
-If this is an issue for the operation of your system, or for running jobs in a timely fashion, what can you do about this?
+What does your system do if someone submits a very long-running job? Try testing this with the `sleep` command. 
+If this is an issue for the stable operation of your system, or for running jobs in a timely fashion, what can you do about this?
+If your system had problems, did your alerts fire?
+
 How can we prevent our consumers getting overloaded if compute-intensive jobs are submitted?
 
-### Part 6: (Optional) Security using Firecracker VMs
+### Part 6: (Optional, difficult) Security using Firecracker VMs
 
 In an earlier note it was mentioned that there are security issues with simply `exec`-ing code in this way. 
 
