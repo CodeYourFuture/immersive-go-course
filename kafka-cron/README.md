@@ -90,7 +90,7 @@ This should be a configurable property of your cron jobs: update your program to
 
 However: you don't want to risk retry jobs displacing first-time runs of other jobs. This is why some queue-based systems [use separate queues for retries](https://www.uber.com/en-IE/blog/reliable-reprocessing/).
 
-You can create a second set of topics for jobs that fail the first time and need to be retried (we need one for each cluster and for `any-cluster`). If a job fails, the consumer should write the job to the corresponding retry queue (and decrement the remaining allowed attempts in the job definition). If there are no more allowed attempts, then discard the job.
+You can create a second set of topics for jobs that fail the first time and need to be retried (we need one for each cluster). If a job fails, the consumer should write the job to the corresponding retry queue (and decrement the remaining allowed attempts in the job definition). If there are no more allowed attempts, then discard the job.
 
 Run some instances of your consumer program that read from your retry queues. Define a job that fails and observe your retry consumers retrying and eventually discarding it.
 
