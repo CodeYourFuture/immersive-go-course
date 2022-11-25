@@ -7,7 +7,6 @@ Apache Kafka distributed queue system.
 
 Learning Objectives
  - How can we use a distributed queue in software architecture?
- - How do distributed queues scale?
  - How can we deal with errors in a system based on distributed queues?
  - How can we instrument a complex application with metrics? How should we design alerting?
 
@@ -44,7 +43,7 @@ There is a [Golang Kafka client](https://docs.confluent.io/kafka-clients/go/curr
 You may want to run other Docker containers later, so you may want to make your own copy of that configuration that you can add to. 
 
 Your producer program needs to be able to do the following:
- * Read and parse a file with cron job definitions
+ * Read and parse a file with cron job definitions (set up your own for this project, don't reuse the system cron config file because you will want to modify the format later)
  * Write a message to Kafka specifying the command to run, the intended start time of the job, and any other information that you think is necessary. It probably makes sense to encode this information as JSON (see [Go By Example: JSON](https://gobyexample.com/json) if you have never worked with JSON in Golang before)
  * You will also need to [create a Kafka topic](https://kafka.apache.org/documentation/#quickstart_createtopic). In a production environment we would probably use separate tooling to manage topics (perhaps Terraform), but for this project, you can [create your Kafka topic using code](https://github.com/confluentinc/examples/blob/7.3.0-post/clients/cloud/go/producer.go#L39).
 
@@ -76,11 +75,13 @@ You can fix this by:
 
 A new requirement: your distributed cron system needs to be able to schedule jobs to run in multiple clusters. 
  * Define a set of clusters in your program (two is fine, `cluster-a` and `cluster-b`)
- * Create a topic for each cluster, as well as a catchall `any-cluster` queue
- * Update the job format so that jobs can specify what cluster to run in. If they do not specify, then put them in `any-cluster`
- * Run separate consumers that are configured to read from each cluster specific queue and the `any-cluster` queue
+ * Each cluster should have its own Kafka topic
+ * Update the job format so that jobs must specify what cluster to run in
+ * Run separate consumers that are configured to read from each cluster specific topic 
  
 Test that your new program and Kafka configuration works as expected.
+
+How would you do this sort of a migration in a running production environment, where you could not drop existing jobs?
 
 ### Part 4: Handling errors
 
