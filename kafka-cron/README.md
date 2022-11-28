@@ -9,7 +9,7 @@ Learning Objectives
  - How can we deal with errors in a system based on distributed queues?
  - How can we instrument a complex application with metrics? How should we design alerting?
 
-Timebox: 3 days
+Timebox: 5 days
 
 ## Project
 
@@ -115,7 +115,9 @@ Add metrics to your programs. Verify that they work as expected using `curl` or 
 
 Kafka doesn't export Prometheus metrics natively. However, we can use the official 
 [Prometheus JMX exporter](https://github.com/prometheus/jmx_exporter) to expose its metrics.
-Set this up (it is probably best as another container in your `docker-compose` configuration - we'll need to define a simple Dockerfile for it).
+
+The Prometheus JMX exporter can run as a Java agent (alongside a Java program such as Kafka) or else as a standalone HTTP server, which collects metrics from a JVM running elsewhere and re-exports them as Prometheus metrics. If we use the agent, we will need to our your own version of the Kafka container that includes the agent. It is probably easier to run it as a standalone HTTP server in its own container. 
+You'll need to define a simple Dockerfile for the JMX exporter and add the container to your `docker-compose` configuration.
 
 Next, we can add Prometheus, AlertManager, and Grafana, a common monitoring stack, to our `docker-compose` configuration. Here is an example configuration that we can adapt: https://dzlab.github.io/monitoring/2021/12/30/monitoring-stack-docker/. AlertManager is used for notifying operators of unexpected conditions, and Grafana is useful for building dashboards that allow us to troubleshoot and understand our system's operation.
 
@@ -123,9 +125,12 @@ If your computer is struggling to run such a complex `docker-compose` system in 
 
 We'll need to set up a Prometheus configuration to scrape our producers and consumers. Prometheus [configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) is quite complex but we can adapt this [example configuration](https://github.com/prometheus/prometheus/blob/main/documentation/examples/prometheus.yml).
 
-Check that Prometheus is correctly scraping our metrics via http://localhost:9090/metrics.
+Once you have adapted the sample Prometheus configuration to scrape metrics from your running producer and consumer(s) and from the JMX exporter that is exporting the Kafka metrics, you should check that Prometheus is correctly scraping all those metrics. If you haven't changed the default port, you can access Prometheus's status page at http://localhost:9090/metrics.
 
-Next, write an [AlertManager configuration](https://prometheus.io/docs/alerting/latest/alertmanager/) and set up at least one alert. Set up PagerDuty (it has a free trial period available) and get your system to fire an alert, and notify us via PagerDuty.
+Next, write an [AlertManager configuration](https://prometheus.io/docs/alerting/latest/alertmanager/) and set up at least one alert. The easiest way to configure an alert is probably
+to use email. This article describes how to send [Alertmanager email using GMail](https://www.robustperception.io/sending-email-with-the-alertmanager-via-gmail/) as an email server.
+If you do this, be careful not to check your `GMAIL_AUTH_TOKEN` into GitHub. Instead, we can check in a template file and use a tool such as [heredoc](https://tldp.org/LDP/abs/html/here-docs.html) or various alertnatives to substitute the value of an environment variable (our token) into the final generated Alertmanager configuration. 
+Consider setting up a throwaway GMail account for this purpose, for additional security.
 
 We can also build a Grafana dashboard to display our Prometheus metrics. The [Grafana Fundamentals](https://grafana.com/tutorials/grafana-fundamentals/) tutorial will walk you through how to do this (although we will need to use our own application and not their sample application).
 
