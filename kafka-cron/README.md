@@ -35,9 +35,7 @@ In this section of the project, we will start by creating a functional distribut
  * A Kafka producer that reads configuration files for jobs and queues tasks for execution
  * A Kafka consumer that dequeues jobs from a queue and runs them
 
-Kafka itself is just a queue that lets you communicate in a structured and asynchronous way between producers and consumers. Therefore, all the scheduling logic for managing recurri
-ng jobs must be part of your producer (although it is recommended to reuse a suitable library to assist with parsing crontabs and scheduling). Every time a job is due to be run, you
-r producer creates a new message and writes it to Kafka, for a consumer to dequeue and run.
+Kafka itself is just a queue that lets you communicate in a structured and asynchronous way between producers and consumers. Therefore, all the scheduling logic for managing recurring jobs must be part of your producer (although it is recommended to reuse a suitable library to assist with parsing crontabs and scheduling). Every time a job is due to be run, your producer creates a new message and writes it to Kafka, for a consumer to dequeue and run.
 
 We'll need to be able to run Kafka. The easiest way is to use `docker-compose`. The [conduktor/kafka-stack-docker-compose](https://github.com/conduktor/kafka-stack-docker-compose) project provides several starter configurations for running Kafka. The config for `zk-single-kafka-single.yml` will work for development purposes.
 
