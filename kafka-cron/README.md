@@ -121,6 +121,8 @@ Add metrics to your programs. Verify that they work as expected using `curl` or 
 Kafka doesn't export Prometheus metrics natively. However, we can use the official 
 [Prometheus JMX exporter](https://github.com/prometheus/jmx_exporter) to expose its metrics.
 
+> **Note:** Kafka is a Java program. We don't need to know much about Java programs in order to run them, but it's useful to know that Java programs run in a host process called a Java Virtual Machine (JVM). The JVM also allows for injecting extra code called Java agents, which can modify how a program is run.
+
 The Prometheus JMX exporter can run as a Java agent (alongside a Java program such as Kafka) or else as a standalone HTTP server, which collects metrics from a JVM running elsewhere and re-exports them as Prometheus metrics. If you're using [conduktor/kafka-stack-docker-compose](https://github.com/conduktor/kafka-stack-docker-compose) as suggested above then your image contains the `jmx_prometheus_javaagent` already. 
 
 You need to create a `config.yaml`. A config file that will collect all metrics is:
@@ -165,9 +167,9 @@ Once you have adapted the sample Prometheus configuration to scrape metrics from
 
 You can now try out some queries in the Prometheus UI.
 
-For example, let's say that our consumers are exporting a metric `job_runtime` that describes how long it takes to run jobs. The metric is labelled with the name of the queue the consumer is reading from. 
+For example, let's say that our consumers are exporting a metric `job_runtime` that describes how long it takes to run jobs. And let's say the metric is labelled with the name of the queue the consumer is reading from.
 
-This metric is describing a population of observed latencies, and the best metric type to use is a [histogram](https://prometheus.io/docs/practices/histograms/).
+Because this metric is describing a population of observed latencies, the best metric type to use is a [histogram](https://prometheus.io/docs/practices/histograms/).
 
 We can query this as follows:
 ```
@@ -182,9 +184,8 @@ For some more PromQL examples, see the [Prometheus Query Examples page](https://
 Next, write an [AlertManager configuration](https://prometheus.io/docs/alerting/latest/alertmanager/) and set up at least one alert. 
 
 For instance:
- * we could alert on the age of jobs being unqueued - if this rises too high (more than a few seconds) then
-user's jobs aren't being executed in a timely fashion. We should use a percentile for this calculation. 
- * we could also alert on failure to queue jobs, and failure to read from the queue.
+ * We could alert on the age of jobs being unqueued - if this rises too high (more than a few seconds) then users' jobs aren't being executed in a timely fashion. We should use a percentile for this calculation.
+ * We could also alert on failure to queue jobs, and failure to read from the queue.
  * We expect to see fetch requests against all of our topics. If we don't, it may mean that our consumers are not running, or are otherwise broken. We could set up alerts on the `kafka_server_BrokerTopicMetrics_Count{name="TotalFetchRequestsPerSec"}` metric to check this.
 
 For critical alerts in a production environment we would usually use PagerDuty or a similar tool, but for our purposes the easiest way to configure an alert is to use email. 
