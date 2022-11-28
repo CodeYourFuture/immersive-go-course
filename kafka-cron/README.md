@@ -49,7 +49,7 @@ Our producer program needs to be able to do the following:
 Our consumer program needs to be able to do the following things:
  * Read job information from a Kafka queue (decoding JSON)
  * Execute the commands to run the jobs (assume this is a simple one-line command that you can `exec` for now)
- * Because the consumer is writing jobs to the queue when they are ready to run, your consumer does not need to do any scheduling or to parse crontab format
+ * Because the producer is writing jobs to the queue when they are ready to run, your consumer does not need to do any scheduling or to parse crontab format
 
  We want to run two consumers - therefore, when we create our topic, we should create two partitions of the topic. We will also need to specify a key for each Kafka message that we produce - Kafka assigns messages to partitions based on a hash of the message ID. We can use a package such as [google's UUID package](https://pkg.go.dev/github.com/google/UUID) to generate keys. 
 
