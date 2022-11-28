@@ -137,7 +137,7 @@ Try running multiple Kafka brokers and Zookeeper servers with our producers and 
 
 How many containers being down can our system tolerate?
 
-What happens to the Kafka system logs and the metrics that our binaries export? Did our alerts fire?
+What happens to the Kafka system logs and the metrics that our binaries export? Did our alerts fire? If not, consider how they could be improved - remember, the point of them is to tell us when something's wrong!
 
 ### Dealing with long-running jobs and load (challenging)
 
