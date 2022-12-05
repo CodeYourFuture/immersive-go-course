@@ -143,11 +143,6 @@ Update `go-ls` to match `ls` in terms of how it handles files (hint: `os.Stat`) 
 
 Make `go-ls -h` include a helpful description.
 
-If you smash through this, here's some fun/tricky extensions:
-
-- Write some tests for `go-ls`
-- Extend `go-ls` to support some more features of the real `ls` (for example, `ls -m assets`)
-
 ### go-cat
 
 This one we're going to make in a different way, so we can see how to use tools to initialise go projects more quickly.
@@ -166,10 +161,23 @@ Let's try it out: `go install . && go-cat`. It will do nothing, but it's a start
 
 Now it's over to you: set up a command that takes a path to a file as an argument, then opens that file and prints it out. You'll need the built-in go functions `os.ReadFile` and `os.Stdout.Write`, as well as more from the `os` package.
 
-Bonus task: handle the error if you pass it a directory rather than a file, like cat does.
-
 [go]: https://go.dev/
 [cat]: https://en.m.wikipedia.org/wiki/Cat_(Unix)
 [ls]: https://en.m.wikipedia.org/wiki/Ls
 [cobra]: https://github.com/spf13/cobra#overview
 [os]: https://pkg.go.dev/os
+
+## Extensions
+
+These are optional, if you have time, but it's highly recommended that you try them out.
+
+### go-ls
+
+1. Write some tests for `go-ls`
+1. Extend `go-ls` to support some more features of the real `ls` (for example, `ls -m assets`)
+
+### go-cat
+
+1. Handle the error if you pass it a directory rather than a file, like the real `cat` does.
+1. What happens if you pass the real `cat` multiple arguments? Do the same.
+1. Find out what passing `-n` does to the real `cat`. Implement support for that too.

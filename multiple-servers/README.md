@@ -436,7 +436,7 @@ Content-Length: 240
 }
 ```
 
-As an extension to this exercise, practice Go modularity by splitting up your API server code into modules:
+Try to practice Go modularity by splitting up your API server code into modules:
 
 - `api.go` for the DB connection & HTTP handlers — this is the file we already wrote
 - `images.go` for all code relating to reading or writing images

@@ -69,7 +69,7 @@ Every project contains at least the following elements, and may have others as n
    1. Learning objectives. A list of things the person doing the project will understand, know, and be able to do after they have completed the project.
    1. A concise description of the high-level idea of the project - what's it for?
    1. A decscription of the outcomes desired from the project, and a rough sequence of steps.
-   1. Ideas for extensions to the project.
+   1. Ideas for extensions to the project, as a bulleted list under a final section heading called "Extensions".
 1. Any scaffolding or supporting files that may be useful (e.g. files to be served, starter code if getting started isn't the focus of the project).
 
 ### On `main` in the README.md

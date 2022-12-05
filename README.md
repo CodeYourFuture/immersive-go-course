@@ -6,7 +6,7 @@ An immersive, introductory course to backend software engineering using [go](htt
 
 ## Requirements
 
-Before you start this course, make sure you've followed all of the instructions in the [prep](prep/README.md) section.
+Before you start this course, make sure you've read and followed all of the instructions in the [prep](prep/README.md) document. This will get you set up and explain how to work through the projects.
 
 Remember: you can _always_ Google or ask for help if you get stuck.
 
@@ -14,7 +14,9 @@ Remember: you can _always_ Google or ask for help if you get stuck.
 
 This course is structured into self-contained projects that you can work through at your own pace.
 
-Each project has its own directory with a README.md file that has instructions. If you want to take a look at one way of completing an exercise, there's some code waiting on a branch prefixed `impl/` (for "implementation") and an associated [Pull Request](https://github.com/CodeYourFuture/immersive-go-course/pulls) for you to look at. Try not to copy!
+Each project has its own directory with a README.md file that has instructions. If you want to take a look at one way of completing an exercise, there's some code waiting on a branch prefixed `impl/` (short for "implementation") and an associated [Pull Request](https://github.com/CodeYourFuture/immersive-go-course/pulls) for you to look at. Try not to copy!
+
+Most exercises finish with a list of optional extension tasks. It's highly recommended that you try them out. Note that often the extensions are open-ended and under-specified - make sure to think about them with a curious mind: Why are they useful? What trade-offs do they have?
 
 1. [CLI & Files](./cli-files)
    <br>An introduction to building things with Go by replicating the unix tools `cat` and `ls`.
