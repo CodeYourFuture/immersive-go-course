@@ -9,3 +9,9 @@ cron:
     command: echo 'Hello, world!'
     clusters: 
       - "cluster-b"
+  - description: 'Random failure'
+    schedule: "* * * * *"
+    command: /scripts/random-failure.sh
+    max_retries: 3
+    clusters: 
+      - "cluster-a"

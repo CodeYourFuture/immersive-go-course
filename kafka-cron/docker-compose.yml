@@ -1,5 +1,9 @@
 version: '3.9'
 
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+
 services:
   zoo1:
     image: confluentinc/cp-zookeeper:7.3.0
@@ -16,10 +20,13 @@ services:
     image: confluentinc/cp-kafka:7.3.0
     hostname: kafka
     container_name: kafka
+    volumes:
+      - ./kafka-jmx-config.yml:/kafka-jmx-config.yml
     ports:
       - "9092:9092"
       - "29092:29092"
       - "9999:9999"
+      - "8999:8999"
     environment:
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092,DOCKER://host.docker.internal:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
@@ -34,6 +41,7 @@ services:
       KAFKA_JMX_HOSTNAME: ${DOCKER_HOST_IP:-127.0.0.1}
       KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+      KAFKA_OPTS: -javaagent:/usr/share/java/cp-base-new/jmx_prometheus_javaagent-0.14.0.jar=8999:/kafka-jmx-config.yml
     depends_on:
       - zoo1
     healthcheck:
@@ -43,7 +51,6 @@ services:
       timeout: 10s
       retries: 10
 
-  
   producer:
     build:
       context: .
@@ -62,7 +69,18 @@ services:
     build:
       context: .
       dockerfile: ./consumer/Dockerfile
-    command: ["/build", "--topic", "jobs-cluster-a", "--brokerList", "kafka:29092"]
+    command: ["/build", "--topic", "jobs-cluster-a", "--brokerList", "kafka:29092", "--retryTopic", "jobs-cluster-a-retries"]
+
+  cluster-a-retries:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: ./consumer/Dockerfile
+    volumes:
+      - ./scripts:/scripts
+    command: ["/build", "--topic", "jobs-cluster-a-retries", "--brokerList", "kafka:29092", "--retryTopic", "jobs-cluster-a-retries"]
   
   cluster-b:
     depends_on:
@@ -72,3 +90,40 @@ services:
       context: .
       dockerfile: ./consumer/Dockerfile
     command: ["/build", "--topic", "jobs-cluster-b", "--brokerList", "kafka:29092"]
+  
+  alertmanager:
+    container_name: alertmanager
+    hostname: alertmanager
+    image: prom/alertmanager
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - 9093:9093
+
+  prometheus:
+    container_name: prometheus
+    hostname: prometheus
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    links:
+      - alertmanager:alertmanager
+    ports:
+      - 9090:9090
+
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana
+    volumes:
+      - ./grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yml
+      - ./grafana_config.ini:/etc/grafana/config.ini
+      - grafana_data:/var/lib/grafana
+    ports:
+      - 3000:3000

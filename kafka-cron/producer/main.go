@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
 
@@ -41,15 +43,17 @@ func main() {
 		log.Panic(err)
 	}
 
-	c := cron.New()
-
-	err = ScheduleJobs(c, producer, cmds)
+	err = ScheduleJobs(producer, cmds)
 
 	if err != nil {
 		log.Panic(err)
 	}
 
-	c.Run()
+	sigs := make(chan os.Signal, 1)
+
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	<-sigs
 }
 
 func ReadConfig(path string) ([]types.Command, error) {
@@ -67,27 +71,25 @@ func ReadConfig(path string) ([]types.Command, error) {
 	return cmds.Cron, nil
 }
 
-func ScheduleJobs(c *cron.Cron, prod sarama.SyncProducer, cmds []types.Command) error {
+func ScheduleJobs(prod sarama.SyncProducer, cmds []types.Command) error {
 	var runErr error
 	for _, cmd := range cmds {
 		fmt.Println("scheduling: ", cmd.Description)
-		_, err := c.AddFunc(cmd.Schedule, func() {
-			log.Println("Publishing command: ", cmd.Description)
-			msgString, err := json.Marshal(cmd)
-			if err != nil {
-				log.Println(fmt.Errorf("error marshalling command: %v", err))
-				runErr = err
-			}
-			err = PublishMessages(prod, string(msgString), cmd.Clusters)
 
-			if err != nil {
-				log.Println(fmt.Errorf("error publishing command: %v", err))
-				runErr = err
-			}
-		})
+		c := cron.New()
+
+		sch, err := cron.ParseStandard(cmd.Schedule)
+
 		if err != nil {
 			return err
 		}
+
+		c.Schedule(sch, &CommandPublisher{
+			Command:   cmd,
+			publisher: prod,
+		})
+
+		c.Start()
 	}
 	return runErr
 }
@@ -105,4 +107,22 @@ func PublishMessages(prod sarama.SyncProducer, msg string, clusters []string) er
 		}
 	}
 	return nil
+}
+
+type CommandPublisher struct {
+	types.Command
+	publisher sarama.SyncProducer
+}
+
+func (c *CommandPublisher) Run() {
+	fmt.Println("Running command: ", c.Description)
+	msgString, err := json.Marshal(&c)
+	if err != nil {
+		log.Println(fmt.Errorf("error marshalling command: %v", err))
+	}
+	err = PublishMessages(c.publisher, string(msgString), c.Clusters)
+
+	if err != nil {
+		log.Println(fmt.Errorf("error publishing command: %v", err))
+	}
 }

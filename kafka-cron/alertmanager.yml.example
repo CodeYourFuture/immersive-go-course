@@ -1,0 +1,18 @@
+global:
+  resolve_timeout: 1m
+  smtp_from: GMAIL_USERNAME
+  smtp_smarthost: smtp.gmail.com:587
+
+route:
+  receiver: 'gmail-notifications'
+
+receivers:
+- name: 'gmail-notifications'
+  email_configs:
+  - to: berkelih@gmail.com
+    from: GMAIL_USERNAME
+    smarthost: smtp.gmail.com:587
+    auth_username: GMAIL_USERNAME
+    auth_identity: GMAIL_USERNAME
+    auth_password: GMAIL_AUTH_TOKEN
+    send_resolved: true
