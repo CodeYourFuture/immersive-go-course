@@ -1,0 +1,11 @@
+cron:
+  - description: 'Echo Hello world every day at 00:00 AM'
+    schedule: "0 0 * * *"
+    command: "echo 'Hello, world!'"
+    clusters: 
+      - "cluster-a"
+  - description: 'Echo Hello world every minute'
+    schedule: "* * * * *"
+    command: echo 'Hello, world!'
+    clusters: 
+      - "cluster-b"

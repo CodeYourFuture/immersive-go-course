@@ -1,0 +1,13 @@
+# The format is a list of cron jobs in list format, all nested under 'cron'.
+# Each cron job is a list of three elements:
+# 1. Description of the job (optional).
+# 2. A cron string, as described here: http://en.wikipedia.org/wiki/Cron
+# 3. The shell command to run (as a string including any arguments).
+# 4. List of clusters where the job should be run
+# Example:
+# cron:
+#   - description: 'Echo Hello world every day at 00:00 AM'
+#     schedule: "0 0 * * *"
+#     command: "echo 'Hello, world!'"
+#     cluster: "cluster-a"
+
