@@ -15,6 +15,7 @@ import (
 	"github.com/Shopify/sarama"
 	"github.com/berkeli/kafka-cron/types"
 	"github.com/google/uuid"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (
@@ -72,8 +73,8 @@ func main() {
 					log.Println(err)
 				}
 				wgWorkers.Add(1)
-				// TODO: Add a worker pool with semaphore?
-				processCommand(cmd, producer, &wgWorkers)
+				// TODO: Add a worker pool with semaphore? What if jobs are dependent on each other?
+				processCommand(producer, cmd, &wgWorkers)
 			case <-signals:
 				chDone <- true
 				return
@@ -85,14 +86,19 @@ func main() {
 	wgWorkers.Wait()
 }
 
-func processCommand(cmd types.Command, producer sarama.SyncProducer, wg *sync.WaitGroup) {
+func processCommand(producer sarama.SyncProducer, cmd types.Command, wg *sync.WaitGroup) {
 	defer wg.Done()
 	log.Println("Starting a job for: ", cmd.Description)
-	log.Println("Command: ", cmd)
+	//metrics
+	timer := prometheus.NewTimer(JobDuration.WithLabelValues(*topic, cmd.Description))
+	JobStatus.WithLabelValues("new", *topic, cmd.Description).Inc()
+
 	out, err := executeCommand(cmd.Command)
 	if err != nil {
+		timer.ObserveDuration()
 		log.Printf("Command: %s resulted in error: %s\n", cmd.Command, err)
 		if cmd.MaxRetries > 0 {
+			JobStatus.WithLabelValues("retry", *topic, cmd.Description).Inc()
 			cmd.MaxRetries--
 			log.Printf("Retrying command: %s, %d retries left\n", cmd.Command, cmd.MaxRetries)
 			cmdBytes, err := json.Marshal(cmd)
@@ -111,9 +117,12 @@ func processCommand(cmd types.Command, producer sarama.SyncProducer, wg *sync.Wa
 			}
 
 		} else {
+			JobStatus.WithLabelValues("failed", *topic, cmd.Description).Inc()
 			log.Printf("Command: %s failed, no more retries left\n", cmd.Command)
 		}
 	}
+	JobStatus.WithLabelValues("success", *topic, cmd.Description).Inc()
+	timer.ObserveDuration()
 	log.Println(out)
 }
 

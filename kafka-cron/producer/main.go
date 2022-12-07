@@ -72,11 +72,9 @@ func ReadConfig(path string) ([]types.Command, error) {
 }
 
 func ScheduleJobs(prod sarama.SyncProducer, cmds []types.Command) error {
-	var runErr error
+	c := cron.New()
 	for _, cmd := range cmds {
 		fmt.Println("scheduling: ", cmd.Description)
-
-		c := cron.New()
 
 		sch, err := cron.ParseStandard(cmd.Schedule)
 
@@ -84,27 +82,32 @@ func ScheduleJobs(prod sarama.SyncProducer, cmds []types.Command) error {
 			return err
 		}
 
-		c.Schedule(sch, &CommandPublisher{
+		job := CommandPublisher{
 			Command:   cmd,
 			publisher: prod,
-		})
+		}
 
-		c.Start()
+		c.Schedule(sch, &job)
+		ScheduledCrons.Inc()
 	}
-	return runErr
+	c.Start()
+	return nil
 }
 
 func PublishMessages(prod sarama.SyncProducer, msg string, clusters []string) error {
 	for _, cluster := range clusters {
+		topic := fmt.Sprintf("%s-%s", *topicPrefix, cluster)
 		msg := &sarama.ProducerMessage{
-			Topic: fmt.Sprintf("%s-%s", *topicPrefix, cluster),
+			Topic: topic,
 			Key:   sarama.StringEncoder(uuid.New().String()),
 			Value: sarama.StringEncoder(msg),
 		}
 		_, _, err := prod.SendMessage(msg)
 		if err != nil {
+			QueuedJobs.WithLabelValues(topic, "error").Inc()
 			return err
 		}
+		QueuedJobs.WithLabelValues(topic, "success").Inc()
 	}
 	return nil
 }

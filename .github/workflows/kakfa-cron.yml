@@ -1,0 +1,17 @@
+name: kafka-cron tests
+on: [push]
+defaults:
+  run:
+    working-directory: kafka-cron
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: "kafka-cron/go.mod"
+          cache: false
+      - name: Run Tests
+        run: go test -v ./...
