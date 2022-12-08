@@ -24,6 +24,8 @@ var (
 )
 
 func main() {
+	InitMonitoring(2112)
+
 	kingpin.Parse()
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll

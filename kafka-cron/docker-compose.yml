@@ -5,6 +5,24 @@ volumes:
   grafana_data: {}
 
 services:
+  fake-service:
+    image: nicholasjackson/fake-service:v0.19.1
+    container_name: fake-service
+    environment:
+      LISTEN_ADDR: 0.0.0.0:8080
+      MESSAGE: "Hello World"
+      SERVER_TYPE: "http"
+      TIMING_50_PERCENTILE: "1000ms"
+      TIMING_95_PERCENTILE: "4000ms"
+      TIMING_99_PERCENTILE: "5000ms"
+      ERROR_RATE: "0.2"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
   zoo1:
     image: confluentinc/cp-zookeeper:7.3.0
     hostname: zoo1
@@ -69,6 +87,8 @@ services:
     build:
       context: .
       dockerfile: ./consumer/Dockerfile
+    volumes:
+      - ./scripts:/scripts
     command: ["/build", "--topic", "jobs-cluster-a", "--brokerList", "kafka:29092", "--retryTopic", "jobs-cluster-a-retries"]
 
   cluster-a-retries:
@@ -86,6 +106,8 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+    volumes:
+      - ./scripts:/scripts
     build:
       context: .
       dockerfile: ./consumer/Dockerfile
@@ -124,6 +146,6 @@ services:
     volumes:
       - ./grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yml
       - ./grafana_config.ini:/etc/grafana/config.ini
-      - grafana_data:/var/lib/grafana
+      - ./grafana_data:/var/lib/grafana
     ports:
       - 3000:3000

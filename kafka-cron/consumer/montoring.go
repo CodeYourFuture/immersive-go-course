@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -11,7 +12,7 @@ import (
 type Metrics map[string]interface{}
 
 var (
-	JobStatus = prometheus.NewCounterVec(prometheus.CounterOpts{
+	JobStatus = promauto.NewCounterVec(prometheus.CounterOpts{
 		Name: "job_status",
 		Help: "Status of jobs",
 	}, []string{"status", "topic", "description"})
@@ -24,7 +25,7 @@ var (
 func InitMonitoring(port int) (Metrics, error) {
 	http.Handle("/metrics", promhttp.Handler())
 	go func() {
-		http.ListenAndServe(":2112", nil)
+		http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	}()
 	return nil, nil
 }

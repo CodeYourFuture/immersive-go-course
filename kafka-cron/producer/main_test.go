@@ -3,12 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/Shopify/sarama"
 	"github.com/Shopify/sarama/mocks"
 	"github.com/berkeli/kafka-cron/types"
 	"github.com/berkeli/kafka-cron/utils"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_PublishMessages(t *testing.T) {
@@ -104,4 +106,60 @@ func Test_CommandPublisher(t *testing.T) {
 
 		cmdPub.Run()
 	})
+}
+
+func Test_ReadConfig(t *testing.T) {
+	sample := `
+cron:
+  - description: 'Echo Hello world every day at 00:00 AM'
+    schedule: "0 0 * * *"
+    command: "echo 'Hello, world!'"
+    max_retries: 3
+    clusters: 
+      - "cluster-a"
+      - "cluster-b"
+  - description: 'Echo Hello world every minute'
+    schedule: "* * * * *"
+    command: echo 'Hello, world!'
+    clusters: 
+      - "cluster-b"`
+
+	want := []types.Command{
+		{
+			Clusters:    []string{"cluster-a", "cluster-b"},
+			Description: "Echo Hello world every day at 00:00 AM",
+			Command:     "echo 'Hello, world!'",
+			MaxRetries:  3,
+			Schedule:    "0 0 * * *",
+		},
+		{
+			Clusters:    []string{"cluster-b"},
+			Description: "Echo Hello world every minute",
+			Command:     "echo 'Hello, world!'",
+			MaxRetries:  0,
+			Schedule:    "* * * * *",
+		},
+	}
+
+	f, err := os.CreateTemp(".", "config.yaml")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer os.Remove(f.Name())
+
+	_, err = f.WriteString(sample)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	got, err := ReadConfig(f.Name())
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	require.ElementsMatch(t, want, got)
 }

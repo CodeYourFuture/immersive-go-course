@@ -24,3 +24,19 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['kafka:8999']
+  - job_name: 'producers'
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['producer:2112']
+  - job_name: 'consumers'
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['cluster-a:2112', 'cluster-b:2112']
+  - job_name: 'retry_consumers'
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['cluster-a-retries:2112']
+  

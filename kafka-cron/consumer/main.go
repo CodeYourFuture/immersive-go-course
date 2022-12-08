@@ -26,6 +26,9 @@ var (
 )
 
 func main() {
+
+	InitMonitoring(2112)
+
 	kingpin.Parse()
 	config := sarama.NewConfig()
 	config.Consumer.Return.Errors = true
@@ -91,11 +94,12 @@ func processCommand(producer sarama.SyncProducer, cmd types.Command, wg *sync.Wa
 	log.Println("Starting a job for: ", cmd.Description)
 	//metrics
 	timer := prometheus.NewTimer(JobDuration.WithLabelValues(*topic, cmd.Description))
+	defer timer.ObserveDuration()
 	JobStatus.WithLabelValues("new", *topic, cmd.Description).Inc()
 
 	out, err := executeCommand(cmd.Command)
 	if err != nil {
-		timer.ObserveDuration()
+
 		log.Printf("Command: %s resulted in error: %s\n", cmd.Command, err)
 		if cmd.MaxRetries > 0 {
 			JobStatus.WithLabelValues("retry", *topic, cmd.Description).Inc()
@@ -122,7 +126,6 @@ func processCommand(producer sarama.SyncProducer, cmd types.Command, wg *sync.Wa
 		}
 	}
 	JobStatus.WithLabelValues("success", *topic, cmd.Description).Inc()
-	timer.ObserveDuration()
 	log.Println(out)
 }
 

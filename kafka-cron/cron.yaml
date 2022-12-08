@@ -11,7 +11,21 @@ cron:
       - "cluster-b"
   - description: 'Random failure every 2 minutes'
     schedule: "*/2 * * * *"
-    command: /scripts/random-fail.sh
+    command: sh /scripts/random-fail.sh
     max_retries: 3
     clusters: 
       - "cluster-a"
+  - description: 'Http request every minute'
+    schedule: "* * * * *"
+    command: sh /scripts/http-request.sh
+    max_retries: 3
+    clusters: 
+      - "cluster-a"
+      - "cluster-b"
+  - description: 'Http request every minute'
+    schedule: "* * * * *"
+    command: sh /scripts/http-request.sh
+    max_retries: 3
+    clusters: 
+      - "cluster-a"
+      - "cluster-b"
