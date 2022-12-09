@@ -21,7 +21,7 @@ import (
 var (
 	brokerList = kingpin.Flag("brokerList", "List of brokers to connect").Default("localhost:9092").Strings()
 	topic      = kingpin.Flag("topic", "Topic name").Default("jobs-cluster-a").String()
-	retryTopic = kingpin.Flag("retryTopic", "Retry topic name").Default("jobs-cluster-a-failed").String()
+	retryTopic = kingpin.Flag("retryTopic", "Retry topic name").Default("jobs-cluster-a-retries").String()
 	partition  = kingpin.Flag("partition", "Partition number").Default("0").Int32()
 )
 
