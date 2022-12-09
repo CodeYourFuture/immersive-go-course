@@ -69,6 +69,20 @@ services:
       timeout: 10s
       retries: 10
 
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8080:8080
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_METRICS_PORT: 11001
+      KAFKA_CLUSTERS_0_METRICS_TYPE: PROMETHEUS
+
   producer:
     build:
       context: .
