@@ -212,15 +212,3 @@ If this is an issue for the stable operation of our system, or for running jobs 
 If your system had problems, did our alerts fire?
 
 How can we prevent our consumers getting overloaded if compute-intensive jobs are submitted?
-
-### Security using Firecracker VMs (challenging)
-
-In an earlier note it was mentioned that there are security issues with simply `exec`-ing code in this way. 
-
-A better solution would be to use a [Firecracker VM](https://github.com/firecracker-microvm/firecracker/) to run the cron commands. Firecracker is an open-source virtualization technology that lets us start lightweight virtual machines very quickly and cheaply. It was developed at AWS to support services like AWS Lambda.
-
-Here are some demos and examples of projects built with Firecracker:
- * https://stanislas.blog/2021/08/firecracker/
- * https://jvns.ca/blog/2021/01/23/firecracker--start-a-vm-in-less-than-a-second/
-
-There is a [Firecracker SDK for Golang](https://github.com/firecracker-microvm/firecracker-go-sdk). If you have a significant amount of extra time available, updating the system to run commands in Firecracker VMs instead of exec-ing the commands provided would be a very good challenge.
