@@ -78,7 +78,7 @@ services:
         condition: service_healthy
     volumes:
       - ./cron.yaml:/cron.yaml
-    command: ["/build", "--cronPath", "/cron.yaml", "--brokerList", "kafka:29092"]
+    command: ["/build", "--cronPath", "/cron.yaml", "--brokerList", "kafka:29092", "--partitions", "2"]
   
   cluster-a:
     depends_on:
@@ -90,6 +90,17 @@ services:
     volumes:
       - ./scripts:/scripts
     command: ["/build", "--topic", "jobs-cluster-a", "--brokerList", "kafka:29092", "--retryTopic", "jobs-cluster-a-retries"]
+
+  cluster-a-2:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: ./consumer/Dockerfile
+    volumes:
+      - ./scripts:/scripts
+    command: ["/build", "--topic", "jobs-cluster-a", "--brokerList", "kafka:29092", "--retryTopic", "jobs-cluster-a-retries", "--partition", "1"]
 
   cluster-a-retries:
     depends_on:
@@ -111,7 +122,18 @@ services:
     build:
       context: .
       dockerfile: ./consumer/Dockerfile
-    command: ["/build", "--topic", "jobs-cluster-b", "--brokerList", "kafka:29092"]
+    command: ["/build", "--topic", "jobs-cluster-b", "--brokerList", "kafka:29092", "--partition", "0"]
+
+  cluster-b-2:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    volumes:
+      - ./scripts:/scripts
+    build:
+      context: .
+      dockerfile: ./consumer/Dockerfile
+    command: ["/build", "--topic", "jobs-cluster-b", "--brokerList", "kafka:29092", "--partition", "1"]
   
   alertmanager:
     container_name: alertmanager

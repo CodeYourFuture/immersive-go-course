@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -21,6 +22,7 @@ var (
 	brokerList  = kingpin.Flag("brokerList", "List of brokers to connect").Default("localhost:9092").Strings()
 	topicPrefix = kingpin.Flag("topicPrefix", "Topic prefix, e.g. jobs will create topics for each cluster in the format jobs-cluster-a").Default("jobs").String()
 	cronPath    = kingpin.Flag("cronPath", "Path to cron file").Default("./cron.yaml").String()
+	partitions  = kingpin.Flag("partitions", "Number of partitions").Default("1").Int32()
 )
 
 func main() {
@@ -28,6 +30,13 @@ func main() {
 
 	kingpin.Parse()
 	config := sarama.NewConfig()
+
+	admin, err := sarama.NewClusterAdmin(*brokerList, config)
+
+	if err != nil {
+		log.Panic(err)
+	}
+
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Return.Successes = true
 	producer, err := sarama.NewSyncProducer(*brokerList, config)
@@ -38,8 +47,17 @@ func main() {
 		if err := producer.Close(); err != nil {
 			log.Panic(err)
 		}
+		if err := admin.Close(); err != nil {
+			log.Panic(err)
+		}
 	}()
 	cmds, err := ReadConfig(*cronPath)
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	err = CreateTopics(admin, cmds)
 
 	if err != nil {
 		log.Panic(err)
@@ -56,6 +74,34 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	<-sigs
+}
+
+func CreateTopics(admin sarama.ClusterAdmin, cmds []types.Command) error {
+	// Create topics for all unique clusters
+	clusters := make([]string, 0)
+
+	for _, cmd := range cmds {
+		for _, cluster := range cmd.Clusters {
+			if !contains(clusters, cluster) {
+				clusters = append(clusters, cluster)
+			}
+		}
+	}
+
+	for _, cluster := range clusters {
+		topicName := fmt.Sprintf("%s-%s", *topicPrefix, cluster)
+
+		err := admin.CreateTopic(topicName, &sarama.TopicDetail{
+			NumPartitions:     *partitions,
+			ReplicationFactor: 1,
+		}, false)
+
+		if errors.Is(err, sarama.ErrTopicAlreadyExists) {
+			admin.CreatePartitions(topicName, *partitions, nil, false)
+		}
+	}
+
+	return nil
 }
 
 func ReadConfig(path string) ([]types.Command, error) {
@@ -130,4 +176,13 @@ func (c *CommandPublisher) Run() {
 	if err != nil {
 		log.Println(fmt.Errorf("error publishing command: %v", err))
 	}
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }

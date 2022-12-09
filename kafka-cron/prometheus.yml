@@ -33,7 +33,7 @@ scrape_configs:
     metrics_path: '/metrics'
     scrape_interval: 5s
     static_configs:
-      - targets: ['cluster-a:2112', 'cluster-b:2112']
+      - targets: ['cluster-a:2112', 'cluster-a-2:2112', 'cluster-b:2112', 'cluster-b-2:2112']
   - job_name: 'retry_consumers'
     metrics_path: '/metrics'
     scrape_interval: 5s
