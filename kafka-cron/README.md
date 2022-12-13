@@ -204,6 +204,7 @@ Write a short README about how you designed your alerts.
 
 Now, for each alert, write a playbook that describes how to handle that type of alert. Information to include:
  * A summary of the relevant system architecture (you can include a diagram, either as an image or using [mermaid.js](https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)).
+ * What the likely user impact is of the alert (e.g. "all scheduled tasks will fail" or "tasks will be slow to execute").
  * What kinds of things might cause this alert? 
  * How would the engineer receiving that alert narrow down the possible causes and troubleshoot?
  * How should the engineer address each possible cause that you can foresee? 
