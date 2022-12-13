@@ -195,6 +195,26 @@ We can also build a Grafana dashboard to display our Prometheus metrics. The [Gr
 
 ## Extensions
 
+#### Comprehensive Alerting Design and Runbooks
+
+You should have at least one alert defined. However, for a production system, we need a comprehensive set of alerts that we can rely on to 
+tell us when our system is not meeting user expectations. Try to implement the smallest set of alerts that covers all cases.
+Use [symptom-based alerting](https://docs.google.com/document/d/199PqyG3UsyXlwieHaqbGiWVa8eMWi8zzAn0YfcApr8Q/preview) and avoid cause-based alerting.
+Write a short README about how you designed your alerts. 
+
+Now, for each alert, write a playbook that describes how to handle that type of alert. Information to include:
+ * A summary of the relevant system architecture (you can include a diagram, either as an image or using [mermaid.js](https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)).
+ * What the likely user impact is of the alert (e.g. "all scheduled tasks will fail" or "tasks will be slow to execute").
+ * What kinds of things might cause this alert? 
+ * How would the engineer receiving that alert narrow down the possible causes and troubleshoot?
+ * How should the engineer address each possible cause that you can foresee? 
+
+A useful way to proceed is to think about all of the entities in your system: services, topics, and so on. 
+What would happen if each of these disappeared?
+Now consider all the places where communication occurs in your system. What would happen if each of these communication paths failed, or if a software bug caused wrong messages to be sent? Don't forget that your monitoring system itself is a communication link to your production systems.
+
+Your alert definitions should include a link to your playbooks on GitHub.
+
 ### Kafka Chaos
 
 Try running multiple Kafka brokers and Zookeeper servers with our producers and consumers (using another of the [conduktor/kafka-stack-docker-compose](https://github.com/conduktor/kafka-stack-docker-compose)) configurations. Experiment with downing Kafka and Zookeeper containers.
