@@ -1,12 +1,13 @@
 .c-text {
   max-width: var(--theme-spacing--linelength);
-
+  @include backdrop($opacity: 0.9);
+  @include pattern(graph, currentColor, b, false, 0.2);
   &--first {
     margin-top: var(--theme-spacing--6);
   }
 
   h2 {
     text-decoration: underline;
-    text-decoration-color: var(--theme-color--brand);
+    text-decoration-color: var(--theme-color--pop);
   }
 }

@@ -1,4 +1,4 @@
-html .e-button {
+.e-button {
   // reset
   appearance: none;
   font: 900 100% var(--theme-font--display);
@@ -16,15 +16,16 @@ html .e-button {
   // styles
   color: var(--theme-color--paper);
   background-color: var(--theme-color--pop);
-  border: var(--theme-border--default);
+  border: var(--theme-border);
   border-radius: var(--theme-border-radius);
-  border-color: var(--theme-color--ink);
-  padding: var(--theme-spacing--2) var(--theme-spacing--4);
+  border-color: var(--theme-color--accent);
+  box-shadow: 2px 5px var(--theme-color--accent);
+  padding: var(--theme-spacing--1) var(--theme-spacing--2);
   transition: background-color 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
     border-color 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
   @include on-event {
-    color: var(--theme-color--shade);
+    color: var(--theme-color--accent);
     background-color: var(--theme-color--paper);
     border-color: currentColor;
     text-decoration: none;

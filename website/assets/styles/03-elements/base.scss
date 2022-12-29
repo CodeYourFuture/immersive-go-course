@@ -7,12 +7,14 @@ html {
   font-family: var(--theme-font--copy);
   font-size: 100%;
   background: var(--theme-color--paper);
-  background-image: radial-gradient(
-    circle,
-    var(--theme-color--paper) 0%,
-    var(--theme-color--block) 50%,
-    var(--theme-color--paper) 100%
-  );
+  background-image: url("./pictures/dddepth-005.jpg"),
+    radial-gradient(
+      circle,
+      var(--theme-color--paper) 0%,
+      var(--theme-color--block) 50%,
+      var(--theme-color--paper) 100%
+    );
+  background-size: cover;
   color: var(--theme-color--ink);
   margin: 0;
   padding: 0;

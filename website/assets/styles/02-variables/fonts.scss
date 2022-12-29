@@ -1,8 +1,8 @@
 :root {
-  --theme-font--display: "Playfair Display", "Raleway", serif;
+  --theme-font--display: "Spectral", "Playfair Display", "Raleway", serif;
   --theme-font--copy: "Hanken Grotesk", "Roboto", system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
     "Open Sans", "Helvetica Neue", sans-serif;
-  --theme-font--brand: 900 100% var(--theme-font--display);
-  --theme-font--system: 100 100% "Monaco", monospace;
+  --theme-font--brand: 900 100% "Roboto", serif;
+  --theme-font--system: 100 100%/2 "Monaco", "Menlo", monospace;
 }

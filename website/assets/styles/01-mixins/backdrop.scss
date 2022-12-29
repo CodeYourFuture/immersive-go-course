@@ -1,0 +1,20 @@
+@mixin backdrop($border: false, $gradient: true, $opacity: 0.5) {
+  backdrop-filter: blur(100px) opacity($opacity);
+  padding: var(--theme-spacing--gutter);
+  min-width: 230px; // !mn fairly arbitrary, just don't want tiny squished boxes
+  max-width: var(--theme-spacing--linelength);
+
+  @if $gradient {
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 0.49),
+      rgba(255, 255, 255, 0.19)
+    );
+  }
+
+  @if $border {
+    border: var(--theme-border--highlight);
+    border-color: var(--theme-color--outline);
+    border-radius: var(--theme-border-radius);
+  }
+}

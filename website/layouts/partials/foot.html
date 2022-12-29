@@ -1,1 +1,5 @@
 <footer class="l-foot"></footer>
+
+{{ $scripts := resources.Get "scripts/app.js" }}
+
+<script src="{{$scripts.Permalink}}"></script>

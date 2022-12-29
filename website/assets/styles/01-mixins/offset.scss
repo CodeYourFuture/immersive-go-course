@@ -16,8 +16,8 @@ d-----c
   }
 
   @if $corner == b {
-    transform: translateX(calc(-1 * var(--theme-spacing--offset)))
-      translateY(var(--theme-spacing--offset));
+    transform: translateX(var(--theme-spacing--offset))
+      translateY(calc(-1 * var(--theme-spacing--offset)));
   }
 
   @if $corner == c {

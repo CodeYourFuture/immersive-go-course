@@ -2,5 +2,16 @@ baseURL = "http://example.org/"
 languageCode = "en-us"
 title = "CYF+"
 languageLang = "en"
+sectionPagesMenu = "main"
+
+[markup]
+  [markup.tableOfContents]
+    endLevel = 3
+    ordered = false
+    startLevel = 2
+  [markup.highlight]
+    lineNos = false
+    codeFences = true
+    guessSyntax = true
 
 disableKinds = ["RSS", "taxonomy", "taxonomyTerm", "categories"]

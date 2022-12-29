@@ -1,11 +1,30 @@
 // if it has a class we presume it's styled
 
 p {
-    line-height: 1.5;
+  line-height: 1.5;
 }
 ul[class],
 li[class] {
-    padding: 0;
-    margin: 0;
-    list-style: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+code,
+.code,
+pre code .highlight pre {
+  font: var(--theme-font--system);
+}
+.highlight pre {
+  display: block;
+  padding: var(--theme-spacing--gutter);
+  overflow-x: auto;
+  margin: 0;
+}
+
+.highlight {
+  border: var(--theme-border);
+  padding: var(--theme-spacing--1);
+  max-width: var(--theme-spacing--linelength);
+  @include pattern(dots, currentColor, c, false);
 }

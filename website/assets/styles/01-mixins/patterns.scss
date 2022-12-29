@@ -13,7 +13,13 @@
   transition: transform 0.3s;
 }
 
-@mixin pattern($key: dots, $colour: currentColor, $offset: null, $fill: false) {
+@mixin pattern(
+  $key: dots,
+  $colour: currentColor,
+  $offset: null,
+  $fill: false,
+  $opacity: 1
+) {
   position: relative;
   overflow: visible;
 
@@ -43,6 +49,7 @@
     @if $fill {
       z-index: unset;
     }
+    opacity: $opacity;
     @content;
   }
 }
