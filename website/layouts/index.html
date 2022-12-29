@@ -1,0 +1,19 @@
+{{ define "main" }}
+<h1>{{.Title}}</h1>
+
+<nav>
+    <h2>Table of Contents</h2>
+
+    {{$section:= .Site.GetPage "section" .Section }}
+    <ul>
+        {{ range (where .Site.RegularPages.ByTitle "Section" .Section ) }}
+            <li><a href="{{ .Permalink }}">{{ .Params.title | humanize | title }}</a></li>
+        {{ end }}
+    </ul>
+</nav>
+
+<article>
+    {{.Content}}
+</article>
+
+{{ end }}

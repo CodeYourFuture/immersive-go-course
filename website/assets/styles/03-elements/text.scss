@@ -1,0 +1,11 @@
+// if it has a class we presume it's styled
+
+p {
+    line-height: 1.5;
+}
+ul[class],
+li[class] {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}

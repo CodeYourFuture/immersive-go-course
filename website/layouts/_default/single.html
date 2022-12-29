@@ -1,0 +1,20 @@
+{{ define "main" }}
+
+<article aria-label="Lesson.">
+    
+    <header class="header">
+        <h1>{{.Title}}</h1>
+    </header>
+    
+        {{.Content}}
+
+    <footer>
+        <nav aria-label="Page Nav.">
+            <a href="{{.Prev}}">Back</a>
+            <a href="{{.Next}}">Next</a>
+        </nav>
+    </footer>
+
+</article>
+
+{{ end }}

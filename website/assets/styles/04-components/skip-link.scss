@@ -1,0 +1,6 @@
+.c-skip-link {
+  @include offscreen(hide);
+  @include on-event {
+    @include offscreen(show);
+  }
+}

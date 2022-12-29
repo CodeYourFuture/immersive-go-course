@@ -1,0 +1,20 @@
+{{ define "main" }}
+<h1 class="e-heading e-heading__1">{{.Title}}</h1>
+
+<nav>
+  <h2 class="e-heading e-heading__2">Table of Contents</h2>
+
+  {{$section:= .Site.GetPage "section" .Section }}
+  <!-- page listing here-->
+  <ul class="o-nav">
+    {{ range (where .Site.RegularPages.ByTitle "Section" .Section ) }}
+    <li>
+      <a href="{{ .Permalink }}">{{ .Params.title | humanize | title }}</a>
+    </li>
+    {{ end }}
+  </ul>
+</nav>
+
+<article>{{.Content}}</article>
+
+{{ end }}

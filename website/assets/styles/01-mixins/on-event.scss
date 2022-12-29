@@ -1,0 +1,47 @@
+/// Event wrapper
+/// @author Harry Roberts
+/// @param {Bool} $self [false] - Whether or not to include current selector
+/// @link https://twitter.com/csswizardry/status/478938530342006784 Original tweet from Harry Roberts
+// hover broken out because of https://css-tricks.com/annoying-mobile-double-tap-link-issue/
+
+// enforces focus styling
+
+@mixin on-event($self: false, $root: null) {
+	@if $self {
+		&,
+		&.is-active,
+		&:active,
+		&:focus {
+			@content;
+		}
+
+		@media (hover) {
+			&:hover {
+				@content;
+			}
+		}
+	} @else if $root {
+		#{$root}.is-active &,
+		#{$root}:active &,
+		#{$root}:focus & {
+			@content;
+		}
+
+		#{$root}:hover & {
+			@media (hover) {
+				@content;
+			}
+		}
+	} @else {
+		&.is-active,
+		&:active,
+		&:focus {
+			@content;
+		}
+		@media (hover) {
+			&:hover {
+				@content;
+			}
+		}
+	}
+}

@@ -1,0 +1,25 @@
+{{- partial "head.html" . -}}
+<body>
+  <div class="l-layout">
+    <header class="l-layout__header l-header">
+      <div class="l-header__nav">
+        <h1 class="l-header__heading e-heading e-heading__1">
+          {{.Site.Title}}
+        </h1>
+        <button class="l-header__menu c-menu-toggle">
+          <span class="c-menu-toggle__bar"></span>
+          <span class="c-menu-toggle__bar"></span>
+          <span class="c-menu-toggle__bar"></span>
+          <span class="is-invisible">Menu</span>
+        </button>
+      </div>
+    </header>
+    <main class="l-layout__main l-main">
+      <div class="c-text">{{ block "main" . }}</div>
+
+      {{ end }}
+    </main>
+
+    {{- partial "foot.html" . -}}
+  </div>
+</body>

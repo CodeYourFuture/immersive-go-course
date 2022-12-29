@@ -1,0 +1,12 @@
+.c-text {
+  max-width: var(--theme-spacing--linelength);
+
+  &--first {
+    margin-top: var(--theme-spacing--6);
+  }
+
+  h2 {
+    text-decoration: underline;
+    text-decoration-color: var(--theme-color--brand);
+  }
+}

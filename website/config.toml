@@ -1,0 +1,6 @@
+baseURL = "http://example.org/"
+languageCode = "en-us"
+title = "CYF+"
+languageLang = "en"
+
+disableKinds = ["RSS", "taxonomy", "taxonomyTerm", "categories"]

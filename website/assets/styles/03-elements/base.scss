@@ -1,0 +1,25 @@
+@import-normalize;
+* {
+  box-sizing: border-box;
+}
+body,
+html {
+  font-family: var(--theme-font--copy);
+  font-size: 100%;
+  background: var(--theme-color--paper);
+  background-image: radial-gradient(
+    circle,
+    var(--theme-color--paper) 0%,
+    var(--theme-color--block) 50%,
+    var(--theme-color--paper) 100%
+  );
+  color: var(--theme-color--ink);
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}

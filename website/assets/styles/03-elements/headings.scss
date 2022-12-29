@@ -1,0 +1,10 @@
+$heading__levels: 1, 2, 3, 4, 5, 6;
+@each $h in $heading__levels {
+  h#{$h},
+  .e-heading__#{$h} {
+    font-family: var(--theme-font--display);
+    font-size: var(--theme-type-size--#{$h});
+    font-weight: 800;
+    margin: 0;
+  }
+}
