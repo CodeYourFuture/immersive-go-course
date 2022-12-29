@@ -1,0 +1,26 @@
+.l-header {
+  @include grid-assign(heading, menu, search, nav);
+  @include pattern(dots, var(--theme-color--pop), null, true, 0.5);
+  grid-template:
+    " . ... . " var(--theme-spacing--gutter)
+    " . nav ." minmax(0, 1fr)
+    " . ... ." var(--theme-spacing--gutter) / minmax(
+      var(--theme-spacing--gutter),
+      1fr
+    )
+    var(--theme-spacing--container) minmax(var(--theme-spacing--gutter), 1fr);
+  &__nav {
+    display: grid;
+    align-items: center;
+    grid-template:
+      "heading . search menu" auto / min-content 1fr var(
+        --theme-spacing--touchtarget
+      )
+      var(--theme-spacing--touchtarget);
+  }
+
+  &__heading {
+    font: var(--theme-font--brand);
+    font-size: var(--theme-type-size--1);
+  }
+}

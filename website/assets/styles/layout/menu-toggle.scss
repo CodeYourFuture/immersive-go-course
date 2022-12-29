@@ -1,0 +1,125 @@
+//this is split up into two sections so it's easier to follow
+// first we make each shape
+// then we apply the shape to the desired state
+
+@mixin menu-transforms($icon) {
+  @if $icon== "cross" {
+    .c-menu-toggle__bar {
+      &--top {
+        transform: translateY(12px) rotateZ(45deg);
+        width: 40px;
+        opacity: 1;
+      }
+
+      &--middle {
+        width: 0;
+        opacity: 0;
+      }
+
+      &--bottom {
+        transform: translateY(-12px) rotateZ(-45deg);
+        width: 40px;
+        opacity: 1;
+      }
+    }
+  }
+
+  @if $icon== "burger" {
+    .c-menu-toggle__bar {
+      &--top {
+        transform: translateY(4px);
+        width: 40px;
+        opacity: 1;
+      }
+
+      &--middle {
+        opacity: 1;
+        width: 40px;
+      }
+
+      &--bottom {
+        transform: translateY(-4px);
+        width: 40px;
+        opacity: 1;
+      }
+    }
+  }
+  @if $icon== "burger-expand" {
+    .c-menu-toggle__bar {
+      &--top {
+        transform: translateY(-8px);
+        width: 40px;
+        opacity: 1;
+      }
+
+      &--middle {
+        opacity: 1;
+        width: 40px;
+      }
+
+      &--bottom {
+        transform: translateY(8px);
+        width: 40px;
+        opacity: 1;
+      }
+    }
+  }
+}
+//you can add other shapes if you like!
+
+// now let's make some rules about what events are signalled by what shapes
+
+.c-menu-toggle {
+  //overall rules
+  display: inline-block;
+  transition: all 0.7s ease;
+
+  @include on-event {
+    color: var(--theme-color--brand);
+    cursor: pointer;
+  }
+  //general bar starting point
+  &__bar {
+    display: block;
+    height: 4px;
+    width: 40px;
+    opacity: 1;
+    background: currentColor;
+    margin: 8px auto;
+    transition: all 0.7s ease;
+  }
+
+  //start as burger
+  @include menu-transforms("burger");
+
+  // on hover and focus we tip our hand with colour in this style
+  // we already change the pointer, because colour can never be the only signal
+  // we do this on the button itself because sometimes you can get "hover jank" (flickering) otherwise
+  button:hover &,
+  button:focus & {
+    @media (hover) {
+      color: var(--theme-color--brand);
+      @include menu-transforms("burger-expand");
+    }
+  }
+
+  //on active we push a little
+  button:active & {
+    transform: translateX(3px);
+  }
+
+  // on is-active make a cross
+  .is-active & {
+    @include menu-transforms("cross");
+  }
+
+  .is-active button:hover & {
+    @media (hover) {
+      filter: opacity(0.5);
+    }
+  }
+
+  .is-active button:active & {
+    @include menu-transforms("burger");
+  }
+}

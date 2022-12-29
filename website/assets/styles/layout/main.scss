@@ -1,0 +1,14 @@
+.l-layout__main {
+  display: grid;
+  gap: var(--theme-spacing--gutter);
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(var(--theme-spacing--container-min), 1fr)
+  );
+  grid-template-rows: repeat(4, min-content);
+
+  & > * {
+    grid-column: 1/-1;
+  }
+}
