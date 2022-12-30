@@ -1,10 +1,9 @@
 .c-text {
+  box-sizing: content-box;
   max-width: var(--theme-spacing--linelength);
+  padding: var(--theme-spacing--6);
   @include backdrop($opacity: 0.9);
   @include pattern(graph, currentColor, b, false, 0.2);
-  &--first {
-    margin-top: var(--theme-spacing--6);
-  }
 
   h2 {
     text-decoration: underline;

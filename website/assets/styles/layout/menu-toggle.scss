@@ -90,7 +90,7 @@
   }
 
   //start as burger
-  @include menu-transforms("burger");
+  @include menu-transforms("cross");
 
   // on hover and focus we tip our hand with colour in this style
   // we already change the pointer, because colour can never be the only signal
@@ -103,23 +103,15 @@
     }
   }
 
-  //on active we push a little
+  // on active make a cross
+  .is-active &,
   button:active & {
-    transform: translateX(3px);
-  }
-
-  // on is-active make a cross
-  .is-active & {
     @include menu-transforms("cross");
   }
 
   .is-active button:hover & {
     @media (hover) {
-      filter: opacity(0.5);
+      filter: opacity(0.7);
     }
-  }
-
-  .is-active button:active & {
-    @include menu-transforms("burger");
   }
 }

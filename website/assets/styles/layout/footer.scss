@@ -1,0 +1,17 @@
+.l-footer {
+  @include grid-assign(impressum);
+
+  grid-template:
+    " . ......... . " var(--theme-spacing--gutter)
+    " . impressum ." minmax(0, 1fr)
+    " . ......... ." var(--theme-spacing--gutter) / minmax(
+      var(--theme-spacing--gutter),
+      1fr
+    )
+    var(--theme-spacing--container) minmax(var(--theme-spacing--gutter), 1fr);
+
+  &__impressum {
+    color: var(--theme-color--paper);
+    font-weight: 100;
+  }
+}

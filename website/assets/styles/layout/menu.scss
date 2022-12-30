@@ -1,15 +1,16 @@
 .l-menu {
-  --ink: var(--theme-color--paper);
-  --paper: var(--theme-color--ink);
+  @include grid-assign(heading, action, primary, container);
+  @include backdrop($opacity: 0.9);
+  @include pattern(graph, currentColor, b, false, 0.2);
+  box-shadow: 2px 5px 30px var(--theme-color--ink);
+  background-image: url("./pictures/dddepth-005.jpg");
 
-  @include grid-assign(heading, action, primary, search, container);
-  background: var(--paper);
-  color: var(--ink);
   min-height: calc(100vh - calc(100vh - 100%));
-  min-width: 100vw;
+  min-width: var(--theme-spacing--container-min);
   position: absolute;
   left: -100vw;
   transition: left cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
+
   &.is-active {
     left: 0;
     z-index: 1;
@@ -22,7 +23,7 @@
       var(--theme-spacing--gutter),
       1fr
     )
-    var(--theme-spacing--container) minmax(var(--theme-spacing--gutter), 1fr);
+    max-content minmax(var(--theme-spacing--gutter), 1fr);
 
   &__container {
     display: grid;
@@ -30,18 +31,16 @@
       "heading ....... action" auto
       "....... ....... ......" var(--theme-spacing--gutter)
       "primary primary primary" 1fr
-      "....... search  search" auto / var(--theme-spacing--logo) 1fr var(--theme-spacing--touchtarget);
+      "....... search  search" auto / 1fr 1fr min-content;
+  }
+
+  &__heading {
+    font: var(--theme-font--brand);
+    color: var(--theme-color--paper);
   }
 
   &__link {
     text-transform: lowercase;
-  }
-
-  &__search {
-    margin-left: auto;
-  }
-
-  &__logo {
-    --theme-color--ink: var(--ink);
+    font-size: var(--theme-type-size--1);
   }
 }

@@ -9,6 +9,9 @@
       1fr
     )
     var(--theme-spacing--container) minmax(var(--theme-spacing--gutter), 1fr);
+
+  position: sticky;
+  top: 0;
   &__nav {
     display: grid;
     align-items: center;
