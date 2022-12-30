@@ -1,4 +1,6 @@
 // if it has a class we presume it's styled
+// just a bunch of phrasing elements
+// hugo has code highlighting built in so I've tweaked that here too
 
 p {
   line-height: 1.5;
@@ -10,10 +12,38 @@ li[class] {
   list-style: none;
 }
 
+// markdown checklist
+ul:has(input),
+li:has(input) {
+  padding: 0;
+  margin: var(--theme-spacing--1) 0 auto 0;
+  list-style: none;
+  &::marker {
+    content: "✶ ";
+    color: var(--theme-color--accent);
+  }
+}
+
+blockquote {
+  font-size: var(--theme-type-size--4);
+  margin: var(--theme-spacing--4) 0 var(--theme-spacing--6);
+  @include pattern(dots, var(--theme-color--pop), b, false, 0.2);
+  border-bottom: var(--theme-border--thick);
+  border-image: linear-gradient(
+      45deg,
+      var(--theme-color--accent),
+      var(--theme-color--pop)
+    )
+    1;
+}
+
 code,
 .code,
 pre code .highlight pre {
   font: var(--theme-font--system);
+}
+code:not([class]) {
+  color: var(--theme-color--pop);
 }
 .highlight pre {
   display: block;

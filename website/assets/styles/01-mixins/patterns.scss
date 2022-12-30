@@ -25,7 +25,7 @@
 
   &:before {
     @include pseudo-block;
-    color: #{$colour};
+    color: $colour;
 
     @if $key == dots {
       background-image: radial-gradient(currentColor 1px, transparent 1px);
