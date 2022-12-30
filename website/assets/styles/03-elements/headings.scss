@@ -4,7 +4,7 @@ $heading__levels: 1, 2, 3, 4, 5, 6;
   .e-heading__#{$h} {
     font-family: var(--theme-font--display);
     font-size: var(--theme-type-size--#{$h});
-    font-weight: 800;
+    font-weight: 900;
     margin: 0;
   }
 }

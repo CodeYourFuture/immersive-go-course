@@ -10,9 +10,6 @@ function toggleMenu() {
   menu.classList.toggle("is-active");
   menu.toggleAttribute("hidden");
   if (menu.classList.contains("is-active")) {
-    // scroll lock
-    document.body.style.height = menu.clientHeight + "px";
-    document.body.style.overflow = "hidden";
     menu.focus();
   } else {
     document.body.style = "";
