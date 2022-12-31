@@ -4,7 +4,9 @@ author="Laura Nolan"
 date="28 Dec 2022 12:22:11 BST" 
 +++
 
-# Section 5: Distributed Locking and Distributed Consensus {#section-5-distributed-locking-and-distributed-consensus}
+# 5
+
+## Distributed Locking and Distributed Consensus
 
 > In a program, sometimes we need to lock a resource. Think about a physical device, like a printer: we only want one program to print at a time. Locking applies to lots of other kinds of resources too, often when we need to update multiple pieces of data in consistent ways in a multi-threaded context.
 

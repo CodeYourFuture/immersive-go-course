@@ -4,7 +4,9 @@ author="Laura Nolan"
 date="28 Dec 2022 12:22:11 BST"    
 +++
 
-# Section 4: Asynchronous Work and Pipelines {#section-4-asynchronous-work-and-pipelines}
+# 4
+
+## Asynchronous Work and Pipelines {#asynchronous-work-and-pipelines}
 
 Not all work that we want to do with computers involves serving a request in near-real-time and responding to a user. Sometimes we need to do _asynchronous_ tasks like:
 
