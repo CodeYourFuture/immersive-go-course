@@ -2,12 +2,12 @@
 // first we make each shape
 // then we apply the shape to the desired state
 
-@mixin menu-transforms($icon) {
-  @if $icon== "cross" {
+@mixin menu-transforms($icon: "cross") {
+  @if $icon == "cross" {
     .c-menu-toggle__bar {
       &--top {
-        transform: translateY(12px) rotateZ(45deg);
-        width: 40px;
+        transform: translateY(9px) rotateZ(45deg);
+        width: 30px;
         opacity: 1;
       }
 
@@ -17,49 +17,49 @@
       }
 
       &--bottom {
-        transform: translateY(-12px) rotateZ(-45deg);
-        width: 40px;
+        transform: translateY(-9px) rotateZ(-45deg);
+        width: 30px;
         opacity: 1;
       }
     }
   }
 
-  @if $icon== "burger" {
+  @if $icon == "burger" {
     .c-menu-toggle__bar {
       &--top {
-        transform: translateY(4px);
-        width: 40px;
+        transform: translateY(3px);
+        width: 30px;
         opacity: 1;
       }
 
       &--middle {
         opacity: 1;
-        width: 40px;
+        width: 30px;
       }
 
       &--bottom {
-        transform: translateY(-4px);
-        width: 40px;
+        transform: translateY(-3px);
+        width: 30px;
         opacity: 1;
       }
     }
   }
-  @if $icon== "burger-expand" {
+  @if $icon == "burger-expand" {
     .c-menu-toggle__bar {
       &--top {
-        transform: translateY(-8px);
-        width: 40px;
+        transform: translateY(-6px);
+        width: 30px;
         opacity: 1;
       }
 
       &--middle {
         opacity: 1;
-        width: 40px;
+        width: 30px;
       }
 
       &--bottom {
-        transform: translateY(8px);
-        width: 40px;
+        transform: translateY(6px);
+        width: 30px;
         opacity: 1;
       }
     }
@@ -75,43 +75,36 @@
   transition: all 0.7s ease;
 
   @include on-event {
-    color: var(--theme-color--brand);
+    color: var(--theme-color--accent);
     cursor: pointer;
   }
   //general bar starting point
   &__bar {
     display: block;
-    height: 4px;
-    width: 40px;
+    height: 3px;
+    width: 30px;
     opacity: 1;
     background: currentColor;
-    margin: 8px auto;
+    margin: 6px auto;
     transition: all 0.7s ease;
   }
-
   //start as burger
-  @include menu-transforms("cross");
+  @include menu-transforms("burger");
 
   // on hover and focus we tip our hand with colour in this style
-  // we already change the pointer, because colour can never be the only signal
+  // we change the pointer, because colour can never be the only signal
   // we do this on the button itself because sometimes you can get "hover jank" (flickering) otherwise
-  button:hover &,
-  button:focus & {
+  &button:hover,
+  &button:focus & {
     @media (hover) {
-      color: var(--theme-color--brand);
+      color: var(--theme-color--accent);
       @include menu-transforms("burger-expand");
     }
   }
 
   // on active make a cross
   .is-active &,
-  button:active & {
+  &button:active {
     @include menu-transforms("cross");
-  }
-
-  .is-active button:hover & {
-    @media (hover) {
-      filter: opacity(0.7);
-    }
   }
 }

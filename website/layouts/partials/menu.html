@@ -1,22 +1,78 @@
-<nav class="l-layout__menu l-menu" aria-label="Main Site Links." id="site-menu">
+<nav
+  class="l-layout__menu l-menu"
+  aria-label="Main Site Links."
+  id="site-menu"
+  hidden
+>
   <div class="l-menu__container">
-    <h2 class="l-menu__heading">{{.Site.Title}}</h2>
-    <button class="l-menu__action c-menu-toggle e-button js-menu-toggle">
-      <span class="c-menu-toggle__bar"></span>
-      <span class="c-menu-toggle__bar"></span>
-      <span class="c-menu-toggle__bar"></span>
+    <h2 class="l-menu__heading e-heading__2">{{.Site.Title}}</h2>
+    <button
+      class="l-menu__action c-menu-toggle e-button js-menu-toggle"
+      id="close-menu"
+    >
+      <span class="c-menu-toggle__bar c-menu-toggle__bar--top"></span>
+      <span class="c-menu-toggle__bar c-menu-toggle__bar--middle"></span>
+      <span class="c-menu-toggle__bar c-menu-toggle__bar--bottom"></span>
       <span class="is-invisible">Close Menu.</span>
     </button>
     <ul class="l-menu__primary e-list">
       <li class="l-menu__item e-list__item">
-        <a class="l-menu__link e-link" href="/projects">Projects</a>
+        <a class="l-menu__link e-link e-heading__1" href="/projects"
+          >Projects</a
+        >
       </li>
       <li class="l-menu__item e-list__item">
-        <a class="l-menu__link e-link" href="/primers">Primers</a>
+        <a class="l-menu__link e-link e-heading__1" href="/primers">Primers</a>
       </li>
       <li class="l-menu__item e-list__item">
-        <a class="l-menu__link e-link" href="/workbooks">Workbooks</a>
+        <a class="l-menu__link e-link e-heading__1" href="/workbooks"
+          >Workbooks</a
+        >
       </li>
+    </ul>
+
+    <ul class="l-menu__secondary e-list">
+      <li class="l-menu__item e-list__item">
+        <a class="l-menu__link e-link" href="#skip-link">
+          <span class="is-invisible">To top</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="l-menu__icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"
+            />
+          </svg>
+        </a>
+      </li>
+      {{ if eq .Kind "page"}}
+      <li class="l-menu__item e-list__item">
+        <a class="l-menu__link e-link" href="#toc" title="table of contents">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="l-menu__icon"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+            />
+          </svg>
+
+          <abbr class="is-invisible" title="table of contents">TOC</abbr>
+        </a>
+      </li>
+      {{ end}}
     </ul>
   </div>
 </nav>

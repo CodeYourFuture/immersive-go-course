@@ -1,18 +1,20 @@
 .l-menu {
-  @include grid-assign(heading, action, primary, container);
+  @include grid-assign(heading, action, primary, secondary, container);
   @include backdrop($opacity: 0.9);
   @include pattern(graph, currentColor, b, false, 0.2);
-  box-shadow: 2px 5px 30px var(--theme-color--ink);
+  box-shadow: -20px -2px 30px var(--theme-color--ink-fade);
   background-image: url("./pictures/dddepth-005.jpg");
 
   min-height: calc(100vh - calc(100vh - 100%));
   min-width: var(--theme-spacing--container-min);
   position: absolute;
-  left: -100vw;
-  transition: left cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
+  right: -100vw;
+  visibility: hidden;
+  transition: right cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s;
 
   &.is-active {
-    left: 0;
+    visibility: visible;
+    right: 40px;
     z-index: 1;
     position: fixed;
     top: 0;
@@ -33,16 +35,24 @@
       "heading ....... action" auto
       "....... ....... ......" var(--theme-spacing--gutter)
       "primary primary primary" 1fr
-      "....... search  search" auto / 1fr 1fr min-content;
+      "....... secondary secondary" auto / 1fr 1fr min-content;
   }
-
   &__heading {
     font: var(--theme-font--brand);
     color: var(--theme-color--paper);
   }
 
+  &__action {
+    @include pin(top right);
+  }
+
   &__link {
     text-transform: lowercase;
-    font-size: var(--theme-type-size--1);
+    font-weight: 400;
+  }
+
+  &__secondary {
+    display: flex;
+    @include pin(bottom right);
   }
 }
