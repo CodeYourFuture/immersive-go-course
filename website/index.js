@@ -18,16 +18,18 @@ const availableItems = items.filter((item) => {
   );
 });
 
-// filter out everything else that isn't a directory
+// filter out everything else that isn't a directory, double check!
 const directories = availableItems.filter((item) => {
   return fs.statSync(path.join("../", item)).isDirectory();
 });
 
-//copy all the directories to the website/content/projects folder
-directories.forEach((project) => {
+console.log(directories + " copied to content/projects");
+
+// for each directory, copy the readme.md file to the content/projects folder
+directories.forEach((dir) => {
   fs.copySync(
-    path.join("../", project),
-    path.join(__dirname, "content", "projects", project)
+    path.join("../", dir, "readme.md"),
+    path.join(__dirname, "content", "projects", `${dir}.md`)
   );
 });
 
@@ -39,17 +41,6 @@ const getGithubData = async (src, hugoDir, subDir = "", targetFile) => {
     .then((data) => {
       fs.writeFileSync(path.join(__dirname, hugoDir, subDir, targetFile), data);
     })
-    console.log("fetch has failed no contributors to write to file");
-  }
-};
-// I'm using the github api to get the contributors
-// using new native fetch api in node
-const getContributors = async () => {
-  const res = await fetch(
-    "https://api.github.com/repos/CodeYourFuture/immersive-go-course/contributors"
-  )
-    .then((response) => response.json())
-    .then((data) => writeToContributors(data))
     .catch((error) => console.log(error));
   return res;
 };
