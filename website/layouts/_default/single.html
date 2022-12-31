@@ -1,20 +1,38 @@
 {{ define "main" }}
 
-<article aria-label="Lesson.">
-    
-    <header class="header">
-        <h1>{{.Title}}</h1>
-    </header>
-    
-        {{.Content}}
+<article>
+  <header class="l-page__header c-page-header">
+    <div class="c-page-header__container">
+      <div class="c-page-header__breadcrumbs">
+        {{ partial "breadcrumbs.html" . }}
+      </div>
+      <h1 class="c-page-header__title e-heading__1 is-invisible">{{.Title}}</h1>
+      {{ with .Params.author}}
+      <a
+        class="c-page-header__author e-heading__5 e-link"
+        href="../../about/contributors"
+        >{{.}}</a
+      >
+      {{ end}} {{ with .Lastmod}}
+      <h2 class="c-page-header__lastmod">
+        .Lastmod
+        <a href="{{.Site.Params.tree}}{{.File.BaseFileName}}">
+          <time datetime="{{ .Params.Lastmod }}"
+            >{{ .Lastmod.Format "January 2, 2006" }}</time
+          >
+        </a>
+      </h2>
+      {{ end}} {{ if .TableOfContents }}
+      <section class="c-page-header__toc c-toc" id="toc">
+        {{ .TableOfContents }}
+      </section>
+      {{ end }}
+    </div>
+  </header>
 
-    <footer>
-        <nav aria-label="Page Nav.">
-            <a href="{{.Prev}}">Back</a>
-            <a href="{{.Next}}">Next</a>
-        </nav>
-    </footer>
+  <section class="l-page__main c-copy">{{.Content}}</section>
 
+  <footer class="l-page__footer"></footer>
 </article>
 
 {{ end }}

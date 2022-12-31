@@ -1,0 +1,67 @@
+.c-page-header {
+  --gap: var(--theme-spacing--gutter);
+
+  @include grid-assign(
+    container,
+    picture,
+    title,
+    summary,
+    breadcrumbs,
+    lastmod,
+    toc,
+    author
+  );
+  @include grid-breakout();
+  grid-template:
+    " . ... . " var(--gap)
+    " . container ." minmax(0, 1fr) " . ... ." 0 / minmax(var(--gap), 1fr)
+    var(--theme-spacing--container) minmax(var(--gap), 1fr);
+
+  pointer-events: none; // just make sure we retain the option of breakout hero headers without interfering with the weirdy menu button
+
+  &__container {
+    pointer-events: all;
+    display: grid;
+    grid-template:
+      ".           .   .   ." var(--gap)
+      "breadcrumbs .   author   ." min-content
+      "title       .   .   ." min-content
+      "toc         toc toc ." auto
+      ".           .   lastmod   ." min-content / 1fr var(--gap) 1fr var(--gap);
+  }
+
+  &__picture {
+    background-color: var(--theme-color--paper);
+  }
+  &__title {
+    line-height: 1;
+  }
+
+  &__lastmod,
+  &__author {
+    background: var(--theme-color--accent);
+    color: var(--theme-color--paper);
+    font-size: var(--theme-type-size--6);
+    padding: calc(var(--theme-spacing--1) / 2);
+    text-align: right;
+  }
+  &__author {
+    background: var(--theme-color--ink-fade);
+    color: var(--theme-color--ink);
+    clip-path: polygon(
+      20px 0%,
+      20px 20%,
+      100% 20%,
+      100% 80%,
+      20px 80%,
+      20px 100%,
+      0% 50%
+    );
+  }
+  &__summary {
+    margin: 0;
+  }
+
+  &__author {
+  }
+}
