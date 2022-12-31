@@ -1,0 +1,13 @@
+// wherever we have long form body copy
+// feel free to throw in copy-only  styles for md generated html
+.c-copy {
+  box-sizing: content-box;
+  @include backdrop($opacity: 0.9);
+  @include pattern(graph, currentColor, b, false, 0.1);
+  padding: var(--theme-spacing--6);
+
+  h2 {
+    text-decoration: underline;
+    text-decoration-color: var(--theme-color--pop);
+  }
+}
