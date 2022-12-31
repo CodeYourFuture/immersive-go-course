@@ -6,16 +6,10 @@
   --theme-color--shade: hsla(228, 70%, 53%, 0.5);
   --theme-color--brand: hsl(5, 71%, 51%);
   --theme-color--pop: hsl(319, 100%, 50%);
-  --theme-color--add: hsl(145, 63%, 42%);
-  --theme-color--add-event: hsl(157, 100%, 24%);
+  --theme-color--contrast-max: hsla(0, 0%, 100%, 1);
   //greys
   --theme-color--block: hsla(0, 0%, 100%, 0.9);
   --theme-color--outline: hsl(0, 0%, 89%);
-  --theme-color--outline-event: hsl(210, 1%, 64%);
-  //signals
-  --theme-color--error: var(--theme-color--pop);
-  --theme-color--success: var(--theme-color--add);
-  --theme-color--warning: rgb(242, 252, 57);
   // @media (prefers-color-scheme: dark) {
   //   --theme-color--paper: rgb(12, 28, 60);
   //   --theme-color--ink: hsla(299, 9%, 86%, 0.95);

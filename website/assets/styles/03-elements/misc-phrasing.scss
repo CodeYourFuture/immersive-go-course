@@ -1,11 +1,12 @@
 // if it has a class we presume it's styled
-// just a bunch of phrasing elements
+// just a bunch of small phrasing elements that markdown might generate
 // hugo has code highlighting built in so I've tweaked that here too
 
 p {
   line-height: 1.5;
 }
 ul[class],
+ol[class],
 li[class] {
   padding: 0;
   margin: 0;
@@ -46,6 +47,7 @@ time {
 code:not([class]) {
   color: var(--theme-color--pop);
 }
+//this .highlight is goldmark
 .highlight pre {
   display: block;
   padding: var(--theme-spacing--gutter);
@@ -58,4 +60,11 @@ code:not([class]) {
   padding: var(--theme-spacing--1);
   max-width: var(--theme-spacing--linelength);
   @include pattern(dots, currentColor, c, false);
+}
+
+// details could show up in github flavoured markdown so we put a basic style on here
+
+summary::marker {
+  color: var(--theme-color--accent);
+  font-size: var(--theme-type-size--3);
 }

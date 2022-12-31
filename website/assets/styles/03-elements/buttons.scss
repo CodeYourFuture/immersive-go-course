@@ -57,27 +57,4 @@
       fill: var(--theme-color--add);
     }
   }
-  &--small {
-    align-items: center;
-    font-size: 1rem;
-  }
-  &--secondary {
-    background: var(--theme-color--paper);
-    color: var(--theme-color--ink);
-  }
-
-  &--mega {
-    font-size: var(--theme-type-size--4);
-  }
-
-  &--submit {
-    background: var(--theme-color--add);
-    border-color: var(--theme-color--add);
-
-    @include on-event {
-      background-color: var(--theme-color--add-event);
-      border-color: var(--theme-color--add-event);
-      color: var(--theme-color--paper);
-    }
-  }
 }

@@ -22,3 +22,7 @@ h4,
     margin-bottom: 0.75em;
   }
 }
+h2:not([class]) {
+  text-decoration: underline;
+  text-decoration-color: var(--theme-color--pop);
+}
