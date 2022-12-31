@@ -58,11 +58,6 @@ const githubData = [
     hugoDir: "content",
     subDir: "about",
   },
-  {
-    src: "https://api.github.com/repos/CodeYourFuture/immersive-go-course/contributors",
-    target: "contributors.json",
-    hugoDir: "data",
-  },
 ];
 
 githubData.forEach((data) =>
