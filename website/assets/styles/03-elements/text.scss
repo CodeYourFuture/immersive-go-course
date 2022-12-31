@@ -39,7 +39,8 @@ blockquote {
 
 code,
 .code,
-pre code .highlight pre {
+pre code .highlight pre,
+time {
   font: var(--theme-font--system);
 }
 code:not([class]) {
