@@ -8,6 +8,7 @@ const path = require("path");
 const items = fs.readdirSync("../");
 
 // filter out hidden files and folders we don't want, like this hugo site as that is recursive madness
+// not very robust, but it works for now
 const availableItems = items.filter((item) => {
   return (
     !item.startsWith(".") &&
@@ -29,16 +30,50 @@ directories.forEach((project) => {
     path.join(__dirname, "content", "projects", project)
   );
 });
-// rename all the README.md files to _index.md
-const copiedProjects = fs.readdirSync(
-  path.join(__dirname, "content", "projects")
-);
 
-copiedProjects.forEach((folder) => {
-  if (!folder.startsWith(".")) {
-    fs.renameSync(
-      path.join(__dirname, "content", "projects", folder, "README.md"),
-      path.join(__dirname, "content", "projects", folder, "_index.md")
-    );
+// grab everything else from github that we don't want to update manually
+// using new native fetch in node 18 - https://nodejs.org/api/fetch.html
+const getGithubData = async (src, hugoDir, subDir = "", targetFile) => {
+  const res = await fetch(src)
+    .then((response) => response.text())
+    .then((data) => {
+      fs.writeFileSync(path.join(__dirname, hugoDir, subDir, targetFile), data);
+    })
+    console.log("fetch has failed no contributors to write to file");
   }
-});
+};
+// I'm using the github api to get the contributors
+// using new native fetch api in node
+const getContributors = async () => {
+  const res = await fetch(
+    "https://api.github.com/repos/CodeYourFuture/immersive-go-course/contributors"
+  )
+    .then((response) => response.json())
+    .then((data) => writeToContributors(data))
+    .catch((error) => console.log(error));
+  return res;
+};
+
+const githubData = [
+  {
+    src: "https://raw.githubusercontent.com/CodeYourFuture/immersive-go-course/master/README.md",
+    target: "_index.md",
+    hugoDir: "content",
+    subDir: "projects",
+  },
+  {
+    src: "https://raw.githubusercontent.com/CodeYourFuture/immersive-go-course/master/CONTRIBUTING.md",
+    target: "contributing.md",
+    hugoDir: "content",
+    subDir: "about",
+  },
+  {
+    src: "https://api.github.com/repos/CodeYourFuture/immersive-go-course/contributors",
+    target: "contributors.json",
+    hugoDir: "data",
+  },
+];
+
+githubData.forEach((data) =>
+  getGithubData(data.src, data.hugoDir, data.subDir, data.target)
+);

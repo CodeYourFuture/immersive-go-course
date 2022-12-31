@@ -3,11 +3,15 @@ languageCode = "en-us"
 title = "CYF+"
 languageLang = "en"
 sectionPagesMenu = "main"
+enableGitInfo = true
+
+[frontmatter]
+  lastmod = [":git", "date", "publishDate"]
 
 [markup]
   [markup.tableOfContents]
-    endLevel = 3
-    ordered = false
+    endLevel = 5
+    ordered = true
     startLevel = 2
   [markup.highlight]
     lineNos = false

@@ -1,0 +1,30 @@
+.c-contributors {
+  display: flex;
+  flex-flow: row wrap;
+  gap: var(--theme-spacing--6);
+}
+.c-contributor {
+  flex: 0 1 var(--theme-spacing--container-min);
+  display: grid;
+  @include grid-assign(avatar, name, commits);
+  grid-template:
+    "avatar .... commits" 1fr
+    "avatar name ......." auto
+    "avatar .... ......." 1fr/ 100px 1fr min-content;
+  gap: var(--theme-spacing--1);
+  @include backdrop(true, true, 1);
+  &__name {
+    @include pin(center left);
+  }
+  &__avatar {
+    clip-path: circle();
+  }
+  &__commits {
+    width: 4ch;
+    height: 4ch;
+    background-color: var(--theme-color--accent);
+    color: var(--theme-color--paper);
+    display: grid;
+    place-content: center;
+  }
+}

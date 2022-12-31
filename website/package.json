@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "A little website to present the CYF+ Immersive Go Course",
   "main": "index.js",
+  "engines" : { 
+    "npm" : ">=8.19.2",
+    "node" : ">=18.12.1"
+  },
   "directories": {
     "content": "content"
   },
