@@ -13,16 +13,16 @@
         href="../../about/contributors"
         >{{.}}</a
       >
-      {{ end}} {{ with .Lastmod}}
+      {{ end}}
       <h2 class="c-page-header__lastmod">
         .Lastmod
         <a href="{{.Site.Params.tree}}{{.File.BaseFileName}}">
-          <time datetime="{{ .Params.Lastmod }}"
+          <time datetime="{{ .Lastmod }}"
             >{{ .Lastmod.Format "January 2, 2006" }}</time
           >
         </a>
       </h2>
-      {{ end}} {{ if .TableOfContents }}
+      {{ if and (gt .WordCount 400 ) (.TableOfContents) }}
       <section class="c-page-header__toc c-toc" id="toc">
         {{ .TableOfContents }}
       </section>
