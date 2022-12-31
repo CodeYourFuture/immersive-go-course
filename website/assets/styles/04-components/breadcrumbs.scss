@@ -1,0 +1,36 @@
+.c-breadcrumbs {
+  &__list {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    font: var(--theme-font--system);
+    font-size: var(--theme-type-size--6);
+  }
+
+  &__item {
+    min-width: fit-content;
+    margin: 0 auto 0 0;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    @include on-event {
+      text-decoration: overline 3px solid var(--theme-color--accent);
+      outline: none;
+      .c-breadcrumbs__icon {
+        color: var(--theme-color--pop);
+      }
+    }
+  }
+
+  &__icon {
+    height: 1em;
+    min-width: 6px;
+  }
+
+  .is-current {
+    color: var(--theme-color--accent);
+    font-weight: 900;
+  }
+}
