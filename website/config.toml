@@ -5,6 +5,9 @@ languageLang = "en"
 sectionPagesMenu = "main"
 enableGitInfo = true
 
+[params]
+  tree="https://github.com/CodeYourFuture/immersive-go-course/tree/main/"
+
 [frontmatter]
   lastmod = [":git", "date", "publishDate"]
 
