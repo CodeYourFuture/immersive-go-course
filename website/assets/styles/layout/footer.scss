@@ -11,7 +11,7 @@
     var(--theme-spacing--container) minmax(var(--theme-spacing--gutter), 1fr);
 
   &__impressum {
-    color: var(--theme-color--paper);
-    font-weight: 100;
+    color: var(--theme-color--add);
+    mix-blend-mode: difference;
   }
 }

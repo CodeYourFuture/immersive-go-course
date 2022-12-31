@@ -1,5 +1,5 @@
 .l-header {
-  @include grid-assign(heading, menu, search, nav);
+  @include grid-assign(heading, action, nav);
   @include pattern(dots, var(--theme-color--pop), null, true, 0.5);
   grid-template:
     " . ... . " var(--theme-spacing--gutter)
@@ -14,9 +14,9 @@
   top: 0;
   &__nav {
     display: grid;
-    align-items: center;
+
     grid-template:
-      "heading . search menu" auto / min-content 1fr var(
+      ". heading heading action" auto / min-content 1fr var(
         --theme-spacing--touchtarget
       )
       var(--theme-spacing--touchtarget);
@@ -25,5 +25,17 @@
   &__heading {
     font: var(--theme-font--brand);
     font-size: var(--theme-type-size--1);
+    color: var(--theme-color--accent);
+  }
+
+  &__action.was-triggered {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    gap: 0;
   }
 }

@@ -5,21 +5,21 @@
     <header class="l-layout__header l-header">
       <div class="l-header__nav">
         <h1 class="l-header__heading e-heading e-heading__1">
-          {{.Site.Title}}
+          <a class="l-header__home" href="/">{{.Site.Title}}</a>
         </h1>
-        <button class="l-header__menu c-menu-toggle e-button js-menu-toggle">
-          <span class="c-menu-toggle__bar"></span>
-          <span class="c-menu-toggle__bar"></span>
-          <span class="c-menu-toggle__bar"></span>
-          <span class="is-invisible">Open Menu</span>
+        <button
+          class="l-header__action c-menu-toggle e-button js-menu-toggle is-watched"
+        >
+          <span class="c-menu-toggle__bar c-menu-toggle__bar--top"></span>
+          <span class="c-menu-toggle__bar c-menu-toggle__bar--middle"></span>
+          <span class="c-menu-toggle__bar c-menu-toggle__bar--bottom"></span>
+          <span class="is-invisible">Open Menu.</span>
         </button>
       </div>
     </header>
     {{ partial "partials/menu.html" . }}
-    <main class="l-layout__main l-main">
-      <div class="c-text">{{ block "main" . }}</div>
-
-      {{ end }}
+    <main id="main" class="l-layout__main l-main">
+      {{ block "main" . }} {{ end }}
     </main>
 
     {{- partial "foot.html" . -}}
