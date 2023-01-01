@@ -1,5 +1,5 @@
 +++
-title="CYF+ Immersive Engineering Programme Workbooks"
+title="Workbooks"
 date="28 Dec 2022 12:22:11 BST"    
 +++
 
@@ -8,6 +8,8 @@ date="28 Dec 2022 12:22:11 BST"
 We run this programme at [Code Your Future](https://codeyourfuture.io) in sprints, currently two week sprints. These workbooks are given to CYF+ Fellows to help them plan their work.
 
 You are welcome to use them too.
+
+Workbooks are compiled into a syllabus iteration: [Iterations](../iterations/)
 
 ### Plan your work???
 

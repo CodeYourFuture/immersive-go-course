@@ -1,7 +1,6 @@
 +++
-title="CYF+ Sprint 2 Workbook"
-date="7 Nov 2022 12:22:11 BST"    
-publishDate="{{ .Date }}"
+title="CYF+01 Sprint 2"
+date="7 Nov 2022"    
 series="001"
 toc= false
 +++

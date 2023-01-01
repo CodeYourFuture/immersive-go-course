@@ -1,9 +1,8 @@
 +++
-title="CYF+ Sprint 1 Workbook"
-date="24 Oct 2022 12:22:11 BST"    
-publishDate="{{ .Date }}"
+title="CYF+01 Sprint 1"
+date="24 Oct 2022"    
 series="001"
-toc= false
+image="static/pictures/depths/dddepth--085.webp"
 +++
 
 ## Study
