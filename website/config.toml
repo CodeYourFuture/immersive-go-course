@@ -1,4 +1,4 @@
-baseURL = "http://example.org/"
+baseURL = "/"
 languageCode = "en-us"
 title = "CYF+"
 languageLang = "en"
@@ -22,4 +22,5 @@ lineNos = false
 codeFences = true
 guessSyntax = true
 
-disableKinds = ["RSS", "taxonomy", "taxonomyTerm", "categories"]
+disableKinds = ["taxonomy", "term"]
+[taxonomies]
