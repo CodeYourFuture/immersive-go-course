@@ -5,8 +5,4 @@ author= {{ .GitInfo.AuthorName}}
 date= {{ .Date }}
 publishDate= {{ .Date }}
 lastmod= {{ .GitInfo.AuthorDate}}
-series=
-toc= true
-draft= true
-timebox=
 +++
