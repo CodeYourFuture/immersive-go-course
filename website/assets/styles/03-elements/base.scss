@@ -1,4 +1,3 @@
-@import-normalize;
 * {
   box-sizing: border-box;
 }
@@ -7,8 +6,8 @@ html {
   font-family: var(--theme-font--copy);
   font-size: 100%;
   background-color: var(--theme-color--paper);
-  background-image: url("./pictures/svgs/nnneon.svg"),
-    url("./pictures/svgs/qqquad-03.svg"),
+  background-image: url("./pictures/svgs/neons/nnneon-hex.svg"),
+    url("./pictures/svgs/quads/qqquad-02.svg"),
     radial-gradient(
       circle,
       var(--theme-color--paper) 0%,

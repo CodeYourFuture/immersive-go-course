@@ -1,0 +1,15 @@
+{{ $quads := readDir "static/pictures/svgs/quads" | shuffle |first 1 }} {{
+$neons := readDir "static/pictures/svgs/neons" | shuffle | first 1 }}
+
+<script>
+  function randomBG() {
+    const style = document.createElement("style");
+    style.textContent = `body, html {background-image:url({{ range $neons }}"../../pictures/svgs/neons/{{.Name}}"{{ end }}),url({{ range $quads }}"../../pictures/svgs/quads/{{.Name}}"{{ end }}),radial-gradient(circle,var(--theme-color--paper) 0%,var(--theme-color--block) 50%,var(--theme-color--paper) 100%);
+      background-size: cover;
+    }`;
+
+    document.head.appendChild(style);
+  }
+
+  window.addEventListener("load", randomBG);
+</script>
