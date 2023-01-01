@@ -1,6 +1,6 @@
 <nav class="c-breadcrumbs">
   <ol class="c-breadcrumbs__list">
-    {{- range .Ancestors.Reverse }}
+    {{- range after 1 .Ancestors.Reverse }}
     <li class="c-breadcrumbs__item">
       <a class="c-breadcrumbs__link" href="{{ .Permalink }}"
         >{{ .Title }}
