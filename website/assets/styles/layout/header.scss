@@ -35,5 +35,6 @@
     flex-flow: column;
     justify-content: flex-start;
     gap: 0;
+    padding-top: var(--theme-spacing--gutter);
   }
 }

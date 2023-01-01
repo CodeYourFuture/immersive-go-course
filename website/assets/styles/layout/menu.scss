@@ -1,49 +1,43 @@
 .l-menu {
+  --gap: var(--theme-spacing--gutter);
   @include grid-assign(heading, action, primary, secondary, container);
-  @include backdrop($opacity: 0.9);
   @include pattern(graph, currentColor, b, false, 0.2);
+  background-color: var(--theme-color--paper);
+
+  padding: 0;
   box-shadow: -20px -2px 30px var(--theme-color--ink-fade);
-  background-image: url("./pictures/dddepth-005.jpg");
 
   min-height: calc(100vh - calc(100vh - 100%));
   min-width: var(--theme-spacing--container-min);
-  position: absolute;
-  right: -100vw;
+  max-width: calc(2 * var(--theme-spacing--container-min));
+
+  position: fixed;
+  top: 0;
+  right: -100%;
   visibility: hidden;
-  transition: right cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s;
+  transition: right cubic-bezier(0.895, 0.03, 0.685, 0.22) 0.4s;
 
   &.is-active {
     visibility: visible;
-    right: 40px;
+    right: var(--gap);
     z-index: 1;
-    position: fixed;
-    top: 0;
   }
 
-  grid-template:
-    " . ... . " var(--theme-spacing--gutter)
-    " . container ." minmax(0, 1fr)
-    " . ... ." var(--theme-spacing--gutter) / minmax(
-      var(--theme-spacing--gutter),
-      1fr
-    )
-    max-content minmax(var(--theme-spacing--gutter), 1fr);
+  grid-template: "container";
 
   &__container {
     display: grid;
     grid-template:
-      "heading ....... action" auto
-      "....... ....... ......" var(--theme-spacing--gutter)
-      "primary primary primary" 1fr
-      "....... secondary secondary" auto / 1fr 1fr min-content;
+      ". ....... ......... ......... ." var(--gap)
+      ". heading ......... action    ." auto
+      ". ....... ......... ......... ." var(--gap)
+      ". primary primary   primary   ." 1fr
+      ". ....... secondary secondary ." var(--theme-spacing--touchtarget)
+      ". ....... ......... ......... ." var(--gap) / var(--gap)
+      1fr 1fr var(--theme-spacing--touchtarget) var(--gap);
   }
   &__heading {
     font: var(--theme-font--brand);
-    color: var(--theme-color--paper);
-  }
-
-  &__action {
-    @include pin(top right);
   }
 
   &__link {
@@ -53,6 +47,13 @@
 
   &__secondary {
     display: flex;
-    @include pin(bottom right);
+    justify-content: flex-end;
+  }
+
+  &__bg {
+    grid-area: container;
+    object-fit: cover;
+    z-index: -1;
+    mix-blend-mode: darken; // might remove this, not v performant
   }
 }
