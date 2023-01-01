@@ -3,13 +3,11 @@
 // menu toggle
 const menuToggles = document.querySelectorAll(".js-menu-toggle");
 const menu = document.getElementById("site-menu");
-const closeMenu = document.getElementById("close-menu");
 const skipLink = document.getElementById("skip-link");
 function toggleMenu() {
   menu.classList.toggle("is-active");
   menu.toggleAttribute("hidden");
-  if (menu.classList.contains("is-active")) {
-    history.pushState(null, null, "#site-menu");
+  if (menu.getAttribute("hidden") == null) {
     menu.focus();
   } else {
     skipLink.focus();
