@@ -40,6 +40,8 @@
   }
   &__title {
     line-height: 1;
+    text-transform: uppercase;
+    text-shadow: -2px 1px 0 var(--theme-color--pop);
   }
   &__lastmod,
   &__author {
@@ -53,5 +55,21 @@
     background: var(--theme-color--ink-fade);
     color: var(--theme-color--ink);
     clip-path: var(--arrow);
+  }
+
+  // small tweaks for list view
+  &--list {
+    position: sticky;
+    top: 0;
+    .c-page-header__container {
+      position: relative;
+    }
+    .c-page-header__toc {
+      position: absolute;
+      width: fit-content;
+      max-width: var(--theme-spacing--container-min);
+      box-sizing: content-box;
+      right: 0;
+    }
   }
 }

@@ -1,13 +1,24 @@
 {{ define "main" }}
-<h1 class="e-heading e-heading__1">{{.Title}} LIST PAGE</h1>
-<ul>
+<header class="c-page-header c-page-header--list">
+  <div class="c-page-header__container">
+    <h1 class="c-page-header__title e-heading e-heading__1">{{.Title}}</h1>
+    <aside class="c-toc c-page-header__toc is-none--lt-container">
+      <ol>
+        {{ range .Pages }}
+        <li>
+          <a href="{{.Permalink}}">{{.Title}}</a>
+        </li>
+        {{ end}}
+      </ol>
+    </aside>
+  </div>
+</header>
+<article class="c-copy">{{.Content}}</article>
+<ul class="c-cells">
   <!-- Ranges through content/posts/*.md -->
   {{ range .Pages }}
-  <li>
-    <a href="{{.Permalink}}">{{.Title}}</a>
-  </li>
+  <li class="c-cells__cell">{{ partial "card.html" . }}</li>
   {{ end }}
 </ul>
-<article class="c-copy">{{.Content}}</article>
 
 {{ end }}
