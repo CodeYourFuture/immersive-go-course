@@ -1,7 +1,11 @@
-.c-timeline {
+.c-timeline,
+ol[class="c-timeline"] {
   --box: var(--theme-spacing--gutter);
   position: relative;
   counter-reset: timeline;
+  transform: translateX(var(--box));
+  width: max-content;
+  padding: var(--theme-spacing--6) 0;
   &__entry,
   li[class="c-timeline__entry"] {
     display: flex;
