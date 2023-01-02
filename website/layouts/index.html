@@ -1,5 +1,16 @@
 {{ define "main" }}
-<article>{{.Content}}</article>
+<article>
+    <header class="l-page__header c-page-header">
+    <div class="c-page-header__container">
+      <h1
+        class="c-page-header__title e-heading__1 "
+      >
+        {{.Title}}
+      </h1>
+    </div>
+  </header>
+  
+  {{.Content}}</article>
 <nav class="c-toc">
     <ol>
         {{ $currentPage := . }}
