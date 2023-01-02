@@ -6,7 +6,7 @@ we are going to use distributed tracing to understand its behaviour.
 Learning Objectives
  - How is distributed tracing different from logging and from metrics?
  - How can we use distributed tracing to get a detailed understanding of complex application behaviour?
- - What are standards in telemetry?
+ - How can costs of distributed tracing be minimized?
 
 Timebox: 5 days
 
