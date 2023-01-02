@@ -1,7 +1,7 @@
 // Description: I'm copying all the projects
 // It is synchronous as it's only run once when the static site is built.
 
-const fs = require("fs-extra");
+const fs = require("fs");
 const path = require("path");
 
 // get a list of all items in the root directory
@@ -27,7 +27,7 @@ console.log(directories + " copied to content/projects");
 
 // for each directory, copy the readme.md file to the content/projects folder
 directories.forEach((dir) => {
-  fs.copySync(
+  fs.copyFileSync(
     path.join("../", dir, "readme.md"),
     path.join(__dirname, "content", "projects", `${dir}.md`)
   );
