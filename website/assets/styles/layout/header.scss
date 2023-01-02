@@ -22,11 +22,18 @@
 
   &__heading {
     font: var(--theme-font--brand);
-    font-size: var(--theme-type-size--1);
+    font-size: var(--theme-type-size--2);
     color: var(--theme-color--accent);
+    display: flex;
+    align-items: center;
+  }
+  &__logo {
+    width: min-content;
   }
 
   &__action.is-fixed {
+    --button-background-color: var(--theme-color--pop);
+    --button-border-color: var(--button-background-color);
     position: fixed;
     right: 0;
     top: 0;

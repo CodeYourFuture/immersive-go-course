@@ -25,4 +25,6 @@ h4,
 h2:not([class]) {
   text-decoration: underline;
   text-decoration-color: var(--theme-color--pop);
+  text-decoration-thickness: 4px;
+  text-underline-offset: 2px;
 }
