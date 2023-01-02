@@ -87,12 +87,18 @@ taking a lock may be a candidate for a span.
 Run your system and view traces in Honeycomb. Run through the [Honeycomb sandbox tour](https://play.honeycomb.io/sandbox/environments/analyze-debug-tour)
 and then explore your own data in the same way. 
 
+Do distributed operations (such as leader elections) surface in Honeycomb as coherent traces?
+
 Create a [Board](https://docs.honeycomb.io/working-with-your-data/boards/) in honeycomb with some useful visualisations.
 
 ### Part 3: Debugging latency and failures using distributed tracing
 
-Bendersky's implementation of RAFT allows you to simulate unreliable RPCs. Enable this and use Honeycomb to observe the dropped RPCs and delays that 
+Bendersky's implementation of RAFT allows you to simulate unreliable RPCs. Enable this (if you wrote your own implementation then you will 
+need to add this kind of chaos capability as a feature first). 
+Now, use Honeycomb to observe the dropped RPCs and delays that 
 the simulation injects. Did these show up on your board from Part 2?
+
+Can you add further kinds of chaos? What about storage failures? 
 
 ### Part 4: Reducing costs of distributed tracing
 
