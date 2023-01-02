@@ -26,4 +26,4 @@ guessSyntax = true
 
 disableKinds = ["taxonomy", "term"]
 [taxonomies]
-series = "iterations"
+series = "versions"

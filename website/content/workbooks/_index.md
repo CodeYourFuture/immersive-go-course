@@ -5,11 +5,11 @@ date="28 Dec 2022 12:22:11 BST"
 
 ## What are these workbooks?
 
-We run this programme at [Code Your Future](https://codeyourfuture.io) in sprints, currently two week sprints. These workbooks are given to CYF+ Fellows to help them plan their work.
+We run this programme at [Code Your Future](https://codeyourfuture.io) in sprints, currently two week sprints. These workbooks are given to CYF+ Fellows to help them plan their work each sprint.
 
 You are welcome to use them too.
 
-Workbooks are compiled into a syllabus iteration: [Iterations](../iterations/)
+We compile our workbooks into a syllabus iteration, [Versions](../versions/), but you can use them in your own way if you like.
 
 ### Plan your work???
 

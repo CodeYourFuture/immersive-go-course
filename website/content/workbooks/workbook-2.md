@@ -1,8 +1,8 @@
 +++
 title="CYF+01 Sprint 2"
 date="7 Nov 2022"    
-series="001"
-toc= false
+versions=["1-0-0"]
+hero="pictures/depths/dddepth--085.webp"
 +++
 
 ## Study

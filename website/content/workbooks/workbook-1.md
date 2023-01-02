@@ -1,8 +1,8 @@
 +++
 title="CYF+01 Sprint 1"
 date="24 Oct 2022"    
-series="001"
-image="static/pictures/depths/dddepth--085.webp"
+versions=["1-0-0"]
+hero="pictures/depths/dddepth--085.webp"
 +++
 
 ## Study
