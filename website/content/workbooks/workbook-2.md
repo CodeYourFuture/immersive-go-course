@@ -1,6 +1,6 @@
 +++
 title="CYF+01 Sprint 2"
-date="7 Nov 2022"    
+date="07 Nov 2022"    
 versions=["1-0-0"]
 hero="pictures/depths/dddepth--085.webp"
 +++

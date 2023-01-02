@@ -11,7 +11,7 @@ You are welcome to use them too.
 
 We compile our workbooks into a syllabus iteration, [Versions](../versions/), but you can use them in your own way if you like.
 
-### Plan your work???
+### I should plan my work???
 
 1. Fork the [CYF+ Immersive Repo](https://github.com/CodeYourFuture/immersive-go-course)
 2. Create a new project board on your forked repo. Here's an [example board](https://github.com/orgs/CodeYourFuture/projects/45/views/1) you can copy.
