@@ -2,8 +2,9 @@
   backdrop-filter: blur(100px) opacity($opacity);
   -webkit-backdrop-filter: blur(100px) opacity($opacity);
   padding: var(--theme-spacing--gutter);
-  min-width: 230px; // !mn fairly arbitrary, just don't want tiny squished boxes
-  max-width: var(--theme-spacing--linelength);
+  min-width: var(
+    --theme-spacing--container-min
+  ); // !mn fairly arbitrary, just don't want tiny squished boxes
 
   @if $gradient {
     background: linear-gradient(
@@ -16,6 +17,5 @@
   @if $border {
     border: var(--theme-border--highlight);
     border-color: var(--theme-color--outline);
-    border-radius: var(--theme-border-radius);
   }
 }

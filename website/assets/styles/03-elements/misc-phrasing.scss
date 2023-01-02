@@ -58,6 +58,7 @@ code:not([class]) {
   padding: var(--theme-spacing--1);
   max-width: var(--theme-spacing--linelength);
   @include pattern(dots, currentColor, c, false);
+  margin-bottom: var(--theme-spacing--gutter);
 }
 
 // details could show up in github flavoured markdown so we put a basic style on here
