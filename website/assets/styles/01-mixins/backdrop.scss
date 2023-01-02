@@ -1,5 +1,6 @@
 @mixin backdrop($border: false, $gradient: true, $opacity: 0.5) {
   backdrop-filter: blur(100px) opacity($opacity);
+  -webkit-backdrop-filter: blur(100px) opacity($opacity);
   padding: var(--theme-spacing--gutter);
   min-width: 230px; // !mn fairly arbitrary, just don't want tiny squished boxes
   max-width: var(--theme-spacing--linelength);
@@ -7,8 +8,8 @@
   @if $gradient {
     background: linear-gradient(
       to top,
-      hsla(0, 0, 100%, 0.49),
-      hsla(0, 0, 100%, 0.19)
+      var(--theme-color--backdrop-from),
+      var(--theme-color--backdrop-to)
     );
   }
 

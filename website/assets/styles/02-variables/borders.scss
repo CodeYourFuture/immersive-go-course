@@ -1,4 +1,10 @@
 :root {
   --theme-border: 0.5px solid var(--theme-color--pop);
   --theme-border--thick: 4px solid;
+  --theme-border-image: linear-gradient(
+      45deg,
+      var(--theme-color--accent),
+      var(--theme-color--pop)
+    )
+    1;
 }

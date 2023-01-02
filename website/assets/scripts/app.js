@@ -26,3 +26,10 @@ window.addEventListener("keydown", (e) => {
     toggleMenu();
   }
 });
+
+// dark mode toggle
+const darkModeToggle = document.getElementById("mode-toggle");
+darkModeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("is-dark-mode");
+  document.body.classList.toggle("is-light-mode");
+});

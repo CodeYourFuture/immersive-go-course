@@ -24,18 +24,16 @@ li:has(input) {
     color: var(--theme-color--accent);
   }
 }
+ul:has(input) {
+  margin: var(--theme-spacing--1) 0 var(--theme-spacing--3);
+}
 
 blockquote {
   font-size: var(--theme-type-size--4);
   margin: var(--theme-spacing--4) 0 var(--theme-spacing--6);
   @include pattern(dots, var(--theme-color--pop), b, false, 0.2);
   border-bottom: var(--theme-border--thick);
-  border-image: linear-gradient(
-      45deg,
-      var(--theme-color--accent),
-      var(--theme-color--pop)
-    )
-    1;
+  border-image: var(--theme-border-image);
 }
 
 code,

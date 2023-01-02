@@ -42,7 +42,6 @@
 
   &__link {
     text-transform: lowercase;
-    font-weight: 400;
   }
 
   &__secondary {
@@ -55,5 +54,8 @@
     object-fit: cover;
     z-index: -1;
     mix-blend-mode: darken; // might remove this, not v performant
+    @media (prefers-color-scheme: dark) {
+      mix-blend-mode: overlay;
+    }
   }
 }

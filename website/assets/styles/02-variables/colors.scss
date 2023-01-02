@@ -1,28 +1,41 @@
-:root {
+@mixin dark-palette {
+  --theme-color--paper: hsla(326, 11%, 24%, 0.95);
+  --theme-color--ink: hsla(228, 100%, 88%, 1);
+  --theme-color--ink-fade: rgba(240, 240, 240, 0.25);
+  --theme-color--accent: hsl(217, 53%, 44%);
+  --theme-color--contrast-max: hsla(0, 0%, 0%, 1);
+  // greys
+  --theme-color--block: hsla(0, 0%, 0%, 0.95);
+  --theme-color--outline: hsla(0, 0%, 89%, 1);
+  // backdrop
+  --theme-color--backdrop-from: hsla(0, 0, 0%, 0.99);
+  --theme-color--backdrop-to: hsla(0, 0, 0%, 0.69);
+}
+
+@mixin light-palette {
   --theme-color--paper: hsla(299, 9%, 86%, 0.95);
   --theme-color--ink: hsla(220, 78%, 29%, 1);
   --theme-color--ink-fade: hsla(220, 78%, 29%, 0.25);
   --theme-color--accent: hsl(211, 100%, 46%);
   --theme-color--shade: hsla(228, 70%, 53%, 0.5);
-  --theme-color--brand: hsl(5, 71%, 51%);
-  --theme-color--pop: hsl(319, 100%, 50%);
+  --theme-color--brand: hsl(351, 100%, 67%);
+  --theme-color--pop: hsl(351, 100%, 67%);
+
   --theme-color--contrast-max: hsla(0, 0%, 100%, 1);
   //greys
   --theme-color--block: hsla(0, 0%, 100%, 0.9);
-  --theme-color--outline: hsl(0, 0%, 89%);
-  // @media (prefers-color-scheme: dark) {
-  //   --theme-color--paper: rgb(12, 28, 60);
-  //   --theme-color--ink: hsla(299, 9%, 86%, 0.95);
-  //   --theme-color--ink-fade: rgba(240, 240, 240, 0.25);
-  //   --theme-color--accent: hsl(211, 100%, 46%);
-  //   --theme-color--shade: hsl(228, 70%, 53%);
-  //   --theme-color--brand: hsl(5, 85%, 57%);
-  //   --theme-color--pop: hsl(0, 100%, 50%);
-  //   --theme-color--add: hsl(145, 63%, 42%);
-  //   --theme-color--add-event: hsl(157, 100%, 24%);
-  //   //greys
-  //   --theme-color--block: hsl(0, 0%, 98%);
-  //   --theme-color--outline: hsl(0, 0%, 89%);
-  //   --theme-color--outline-event: hsl(0, 0%, 66%);
-  // }
+  --theme-color--outline: hsla(0, 0%, 89%, 1);
+  // backdrop
+  --theme-color--backdrop-from: hsla(0, 0, 100%, 0.49);
+  --theme-color--backdrop-to: hsla(0, 0, 100%, 0.19);
 }
+
+:root {
+  @include light-palette();
+  @media (prefers-color-scheme: dark) {
+    @include dark-palette();
+  }
+}
+
+// see states for classes that toggle these
+// no classes in the variables folder
