@@ -21,7 +21,7 @@
     loading="lazy"
     class="c-card__image"
     src="
-  {{ range $fallBack}}../../pictures/depths/{{.Name}}
+  {{ range $fallBack}}{{$.Site.BaseURL}}pictures/depths/{{.Name}}
   {{ end }}"
     alt=""
   />
