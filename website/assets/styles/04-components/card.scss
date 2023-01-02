@@ -1,0 +1,18 @@
+.c-card {
+  @include grid-assign(image, date, title);
+
+  display: grid;
+  grid-template:
+    "image image image" 100px
+    ".     date  ." min-content
+    ".     title ." 1fr / var(--theme-spacing--1) 1fr var(--theme-spacing--1);
+
+  background-color: var(--theme-color--paper);
+  box-shadow: 2px 3px 0 var(--theme-color--pop),
+    4px 5px 0 var(--theme-color--accent);
+
+  &__image {
+    overflow: hidden;
+    filter: grayscale(0.4);
+  }
+}

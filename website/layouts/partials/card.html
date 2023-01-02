@@ -1,0 +1,29 @@
+{{ $fallBack := readDir "static/pictures/depths" | shuffle |first 1 }}
+
+<a class="c-card" href="{{.Permalink}}">
+  <h3 class="c-card__title">{{.Title}}</h3>
+  <time class="c-card__date" datetime="{{.Date}}"
+    >{{.Date.Format "January 2, 2006"}}</time
+  >
+
+  {{ $cover := .Resources.GetMatch "hero" }}
+
+  <!-- make sure the cover image exists first!-->
+  {{ if $cover }}
+
+  <!-- now resize the resource-->
+  {{ $cover := $cover.Fill "600x200" }}
+
+  <!-- now show it -->
+  <img class="c-card__image" src="{{ $cover.RelPermalink }}" alt="" />
+  {{ else }}
+  <img
+    loading="lazy"
+    class="c-card__image"
+    src="
+  {{ range $fallBack}}../../pictures/depths/{{.Name}}
+  {{ end }}"
+    alt=""
+  />
+  {{end}}
+</a>
