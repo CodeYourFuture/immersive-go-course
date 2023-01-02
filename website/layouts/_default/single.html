@@ -6,7 +6,11 @@
       <div class="c-page-header__breadcrumbs">
         {{ partial "breadcrumbs.html" . }}
       </div>
-      <h1 class="c-page-header__title e-heading__1 is-invisible">{{.Title}}</h1>
+      <h1
+        class="c-page-header__title e-heading__1 is-invisible{{with .Params.showTitle }}is-visible{{end}}"
+      >
+        {{.Title}}
+      </h1>
       {{ with .Params.author}}
       <a
         class="c-page-header__author e-heading__5 e-link"
