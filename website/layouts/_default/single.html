@@ -17,7 +17,8 @@
       <h2 class="c-page-header__lastmod">
         .Lastmod
         <a href="{{.Site.Params.tree}}{{.File.BaseFileName}}">
-          {{if .Lastmod }} {{ $lm:= .Lastmod.Format "January 2, 2006" }}
+          {{if not .Lastmod.IsZero }} {{ $lm:= .Lastmod.Format "January 2, 2006"
+          }}
           <time datetime="{{ .Lastmod }}"
             >{{ .Lastmod.Format "January 2, 2006" }}</time
           >
