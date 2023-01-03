@@ -1,4 +1,5 @@
-{{ $fallBack := readDir "static/pictures/depths" | shuffle |first 1 }}
+{{ $fallBack := readDir "static/pictures/svgs/neons" | shuffle |first 1 }} {{
+$fallBackProjects := readDir "static/pictures/depths" | shuffle |first 1 }}
 
 <a class="c-card" href="{{.Permalink}}">
   <h3 class="c-card__title">{{.Title}}</h3>
@@ -16,14 +17,9 @@
 
   <!-- now show it -->
   <img class="c-card__image" src="{{ $cover.RelPermalink }}" alt="" />
-  {{ else }}
-  <img
-    loading="lazy"
-    class="c-card__image"
-    src="
-  {{ range $fallBack}}{{$.Site.BaseURL}}pictures/depths/{{.Name}}
-  {{ end }}"
-    alt=""
-  />
-  {{end}}
+  {{ else }} <img loading="lazy" class="c-card__image" src="{{ if eq .Section
+  "projects" }}{{ range $fallBackProjects }}{{ $.Site.BaseURL
+  }}pictures/depths/{{ .Name }}{{ end }}{{ else }}{{ range
+  $fallBack}}{{$.Site.BaseURL}}pictures/svgs/neons/{{ .Name }}{{ end }}{{ end
+  }}" alt="" /> {{end}}
 </a>
