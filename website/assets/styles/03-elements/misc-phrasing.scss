@@ -62,7 +62,9 @@ code:not([class]) {
 }
 
 // details could show up in github flavoured markdown so we put a basic style on here
-
+summary > * {
+  display: inline-block;
+}
 summary::marker {
   color: var(--theme-color--accent);
   font-size: var(--theme-type-size--3);

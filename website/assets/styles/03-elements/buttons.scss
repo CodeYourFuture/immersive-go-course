@@ -53,7 +53,7 @@
       #{$rule}: var(--theme-spacing--touchtarget);
     }
     // don't leak button styles into icons
-    border: 0;
+    border: none;
     background: transparent;
     box-shadow: none;
     color: currentColor;

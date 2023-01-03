@@ -7,6 +7,10 @@ $heading__levels: 1, 2, 3, 4, 5, 6;
     font-weight: 900;
     margin: 0;
   }
+  // unstyled headings from markdown/ body copy need some relational breathing space
+  h#{$h}:not([class]) {
+    margin-bottom: 0.75em;
+  }
 }
 
 h4,
@@ -15,13 +19,6 @@ h4,
   color: var(--theme-color--accent);
 }
 
-// unstyled headings from markdown/ body copy
-// give them a bit of a breather
-@each $h in $heading__levels {
-  h#{$h}:not([class]) {
-    margin-bottom: 0.75em;
-  }
-}
 h2:not([class]) {
   text-decoration: underline;
   text-decoration-color: var(--theme-color--pop);

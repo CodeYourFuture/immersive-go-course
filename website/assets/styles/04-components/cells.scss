@@ -1,11 +1,8 @@
 .c-cells {
   display: flex;
   flex-flow: row wrap;
-  align-items: flex-start;
   gap: var(--theme-spacing--gutter);
-  position: relative;
   @include backdrop();
-  max-width: none;
 
   &__cell {
     flex: 1 0 var(--theme-spacing--container-min);

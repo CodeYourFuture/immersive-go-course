@@ -8,8 +8,8 @@
   --theme-color--block: hsla(0, 0%, 0%, 0.95);
   --theme-color--outline: hsla(0, 0%, 89%, 1);
   // backdrop
-  --theme-color--backdrop-from: hsla(0, 0, 0%, 0.99);
-  --theme-color--backdrop-to: hsla(0, 0, 0%, 0.69);
+  --theme-color--backdrop-from: hsla(0, 0%, 0%, 0.99);
+  --theme-color--backdrop-to: hsla(0, 0%, 0%, 0.69);
 }
 
 @mixin light-palette {

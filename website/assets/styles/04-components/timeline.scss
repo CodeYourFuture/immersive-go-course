@@ -6,6 +6,11 @@ ol[class="c-timeline"] {
   transform: translateX(var(--box));
   width: max-content;
   padding: var(--theme-spacing--6) 0;
+  background-image: linear-gradient(
+    to right,
+    var(--theme-color--backdrop-from) 50%,
+    transparent
+  );
   &__entry,
   li[class="c-timeline__entry"] {
     display: flex;
