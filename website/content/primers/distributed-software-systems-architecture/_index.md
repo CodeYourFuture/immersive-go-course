@@ -27,8 +27,7 @@ Some workloads are too high to be served from a single machine. We use distribut
 
 Almost all computer systems that we build today are distributed systems, whether large or small.
 
-## Glossary of Abbreviations {#glossary-of-abbreviations}
-
+{{< details summary="Glossary of Abbreviations" >}}
 API
 : Application Programming Interface
 
@@ -94,3 +93,5 @@ UDP
 
 3PC
 : 3 Phase Commit
+
+{{</ details >}}
