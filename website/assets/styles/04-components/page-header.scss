@@ -32,11 +32,11 @@
     pointer-events: all;
     display: grid;
     grid-template:
-      ".           .   .   ." var(--gap)
+      ".           .   .        ." var(--gap)
       "breadcrumbs .   author   ." min-content
-      "title       .   .   ." min-content
-      "toc         toc toc ." auto
-      ".           .   lastmod   ." min-content / 1fr var(--gap) 1fr var(--gap);
+      "title       .   .        ." min-content
+      "toc         toc toc      ." auto
+      ".           .   lastmod  ." min-content / 1fr var(--gap) minmax(0, 1fr) var(--gap);
   }
   &__title {
     line-height: 1;

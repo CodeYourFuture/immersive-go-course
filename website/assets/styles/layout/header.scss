@@ -37,10 +37,15 @@
     right: 0;
     top: 0;
     height: 100vh;
+    min-width: calc(var(--theme-spacing--gutter) * 2);
+    max-width: calc(var(--theme-spacing--gutter) * 2);
     display: flex;
     flex-flow: column;
     justify-content: flex-start;
     gap: 0;
     padding-top: var(--theme-spacing--gutter);
+    @include on-event {
+      background-color: var(--theme-color--pop);
+    }
   }
 }
