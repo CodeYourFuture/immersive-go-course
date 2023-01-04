@@ -19,7 +19,7 @@ html {
   margin: 0;
   padding: 0;
   height: 100%;
-  animation: fade-in cubic-bezier(0.55, 0.055, 0.675, 0.19) 0.3s;
+  animation: fade-in 0.2s;
 }
 
 html {
@@ -30,10 +30,8 @@ html {
 @keyframes fade-in {
   0% {
     opacity: 0;
-    transform: translateX(10px);
   }
   100% {
     opacity: 1;
-    transform: translateX(0);
   }
 }

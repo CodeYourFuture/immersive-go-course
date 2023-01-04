@@ -24,9 +24,6 @@
     display: flex;
     align-items: center;
   }
-  &__logo {
-    width: min-content;
-  }
 
   &__action.is-fixed {
     --button-background-color: var(--theme-color--pop);
