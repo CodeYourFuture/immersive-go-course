@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+body,
+html {
+  font-family: var(--theme-font--copy);
+  font-size: 100%;
+  background-color: var(--theme-color--paper);
+  background-image: url("./pictures/svgs/neons/nnneon-hex.svg"),
+    url("./pictures/svgs/quads/qqquad-02.svg"),
+    radial-gradient(
+      circle,
+      var(--theme-color--paper) 0%,
+      var(--theme-color--block) 50%,
+      var(--theme-color--paper) 100%
+    );
+  background-size: cover;
+  color: var(--theme-color--ink);
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  animation: fade-in cubic-bezier(0.55, 0.055, 0.675, 0.19) 0.3s;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

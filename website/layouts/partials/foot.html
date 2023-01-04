@@ -1,0 +1,45 @@
+<footer class="l-layout__footer l-footer">
+  <p class="l-footer__impressum e-heading__6">
+    This free and open source engineering programme is a project of
+    <a href="https://codeyourfuture.io">Code Your Future</a>
+    <br />
+    This work is licensed under a Creative Commons Attribution-ShareAlike 4.0
+    International License.
+  </p>
+  <button
+    id="mode-toggle"
+    class="e__button--toggle e-button--icon l-footer__mode"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="e-icon e__button__icon e-icon--moon"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+      />
+    </svg>
+
+    <span class="is-invisible">Toggle between light and dark mode</span>
+  </button>
+</footer>
+
+{{ $scripts := resources.Get "scripts/app.js" | resources.Minify }} {{ partial
+"random-bg" .}}
+
+<script src="{{$scripts.Permalink}}" defer></script>
+
+{{ if .Page.Store.Get "hasMermaid" }}
+<script
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  defer
+></script>
+<script>
+  mermaid.initialize({ startOnLoad: true });
+</script>
+{{ end }}

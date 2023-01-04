@@ -1,0 +1,46 @@
+.l-header {
+  @include grid-assign(heading, action, nav);
+  @include pattern(dots, var(--theme-color--pop), null, true, 0.5);
+  grid-template:
+    " . ... . " var(--theme-spacing--gutter)
+    " . nav ." minmax(0, 1fr)
+    " . ... ." var(--theme-spacing--gutter) / minmax(
+      var(--theme-spacing--gutter),
+      1fr
+    )
+    var(--theme-spacing--container) minmax(var(--theme-spacing--gutter), 1fr);
+
+  &__nav {
+    display: grid;
+
+    grid-template:
+      ". heading heading action" auto / min-content 1fr var(
+        --theme-spacing--touchtarget
+      )
+      var(--theme-spacing--touchtarget);
+  }
+
+  &__heading {
+    font: var(--theme-font--brand);
+    color: var(--theme-color--brand);
+    display: flex;
+    align-items: center;
+  }
+  &__logo {
+    width: min-content;
+  }
+
+  &__action.is-fixed {
+    --button-background-color: var(--theme-color--pop);
+    --button-border-color: var(--button-background-color);
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    gap: 0;
+    padding-top: var(--theme-spacing--gutter);
+  }
+}

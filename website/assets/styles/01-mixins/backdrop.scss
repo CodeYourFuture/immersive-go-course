@@ -1,0 +1,17 @@
+@mixin backdrop($border: false, $gradient: true, $opacity: 0.5) {
+  backdrop-filter: blur(100px) opacity($opacity);
+  -webkit-backdrop-filter: blur(100px) opacity($opacity);
+
+  @if $gradient {
+    background: linear-gradient(
+      to top,
+      var(--theme-color--backdrop-from),
+      var(--theme-color--backdrop-to)
+    );
+  }
+
+  @if $border {
+    border: var(--theme-border--highlight);
+    border-color: var(--theme-color--outline);
+  }
+}

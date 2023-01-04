@@ -1,0 +1,49 @@
+.c-timeline,
+ol[class="c-timeline"] {
+  --box: var(--theme-spacing--gutter);
+  position: relative;
+  counter-reset: timeline;
+  transform: translateX(var(--box));
+  width: max-content;
+  padding: var(--theme-spacing--6) 0;
+  background-image: linear-gradient(
+    to right,
+    var(--theme-color--backdrop-from) 50%,
+    transparent
+  );
+  &__entry,
+  li[class="c-timeline__entry"] {
+    display: flex;
+    border-left: var(--theme-border--thick);
+    border-image: var(--theme-border-image);
+    padding: 0 var(--box) var(--theme-spacing--5) 0;
+    counter-increment: timeline 1;
+    &:before {
+      content: counter(timeline);
+      padding: var(--box);
+      height: var(--box);
+      width: var(--box);
+      clip-path: circle();
+      display: inline-grid;
+      place-content: center;
+      background-color: var(--theme-color--accent);
+      color: var(--theme-color--contrast-max);
+      transform: translateX(calc(var(--box) * -1.5));
+      transition: background-color 0.3s;
+      font: var(--theme-font--system);
+    }
+    &:hover:before {
+      background-color: var(--theme-color--pop);
+    }
+
+    &:last-of-type {
+      border: 0;
+    }
+  }
+
+  &__title {
+    @include on-event(false, ".c-timeline__entry") {
+      text-decoration: underline;
+    }
+  }
+}
