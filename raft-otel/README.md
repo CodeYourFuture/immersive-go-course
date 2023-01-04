@@ -21,7 +21,26 @@ We need to be able to do [locking in distributed systems](https://martin.kleppma
 
 It turns out that in terms of computer science, distributed locking is theoretically equivalent to reliably electing a single leader (like in database replication, for example). It is also logically the same as determining the exact order that a sequence of events on different machines in a distributed system occur. All of these are useful. All of these are versions of the same problem: distributed consensus. Distributed consensus in computer science means reaching agreement on state among multiple processes on different machines in the presence of unreliable components (such as networks).
 
-Distributed consensus is a key component of widely-used software infrastructure such as Zookeeper (used by Kafka), etcd (used by Kubernetes), and the Consul service catalog.
+Distributed consensus gives us the strongest possible guarantees of data consistency. If we run a distributed consensus protocol on a cluster of machines, as  long as a majority of those machines remain available then:
+* we can never lose data that has been written
+* we will never see 'stale' data that has been modified by another process
+
+Contrast this with a system such as memcached: if a node becomes unavailable we can lose data that has been written. If multiple cache nodes store the same value,
+the values can become out of sync if a node becomes temporarily unavailable and misses an update. Replicated databases can also lose data or become inconsistent.
+This is not possible with a distributed consensus system. The downside of these strong guarantees is that they require more network round-trips and therefore have higher latency and lower throughput. 
+Because of this, they are normally used only for critical data. 
+
+Distributed consensus is a key component of widely-used software infrastructure such as Zookeeper (used by Kafka), etcd (used by Kubernetes), 
+Vitess (which can use Consul, etcd or Zookeeper) and the Consul service catalog.
+
+Typically, these services use distributed consensus to store key information such as:
+ * which database instances are the leader for a given shard (Vitess)
+ * which brokers are members of a Kafka cluster, and which brokers are leaders of each partition (Kafka)
+ * cluster state and configuration (Kubernetes)
+
+What these usecases have in common is that if there is inconsistency in how the system views this kind of state, it has far-reaching consequences.
+For example, if two database instances both act as leaders for a shard in Vitess, we would have a 'split-brain' situation, where both instances
+might commit different sets of transactions. These kinds of situations are very difficult to resolve without data loss.
 
 RAFT is a specific protocol that implements distributed consensus. It has been designed specifically to be easier
 to understand than earlier protocols (such as Paxos). However, it remains quite a complex protocol. The [RAFT website](https://raft.github.io) provides 
@@ -45,8 +64,12 @@ Distributed tracing has two key concepts: traces and spans. A trace represents a
 Traces are made up of a set of spans, each tagged with the trace ID of the trace it belongs to. Each span is a unit of work: a remote procedure call or 
 web request to a specific service, a method execution, or perhaps the time that a message spends in a queue. Spans can have child spans. 
 There are specific tools that are designed to collect and store distributed traces, and to perform useful queries against them. 
-One of the key aspects of distributed tracing is that when services call other services the trace ID is propagated to those calls, so that the 
-overall trace may be assembled. 
+
+One of the key aspects of distributed tracing is that when services call other services the trace ID is propagated to those calls (in HTTP-based systems
+this is done using a special HTTP [traceparent header](https://uptrace.dev/opentelemetry/opentelemetry-traceparent.html)) so that the 
+overall trace may be assembled. This is necessary because each service in a complex chain of calls independently posts its spans to the distributed
+trace collector. The collector uses the trace ID to assemble the spans together, like a jigsaw puzzle, so that we can see a holistic view of an
+entire operation.
 
 [OpenTelemetry](https://opentelemetry.io/) (also known as OTel) is the main industry standard for distributed tracing. It governs the format of traces and spans, and how traces and spans are collected. It is worth spending some time exploring the [OTel documentation](https://opentelemetry.io/docs/), particularly the Concepts
 section. The [awesome-opentelemetry repo](https://github.com/magsther/awesome-opentelemetry) is another very comprehensive set of 
@@ -71,6 +94,10 @@ Does it differ from yours in any significant respect?
 
 By the end of Part 1 we should have a running RAFT cluster with 5 instances. 
 We may choose to run our RAFT cluster locally using `docker-compose`, `minikube`, or any other appropriate tool.
+
+Please timebox this part of the project to no more than two days, in order to leave time for the other sections.
+At the start of the third day, if your implementation is not complete, use Bendersky's. You can come back and complete your 
+own implementation if you have time at the end of the sprint.
 
 ### Part 2: Add distributed tracing
 
