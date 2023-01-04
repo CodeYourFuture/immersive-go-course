@@ -10,7 +10,7 @@
   {{ end}}
 {{ if eq .Section "primers"  }}
   <nav class="c-page-footer__section-nav">
-    {{if .NextInSection}}<a href="{{.NextInSection.Permalink}}"
+    {{if .NextInSection}}<a class="c-page-footer__backwards" href="{{.NextInSection.Permalink}}"
     >&larr; {{.NextInSection.Title}}</a
   >{{ end}} 
     {{ if eq .Section "projects"}}
@@ -18,7 +18,7 @@
     <a
       class="e-button e-button--icon c-page-footer__edit"
       href="{{ .Site.Params.edit }}{{ .Title | urlize }}/README.md"
-      ><svg
+      ><svg title="Edit this page on GitHub"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -38,7 +38,7 @@
     <a
       class="e-button e-button--icon c-page-footer__edit"
       href="{{ .Site.Params.edit }}{{.File.Path}}"
-      ><svg
+      ><svg title="Edit this page on GitHub"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -56,7 +56,7 @@
     >
     {{end}}
 
-{{if .PrevInSection}}<a href="{{.PrevInSection.Permalink}}"
+{{if .PrevInSection}}<a class="c-page-footer__forwards" href="{{.PrevInSection.Permalink}}"
     >{{.PrevInSection.Title}} &rarr;</a
   >{{ end}}
 

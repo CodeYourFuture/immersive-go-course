@@ -18,6 +18,10 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
+  &__forwards {
+    text-align: right;
+  }
+
   &__edit {
     place-self: center;
     color: var(--theme-color--ink-fade);
