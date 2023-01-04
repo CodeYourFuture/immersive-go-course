@@ -2,23 +2,27 @@
   {{ with .Params.author}}
   <h4 class="c-page-footer__author">
     <a
-    class="c-page-footer__author-link e-link"
-    href="{{$.Site.BaseURL}}about/contributors"
-    >{{.}}</a
-  >
+      class="c-page-footer__author-link e-link"
+      href="{{$.Site.BaseURL}}about/contributors"
+      >{{.}}</a
+    >
   </h4>
   {{ end}}
-{{ if eq .Section "primers"  }}
   <nav class="c-page-footer__section-nav">
-    {{if .NextInSection}}<a class="c-page-footer__backwards" href="{{.NextInSection.Permalink}}"
-    >&larr; {{.NextInSection.Title}}</a
-  >{{ end}} 
-    {{ if eq .Section "projects"}}
+    {{if .NextInSection}}<a
+      class="c-page-footer__backwards"
+      href="{{.NextInSection.Permalink}}"
+      >&larr; {{.NextInSection.Title}}</a
+    >{{ else }}
+    <span class="c-page-footer__backwards"></span>
+
+    {{ end}} {{ if eq .Section "projects"}}
 
     <a
       class="e-button e-button--icon c-page-footer__edit"
       href="{{ .Site.Params.edit }}{{ .Title | urlize }}/README.md"
-      ><svg title="Edit this page on GitHub"
+      ><svg
+        title="Edit this page on GitHub"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -38,7 +42,8 @@
     <a
       class="e-button e-button--icon c-page-footer__edit"
       href="{{ .Site.Params.edit }}{{.File.Path}}"
-      ><svg title="Edit this page on GitHub"
+      ><svg
+        title="Edit this page on GitHub"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -54,11 +59,9 @@
       </svg>
       <span class="is-invisible">Edit this page on GitHub</span></a
     >
-    {{end}}
-
-{{if .PrevInSection}}<a class="c-page-footer__forwards" href="{{.PrevInSection.Permalink}}"
-    >{{.PrevInSection.Title}} &rarr;</a
-  >{{ end}}
-
-  {{ end}}
+    {{end}} {{if .PrevInSection}}
+    <a class="c-page-footer__forwards" href="{{.PrevInSection.Permalink}}"
+      >{{.PrevInSection.Title}} &rarr;</a
+    >{{ end}}
+  </nav>
 </footer>

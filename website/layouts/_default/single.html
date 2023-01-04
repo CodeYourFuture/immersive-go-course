@@ -41,7 +41,8 @@
 
   <section class="l-page__main c-copy">{{.Content}}</section>
 
-  {{ partial "page-footer.html" .}}
+  {{ if .Params.hideFooter }} {{ else}} {{ partial "page-footer.html" .}} {{
+  end}}
 </article>
 
 {{ end }}
