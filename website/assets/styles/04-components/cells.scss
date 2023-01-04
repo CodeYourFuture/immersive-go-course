@@ -3,6 +3,9 @@
   flex-flow: row wrap;
   gap: var(--theme-spacing--gutter);
   @include backdrop();
+  max-width: calc(
+    var(--theme-spacing--container) - var(--theme-spacing--gutter)
+  );
 
   &__cell {
     flex: 1 0 var(--theme-spacing--container-min);

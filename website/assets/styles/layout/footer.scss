@@ -2,16 +2,17 @@
   position: relative;
   @include grid-assign(impressum, mode);
   --expander: calc(
-    var(--theme-spacing--container) - var(--theme-spacing--touchtarget)
+    var(--theme-spacing--container) -
+      calc(var(--theme-spacing--touchtarget) + var(--theme-spacing--gutter))
   );
 
   grid-template:
-    " . ......... .    . " var(--theme-spacing--6)
-    " . impressum mode    ." minmax(0, 1fr)
-    " . ......... mode ." var(--theme-spacing--touchtarget)
-    " . ......... . ." var(--theme-spacing--gutter) / minmax(
+    " . ......... .    . ." var(--theme-spacing--6)
+    " . impressum mode . ." minmax(0, 1fr)
+    " . ......... mode . ." var(--theme-spacing--touchtarget)
+    " . ......... .    . ." var(--theme-spacing--gutter) / minmax(
       var(--theme-spacing--gutter),
       1fr
     )
-    var(--expander) min-content minmax(var(--theme-spacing--gutter), 1fr);
+    var(--expander) min-content var(--theme-spacing--gutter) minmax(var(--theme-spacing--gutter), 1fr);
 }
