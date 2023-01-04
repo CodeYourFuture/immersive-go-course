@@ -34,7 +34,7 @@
 <article class="c-copy">{{.}}</article>
 {{ end }}
 <ul class="c-cells">
-  {{ range .Pages.Reverse }}
+  {{ range .Pages.ByTitle }}
   <li class="c-cells__cell">{{ partial "card.html" . }}</li>
   {{ end }}
 </ul>
