@@ -127,7 +127,13 @@ the simulation injects. Did these show up on your board from Part 2?
 
 Can you add further kinds of chaos? What about storage failures? 
 
-### Part 4: Reducing costs of distributed tracing
+### Part 4: Comparison with logging and metrics
+
+Consider if you didn't have distributed tracing in this project, what logging you may add, and what metrics you may record.
+
+What kind of analysis does each form of observability make easier? What's harder to do with each? We tend to do all three in real systems - when might each be useful?
+
+### Part 5: Reducing costs of distributed tracing
 
 In this exercise we are running a small system and using Honeycomb's free tier, so cost is not a consideration.
 However, in real production systems, distributed tracing can create a large volume of traces and spans. This can be 
