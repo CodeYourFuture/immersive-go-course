@@ -1,0 +1,9 @@
+:root {
+  --theme-type-size--6: clamp(0.83rem, 0.44vw + 0.72rem, 0.9375rem);
+  --theme-type-size--5: clamp(1rem, 0.53vw + 0.87rem, 1.2rem);
+  --theme-type-size--4: clamp(1.2rem, 0.64vw + 1.04rem, 1.44rem);
+  --theme-type-size--3: clamp(1.44rem, 0.77vw + 1.25rem, 1.73rem);
+  --theme-type-size--2: clamp(1.73rem, 0.92vw + 1.5rem, 2.07rem);
+  --theme-type-size--1: clamp(2.07rem, 2.49vw + 2.25rem, 6rem);
+  --theme-type-size--reset: 100%;
+}

@@ -1,0 +1,23 @@
+// see demo to understand why we enforce this: https://codepen.io/Sally_McGrath/pen/NLpEqj
+@mixin screen($state) {
+  @if $state==hide {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  } @else if $state==show {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    white-space: normal;
+    width: auto;
+    @content;
+  }
+}

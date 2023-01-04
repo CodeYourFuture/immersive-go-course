@@ -1,0 +1,41 @@
+@mixin dark-palette {
+  --theme-color--paper: hsla(326, 11%, 24%, 0.95);
+  --theme-color--ink: hsla(228, 100%, 88%, 1);
+  --theme-color--ink-fade: rgba(240, 240, 240, 0.25);
+  --theme-color--accent: hsl(217, 53%, 44%);
+  --theme-color--contrast-max: hsla(0, 0%, 0%, 1);
+  // greys
+  --theme-color--block: hsla(0, 0%, 0%, 0.95);
+  --theme-color--outline: hsla(0, 0%, 89%, 1);
+  // backdrop
+  --theme-color--backdrop-from: hsla(0, 0%, 0%, 0.99);
+  --theme-color--backdrop-to: hsla(0, 0%, 0%, 0.69);
+}
+
+@mixin light-palette {
+  --theme-color--paper: hsla(299, 9%, 86%, 0.95);
+  --theme-color--ink: hsla(220, 78%, 29%, 1);
+  --theme-color--ink-fade: hsla(220, 78%, 29%, 0.25);
+  --theme-color--accent: hsl(211, 100%, 46%);
+  --theme-color--shade: hsla(228, 70%, 53%, 0.5);
+  --theme-color--brand: hsl(351, 100%, 67%);
+  --theme-color--pop: hsl(351, 100%, 67%);
+
+  --theme-color--contrast-max: hsla(0, 0%, 100%, 1);
+  //greys
+  --theme-color--block: hsla(0, 0%, 100%, 0.9);
+  --theme-color--outline: hsla(0, 0%, 89%, 1);
+  // backdrop
+  --theme-color--backdrop-from: hsla(0, 0%, 100%, 0.79);
+  --theme-color--backdrop-to: hsla(0, 0%, 100%, 0.59);
+}
+
+:root {
+  @include light-palette();
+  @media (prefers-color-scheme: dark) {
+    @include dark-palette();
+  }
+}
+
+// see states for classes that toggle these
+// no classes in the variables folder

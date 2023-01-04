@@ -1,0 +1,41 @@
+@mixin pin($xy) {
+  @if $xy == left {
+    margin: auto auto auto 0;
+  }
+
+  @if $xy == top {
+    margin: auto 0 auto auto;
+  }
+
+  @if $xy == right {
+    margin: auto 0 auto auto;
+  }
+
+  @if $xy == bottom {
+    margin: auto auto 0 auto;
+  }
+
+  @if $xy == top-left {
+    margin: 0 auto auto 0;
+  }
+
+  @if $xy == top-right {
+    margin: 0 0 auto auto;
+  }
+
+  @if $xy == bottom-right {
+    margin: auto 0 0 auto;
+  }
+
+  @if $xy == bottom-left {
+    margin: auto auto 0 0;
+  }
+
+  @if $xy == center {
+    margin: auto;
+  }
+
+  @if $xy == all {
+    margin: 0;
+  }
+}

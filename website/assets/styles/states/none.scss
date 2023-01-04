@@ -1,0 +1,17 @@
+@use "02-variables/spacing" as *;
+
+// this removes the node
+// see is-visible / is-invisible for most use cases
+
+.is-none {
+  &--gt-container {
+    @media (min-width: $c-max) {
+      display: none;
+    }
+  }
+  &--lt-container {
+    @media (max-width: $c-max) {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+.l-menu {
+  --gap: var(--theme-spacing--gutter);
+  @include grid-assign(heading, action, primary, secondary, container);
+  @include pattern(graph, currentColor, b, false, 0.2);
+  background-color: var(--theme-color--paper);
+
+  padding: 0;
+  box-shadow: -20px -2px 30px var(--theme-color--ink-fade);
+
+  min-height: calc(100vh - calc(100vh - 100%));
+  min-width: var(--theme-spacing--container-min);
+  max-width: calc(2 * var(--theme-spacing--container-min));
+
+  position: fixed;
+  top: 0;
+  right: -100%;
+  visibility: hidden;
+  transition: right cubic-bezier(0.895, 0.03, 0.685, 0.22) 0.4s;
+
+  &.is-active {
+    visibility: visible;
+    right: var(--gap);
+    z-index: 1;
+  }
+
+  grid-template: "container";
+
+  &__container {
+    display: grid;
+    grid-template:
+      ". ....... ......... ......... ." var(--gap)
+      ". heading ......... action    ." auto
+      ". ....... ......... ......... ." var(--gap)
+      ". primary primary   primary   ." 1fr
+      ". ....... secondary secondary ." var(--theme-spacing--touchtarget)
+      ". ....... ......... ......... ." var(--gap) / var(--gap)
+      1fr 1fr var(--theme-spacing--touchtarget) var(--gap);
+  }
+  &__heading {
+    font: var(--theme-font--brand);
+  }
+
+  &__link {
+    text-transform: lowercase;
+  }
+
+  &__secondary {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__bg {
+    grid-area: container;
+    object-fit: cover;
+    z-index: -1;
+    mix-blend-mode: darken; // might remove this, not v performant
+    @media (prefers-color-scheme: dark) {
+      mix-blend-mode: overlay;
+    }
+  }
+}

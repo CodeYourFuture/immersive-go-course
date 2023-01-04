@@ -1,0 +1,31 @@
+.c-card {
+  @include grid-assign(image, date, byline, title);
+
+  display: grid;
+  grid-template:
+    "image image image" 100px
+    ".     .      ." var(--theme-spacing--1)
+    ".     title  ." auto
+    ".     byline ." min-content / var(--theme-spacing--1) 1fr var(--theme-spacing--1);
+
+  background-color: var(--theme-color--paper);
+  box-shadow: 2px 3px 0 var(--theme-color--pop),
+    4px 5px 0 var(--theme-color--accent);
+  height: 100%;
+
+  @include on-event {
+    transform: translate(0.5px, 1px);
+    box-shadow: 0px 0px 0 var(--theme-color--pop),
+      0px 0px 0 var(--theme-color--accent);
+  }
+
+  &__image {
+    background: var(--theme-color--ink);
+    overflow: hidden;
+    filter: grayscale(0.4);
+    transition: filter 10s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    @include on-event(false, ".c-card") {
+      filter: grayscale(0) hue-rotate(360deg);
+    }
+  }
+}

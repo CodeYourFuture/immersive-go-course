@@ -1,0 +1,4 @@
+.is-light-mode,
+:root:has(.is-light-mode) {
+  @include light-palette;
+}
