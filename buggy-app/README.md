@@ -1,10 +1,13 @@
-# Buggy App
++++
+title="Buggy App"
+author="Tom Ashworth"
++++
 
 In this project, you're going to run, debug, and fix a buggy application. This code here is a "notes" application with users and notes. It simulates a real-world application that has grown and developed over time: the code isn't perfect, there are tests missing and it contains bugs. The task is to find and fix these bugs. There are _at least_ 5 distinct and important bugs for you to find a fix.
 
 > **Note:** This project requires you to have Docker with [Compose](https://docs.docker.com/compose/) installed. Compose is a tool for defining and running multi-container Docker applications. With Compose, we use a YAML file to configure the application’s services. Then, with a single command, we create and start all the services from the configuration.
 
-Learning objectives:
+## Learning objectives:
 
 - How can we quickly read, understand and fix existing application code?
 - How do we QA running code by thinking about security, edge cases and performance?

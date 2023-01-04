@@ -4,7 +4,7 @@ $heading__levels: 1, 2, 3, 4, 5, 6;
   .e-heading__#{$h} {
     font-family: var(--theme-font--display);
     font-size: var(--theme-type-size--#{$h});
-    font-weight: 900;
+    font-weight: 500;
     margin: 0;
   }
   // unstyled headings from markdown/ body copy need some relational breathing space
@@ -19,9 +19,19 @@ h4,
   color: var(--theme-color--accent);
 }
 
-h2:not([class]) {
-  text-decoration: underline;
-  text-decoration-color: var(--theme-color--pop);
-  text-decoration-thickness: 4px;
-  text-underline-offset: 2px;
+h2:not([class])::after {
+  content: "";
+  width: 4ch;
+  height: 4px;
+  display: block;
+  background-image: linear-gradient(
+    45deg,
+    var(--theme-color--accent),
+    var(--theme-color--pop)
+  );
+}
+
+h1,
+.e-heading__1 {
+  font-weight: 900;
 }

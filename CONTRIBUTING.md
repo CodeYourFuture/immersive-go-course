@@ -1,3 +1,7 @@
++++
+title="Contributing"
++++
+
 # Contributing to Code Your Future Immersive Go Course
 
 This repository is a permissively licensed, open source work. We welcome contributions, both as corrections/improvements and additions, and recommend filing an issue for discussion before investing too much work.

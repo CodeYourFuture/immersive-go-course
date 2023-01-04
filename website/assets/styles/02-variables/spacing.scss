@@ -23,4 +23,7 @@ $spacing__levels: 1, 2, 3, 4, 5, 6;
   --theme-spacing--offset: var(--theme-spacing--1); //set by eye is fine
   --theme-spacing--linelength: 80ch; // readability maximum
   --theme-spacing--touchtarget: 48px; // access minimum
+  --theme-spacing--menu: calc(
+    var(--theme-spacing--gutter) * 2
+  ); // the big long menu trigger
 }

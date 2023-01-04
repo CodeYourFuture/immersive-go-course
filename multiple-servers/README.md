@@ -1,10 +1,13 @@
-# Multiple servers
++++
+title="Multiple servers"
+author="Tom Ashworth"
++++
 
 Create file server to serve static HTML files. Create an API server that serves JSON from a database. Run the API and file server as two separate servers. Try to load the website & see CORS issue. Put nginx in front of the file server and the API so they are on a single port and hostname. Learn about how to run services in VMs in the cloud. Replicate this local setup in the cloud on a single VM, with all services running on the same host. Route requests to the service.
 
 Timebox: 5 days
 
-Learning objectives:
+## Learning objectives:
 
 - Basic microservices ideas, separating concerns of services
 - Configure nginx to talk to 2-3 copies of the API server

@@ -10,6 +10,24 @@
     <title>{{.Site.Title}}</title>
     <meta name="description" content="{{.Site.Params.description}}" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- suppress FOUC-->
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        animation: fade-in 0.2s;
+      }
+      @keyframes fade-in {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+    </style>
     {{ $sass := resources.Match "styles/**.scss" | resources.Concat
     "bundled.css" }} {{ $style := $sass | toCSS | minify | fingerprint "md5" }}
     <link

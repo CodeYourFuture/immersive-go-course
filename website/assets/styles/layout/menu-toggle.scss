@@ -1,110 +1,19 @@
-//this is split up into two sections so it's easier to follow
-// first we make each shape
-// then we apply the shape to the desired state
-
-@mixin menu-transforms($icon: "cross") {
-  @if $icon == "cross" {
-    .c-menu-toggle__bar {
-      &--top {
-        transform: translateY(9px) rotateZ(45deg);
-        width: 30px;
-        opacity: 1;
-      }
-
-      &--middle {
-        width: 0;
-        opacity: 0;
-      }
-
-      &--bottom {
-        transform: translateY(-9px) rotateZ(-45deg);
-        width: 30px;
-        opacity: 1;
-      }
-    }
-  }
-
-  @if $icon == "burger" {
-    .c-menu-toggle__bar {
-      &--top {
-        transform: translateY(3px);
-        width: 30px;
-        opacity: 1;
-      }
-
-      &--middle {
-        opacity: 1;
-        width: 30px;
-      }
-
-      &--bottom {
-        transform: translateY(-3px);
-        width: 30px;
-        opacity: 1;
-      }
-    }
-  }
-  @if $icon == "burger-expand" {
-    .c-menu-toggle__bar {
-      &--top {
-        transform: translateY(-6px);
-        width: 30px;
-        opacity: 1;
-      }
-
-      &--middle {
-        opacity: 1;
-        width: 30px;
-      }
-
-      &--bottom {
-        transform: translateY(6px);
-        width: 30px;
-        opacity: 1;
-      }
-    }
-  }
-}
-//you can add other shapes if you like!
-
-// now let's make some rules about what events are signalled by what shapes
-
 .c-menu-toggle {
-  //overall rules
-  display: inline-block;
-  transition: all 0.7s ease;
-
+  --button-background-color: transparent;
+  --button-border-color: transparent;
+  --button-box-shadow: none;
+  padding-top: 0; // just make sure this is zeroed out so toggles always line up
   @include on-event {
-    color: var(--theme-color--accent);
-    cursor: pointer;
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--theme-color--pop);
   }
-  //general bar starting point
-  &__bar {
-    display: block;
-    height: 3px;
-    width: 30px;
-    opacity: 1;
-    background: currentColor;
-    margin: 6px auto;
-    transition: all 0.7s ease;
-  }
-  //start as burger
-  @include menu-transforms("burger");
-
-  // on hover and focus we tip our hand with colour in this style
-  // we change the pointer, because colour can never be the only signal
-  // we do this on the button itself because sometimes you can get "hover jank" (flickering) otherwise
-  &button:hover,
-  &button:focus & {
-    @media (hover) {
-      color: var(--theme-color--accent);
-      @include menu-transforms("burger-expand");
+  &__icon {
+    width: var(--theme-spacing--gutter);
+    height: auto;
+    min-height: none;
+    @include on-event(false, ".c-menu-toggle") {
+      mix-blend-mode: difference;
     }
-  }
-
-  // on active make a cross
-  .is-active &,
-  &button:active {
-    @include menu-transforms("cross");
   }
 }

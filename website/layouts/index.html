@@ -1,22 +1,19 @@
 {{ define "main" }}
 <article>
-    <header class="l-page__header c-page-header">
+  <header class="l-page__header c-page-header">
     <div class="c-page-header__container">
-      <h1
-        class="c-page-header__title e-heading__1 "
-      >
-        {{.Title}}
-      </h1>
+      <h1 class="c-page-header__title e-heading__1">{{.Title}}</h1>
     </div>
   </header>
-  
-  {{.Content}}</article>
+
+  {{.Content}}
+</article>
 <nav class="c-toc">
-    <ol>
-        {{ $currentPage := . }}
-    {{ range .Site.Menus.main }}
-    <li><a class="{{if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{end}}" href="{{ .URL }}" title="{{ .Title }}">{{ .Name }}</a></li>
-    {{ end }}
-    </ol>
+  <ul>
+    <li><a href="{{.Site.BaseURL}}about">About</a></li>
+    <li><a href="{{.Site.BaseURL}}versions">Versions</a></li>
+    <li><a href="{{.Site.BaseURL}}projects">Projects</a></li>
+    <li><a href="{{.Site.BaseURL}}primers">Primers</a></li>
+  </ul>
 </nav>
 {{ end }}

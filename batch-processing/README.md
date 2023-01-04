@@ -1,4 +1,7 @@
-# Batch Processing
++++
+title="Batch Processing"
+author="Tom Ashworth"
++++
 
 In this project, you'll build a simple image processing pipeline: reading a list of image URLs from a CSV file, downloading each image, processing it, and uploading it to cloud storage.
 
@@ -6,7 +9,7 @@ In this project, you'll build a simple image processing pipeline: reading a list
 
 > ⚠️ You need a GitHub repo to complete this because we'll be using [GitHub Actions](https://docs.github.com/en/actions).
 
-Learning objectives:
+## Learning objectives:
 
 - What is batch processing and how does it differ from building servers?
 - How do we use Go to use run existing software to complete tasks?

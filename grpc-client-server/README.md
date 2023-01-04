@@ -1,11 +1,15 @@
-# GRPC Client and Server Communication 
++++
+title="GRPC Client and Server Communication"
+author="Laura Nolan"
++++
 
 Timebox: 3 days
 
-Learning objectives:
- * Learn what gRPC is and how it differs from HTTP
- * Understand what kinds of issues can occur in a real system and how to defend against them
- * Learn what observability is, and what are some kinds of observability you'd find in use in production?
+## Learning objectives:
+
+- Learn what gRPC is and how it differs from HTTP
+- Understand what kinds of issues can occur in a real system and how to defend against them
+- Learn what observability is, and what are some kinds of observability you'd find in use in production?
 
 ## What is gRPC?
 
@@ -17,13 +21,13 @@ It is used commonly within an organisation (it isn't used from browsers), where 
 
 gRPC is not used to communicate from web browsers to servers (important because this is context they have).
 
- RPCs let you call a specific function on another computer. RPCs are highly structured; normally the request and response are encoded in efficient binary formats which are not human-readable. HTTP APIs are usually limited to CRUD (Create, Read, Update, Delete) operations and RPCs can perform any kind of operation. 
- 
- If you want to efficiently integrate two systems that you control, RPCs are a good choice. If you want to provide an API for use by developers outside of your organisation then HTTP APIs are generally a better choice, because they are simpler to develop against, all programming languages provide good HTTP support, and HTTP works in the browser. 
- 
- gRPC, which we will use in this exercise, is a RPC implementation that is fairly common in industry. 
+RPCs let you call a specific function on another computer. RPCs are highly structured; normally the request and response are encoded in efficient binary formats which are not human-readable. HTTP APIs are usually limited to CRUD (Create, Read, Update, Delete) operations and RPCs can perform any kind of operation.
 
-Read the [gRPC Introduction](https://grpc.io/docs/what-is-grpc/introduction/) and 
+If you want to efficiently integrate two systems that you control, RPCs are a good choice. If you want to provide an API for use by developers outside of your organisation then HTTP APIs are generally a better choice, because they are simpler to develop against, all programming languages provide good HTTP support, and HTTP works in the browser.
+
+gRPC, which we will use in this exercise, is a RPC implementation that is fairly common in industry.
+
+Read the [gRPC Introduction](https://grpc.io/docs/what-is-grpc/introduction/) and
 [gRPC Core Concepts](https://grpc.io/docs/what-is-grpc/core-concepts/) for an overview of gRPC.
 
 ## Run the gRPC Quick Start Hello World Example
@@ -39,11 +43,13 @@ Next, we will implement a simple prober service. Imagine that we want to verify 
 In a real production system, we could run several instances of our prober server in different regions and use one client to query all of the prober servers.
 
 In the same directory as this README you will find initial versions of:
- * the protocol buffer definition
- * prober server Go code
- * prober client Go code
 
-Generate the generated protobuf code: 
+- the protocol buffer definition
+- prober server Go code
+- prober client Go code
+
+Generate the generated protobuf code:
+
 ```console
 > protoc --go_out=. --go_opt=paths=source_relative \
     --go-grpc_out=. --go-grpc_opt=paths=source_relative \
@@ -51,42 +57,44 @@ Generate the generated protobuf code:
 ```
 
 Observe the new generated files:
+
 ```console
 > ls prober
 > prober.pb.go		prober.proto		prober_grpc.pb.go
 ```
 
-Read through `prober_grpc.pb.go` - this is the interface we will use in our code. This is how gRPC works: a `proto` format 
+Read through `prober_grpc.pb.go` - this is the interface we will use in our code. This is how gRPC works: a `proto` format
 gets generated into language-specific code that we can use to interact with gRPCs. If we're working with multiple programming languages
 that need to interact through RPCs, we can do this by generating from the same protocol buffer definition with the language-specific
-tooling. 
+tooling.
 
 Now run the server and client code. You should see output like this.
 
 ```console
 > go run prober_server/main.go
 > 2022/10/19 17:51:32 server listening at [::]:50051
-````
+```
 
 ```console
-> go run prober_client/main.go 
+> go run prober_client/main.go
 > 2022/10/19 17:52:15 Response Time: 117.000000
 ```
 
-We've now gained some experience with the protocol buffer format, learned 
+We've now gained some experience with the protocol buffer format, learned
 how to generate Go code from protocol buffer definitions, and called that code from Go programs.
 
 ## Implement prober logic
 
-Let's modify the prober service slightly. Instead of the simple one-off HTTP GET against a hardcoded google.com, we are going to modify the service to probe an HTTP endpoint N times and return the average time to GET that endpoint to the client. 
+Let's modify the prober service slightly. Instead of the simple one-off HTTP GET against a hardcoded google.com, we are going to modify the service to probe an HTTP endpoint N times and return the average time to GET that endpoint to the client.
 
 Change your prober request and response:
-* Add a field to the `ProbeRequest` for the number of requests to make.
-* Rename the field in `ProbeReply` (and perhaps add a comment) to make clear it's the _average_ response time of the several requests.
 
-Note that it's ok to rename fields in protobuf (unlike when we use JSON), because the binary encoding of protobuf messages doesn't include field names. 
+- Add a field to the `ProbeRequest` for the number of requests to make.
+- Rename the field in `ProbeReply` (and perhaps add a comment) to make clear it's the _average_ response time of the several requests.
+
+Note that it's ok to rename fields in protobuf (unlike when we use JSON), because the binary encoding of protobuf messages doesn't include field names.
 However, do note that we need to be very careful about removing proto fields, changing their types, or changing the numerical ordering of fields. In general, these kinds of changes will break your clients because they change the binary encoding format.
-You can [read more about backward/forward compatibility with protobufs](https://earthly.dev/blog/backward-and-forward-compatibility/) if you want. 
+You can [read more about backward/forward compatibility with protobufs](https://earthly.dev/blog/backward-and-forward-compatibility/) if you want.
 
 Remember that you'll need to re-generate your Go code after changing your proto definitions.
 
@@ -100,11 +108,11 @@ You can do arithmetic operations like addition and division on `time.Duration` v
 
 ## Add a client timeout
 
-Maybe the site we are probing is very slow (which can happen for all kinds of reasons, from network problems to excessive load), 
+Maybe the site we are probing is very slow (which can happen for all kinds of reasons, from network problems to excessive load),
 or perhaps the number of repetitions is very high.
-Either way, we never want our program to wait forever. 
-If we are not careful about preventing this then we can end up building systems where problems in one small part of the system 
-spread across all of the services that talk to that part of the system. 
+Either way, we never want our program to wait forever.
+If we are not careful about preventing this then we can end up building systems where problems in one small part of the system
+spread across all of the services that talk to that part of the system.
 
 On the client side, add a [timeout](https://pkg.go.dev/context#WithTimeout) to stop waiting after 1 second.
 
@@ -122,30 +130,32 @@ Modify your code and proto format to handle these cases.
 These sections are optional - do them for an extra challenge if time permits.
 
 ### Part 1: Add Prometheus Metrics
+
 Let's learn something about how to monitor applications.
 
 In software operations, we want to know what our software is doing and how it is performing.
-One very useful technique is to have our program export metrics. Metrics are basically values that your 
-program makes available (the industry standard is to export and scrape over HTTP). 
+One very useful technique is to have our program export metrics. Metrics are basically values that your
+program makes available (the industry standard is to export and scrape over HTTP).
 
 Specialised programs, such as Prometheus, can then fetch metrics regularly
 from all the running instances of your program, store the history of these metrics, and do useful arithmetic on them
-(like computing rates, averages, and maximums). We can use this data to do troubleshooting and to alert if things 
+(like computing rates, averages, and maximums). We can use this data to do troubleshooting and to alert if things
 go wrong.
 
 Read the [Overview of Prometheus](https://prometheus.io/docs/introduction/overview/).
 
 Now add Prometheus metrics to your prober server. Every time you execute a probe, update a `gauge` metric that tracks the latency.
-Add a `label` specifying the endpoint being probed. 
+Add a `label` specifying the endpoint being probed.
 The [Prometheus Guide to Instrumenting a Go Application](https://prometheus.io/docs/guides/go-application/) has all the information you need to do this.
 
-Once you've run your program, use your client to execute probes against some endpoint. 
-Now use the `curl` program or your browser to view the metrics. 
+Once you've run your program, use your client to execute probes against some endpoint.
+Now use the `curl` program or your browser to view the metrics.
 You should see a number of built-in Go metrics, plus your new gauge.
 
 If you use your client to start probing a second endpoint, you should see a second labelled metric appear.
 
 ### Part 2: Scrape Prometheus Metrics
+
 The final step is to set up the Prometheus application to periodically pull metrics from your `prober_server`.
 
 The easiest way to run Prometheus locally is in Docker. This way we can run an up-to-date version that has been built by the Prometheus maintainers.
