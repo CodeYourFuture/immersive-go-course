@@ -17,7 +17,7 @@
         href="{{$.Site.BaseURL}}about/contributors"
         >{{.}}</a
       >
-      {{ end}}
+      {{ end}} {{with .Params.showTitle }}{{ else }}
       <h2 class="c-page-header__lastmod">
         .Lastmod
         <a href="{{.Site.Params.tree}}{{.File.BaseFileName}}">
@@ -31,7 +31,7 @@
           {{ end}}
         </a>
       </h2>
-      {{ if and (gt .WordCount 400 ) (.TableOfContents) }}
+      {{ end}} {{ if and (gt .WordCount 400 ) (.TableOfContents) }}
       <section class="c-page-header__toc c-toc" id="toc">
         {{ .TableOfContents }}
       </section>
