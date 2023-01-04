@@ -44,6 +44,10 @@
     text-transform: lowercase;
   }
 
+  &__home {
+    text-decoration: none;
+  }
+
   &__secondary {
     display: flex;
     justify-content: flex-end;
