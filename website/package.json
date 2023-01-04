@@ -8,7 +8,8 @@
     "node" : ">=18.12.1"
   },
   "scripts": {
-    "dev": "node index.js && hugo server"
+    "dev": "node index.js && hugo server",
+    "populate": "node index.js"
   },
   "license": "MIT"
 }
