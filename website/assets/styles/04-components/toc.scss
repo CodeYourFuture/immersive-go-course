@@ -3,7 +3,7 @@
 
 .c-toc {
   color: var(--theme-color--accent);
-
+  max-width: var(--theme-spacing--container);
   border: var(--theme-border--thick);
 
   ol {
