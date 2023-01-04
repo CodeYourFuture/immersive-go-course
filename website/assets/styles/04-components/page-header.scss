@@ -25,7 +25,7 @@
     " . ... . " var(--gap)
     " . container ." minmax(0, 1fr)
     " . ... ." 0 / minmax(var(--gap), 1fr)
-    var(--theme-spacing--container) minmax(var(--gap), 1fr);
+    calc(var(--theme-spacing--container) - var(--theme-spacing--menu)) minmax(var(--gap), 1fr);
 
   pointer-events: none; // just make sure we retain the option of breakout hero headers without interfering with the weirdy menu button
 
@@ -37,7 +37,7 @@
       "breadcrumbs .   author   " min-content
       "title       .   .        " min-content
       "toc         toc toc      " auto
-      ".           .   lastmod  " min-content / 1fr var(--gap) minmax(0, 1fr) var(--theme-spacing--menu);
+      ".           .   lastmod  " min-content / 1fr var(--gap) minmax(0, 1fr);
   }
   &__title {
     line-height: 1;

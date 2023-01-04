@@ -8,7 +8,7 @@
       var(--theme-spacing--gutter),
       1fr
     )
-    var(--theme-spacing--container) minmax(var(--theme-spacing--menu), 1fr);
+    calc(var(--theme-spacing--container) - var(--theme-spacing--menu)) minmax(var(--theme-spacing--gutter), 1fr);
 
   &__nav {
     display: grid;

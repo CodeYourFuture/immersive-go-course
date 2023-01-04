@@ -1,14 +1,11 @@
 .l-footer {
   position: relative;
   @include grid-assign(impressum, mode);
-  --expander: calc(
-    var(--theme-spacing--container) - var(--theme-spacing--touchtarget)
-  );
 
   grid-template:
     "......... ." var(--theme-spacing--6)
     "impressum mode" minmax(0, 1fr)
     "......... mode" var(--theme-spacing--touchtarget)
     "......... ." var(--theme-spacing--gutter) /
-    var(--expander) var(--theme-spacing--touchtarget);
+    1fr var(--theme-spacing--touchtarget);
 }
