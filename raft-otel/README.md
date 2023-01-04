@@ -121,7 +121,7 @@ Create a [Board](https://docs.honeycomb.io/working-with-your-data/boards/) in ho
 ### Part 3: Debugging latency and failures using distributed tracing
 
 Bendersky's implementation of RAFT allows you to simulate unreliable RPCs. Enable this (if you wrote your own implementation then you will 
-need to add this kind of chaos capability as a feature first). 
+need to add this kind of chaos capability as a feature first - for example, adding an environment variable which, if set, will drop some percent of requests completely, and add random latency to others). 
 Now, use Honeycomb to observe the dropped RPCs and delays that 
 the simulation injects. Did these show up on your board from Part 2?
 
