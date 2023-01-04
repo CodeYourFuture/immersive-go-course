@@ -142,4 +142,6 @@ costly in terms of network, storage, or SaaS bills.
 For this reason, many distributed tracing users use sampling or ratelimiting to control the number of traces that are
 collected. Read about [OTel Sampling and Ratelimiting](https://uptrace.dev/opentelemetry/sampling.html).
 
-Modify your solution to support sampling a specific percentage of requests, and to limit the total number of traces sent to no more than 100 per minute.
+Modify your solution to support sampling a specific percentage of requests, and to limit the total number of traces sent to no more than 100 per minute. (Hint: You typically want to get all or no spans for a whole trace, rather than dropping spans independently of the trace they're in).
+
+Consider also whether some requests may be more important to trace than others. What may make a request more or less interesting than others?
