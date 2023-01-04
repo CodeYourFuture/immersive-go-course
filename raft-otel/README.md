@@ -89,14 +89,42 @@ You can either
  2) use Bendersky's code, after having thoroughly read it and understood it
  3) write your own implementation, using Bendersky's as a reference if you get stuck
 
-Reading code written by others is a useful skill to have, so if you opt to create your own implementation, you should review Bendersky's code.
+**Note:** Note that Bendersky's code as it stands does not include a main package for actually running standalone RAFT servers.
+It instead includes a test harness that simulates running a cluster in one process. 
+We want to run a real cluster sending real RPCs between the members, so that we can see traces composed of spans from different instances.
+In order to do this we will need to make some straightforward changes to Bendersky's codebase: 
+ * add a `main` package (with code similar to the test harness setup code)
+ * pass in the list of cluster members (i.e. a list of host:port pairs) as an argument to the program (in a real-world application we would likely use some form of service discovery)
+ * change the code in `server.go` to send and receive gRPC calls (in a similar fashion to the [gRPC Client-Server project](https://github.com/CodeYourFuture/immersive-go-course/tree/main/grpc-client-server))
+
+Reading code written by others is a useful skill to have, so if you opt to create your own implementation, you should still review Bendersky's code.
 Does it differ from yours in any significant respect?
 
 By the end of Part 1 we should have a running RAFT cluster with 5 instances. 
 We may choose to run our RAFT cluster locally using `docker-compose`, `minikube`, or any other appropriate tool.
 
+If you are using Bendersky's code, you will notice that his RAFT implementation implements a method `func (cm *ConsensusModule) Submit(command interface{}) bool`.
+This simply appends the `command` provided to a log. 
+
+**Note:** What Bendersky is doing here is rather sketchily demonstrating a theoretical [Finite State Machine](https://en.wikipedia.org/wiki/Finite-state_machine) (FSM).
+FSMs are a computer science concept: the idea that you can implement a program's core state as an abstract machine, with a specific set of states
+and a specific set of transitions between those states. Externally-provided commands are the trigger to move between states.
+
+Try modifying your code to instead implement Get, Set, and CompareAndSet commands - a highly-consistent key-value store - and make these available via gRPC methods. 
+There is already a `storage` module that you can use.
+
+**Note:** [CompareAndSwap](https://en.wikipedia.org/wiki/Compare-and-swap) (also called CompareAndSet, or CAS) 
+is a very useful pattern for concurrent systems that lets you update a key to a given value only if that key already has a specific value.
+This is useful for implementing sequences of operations where we read a value, perform some computation that modifies that value, and then write that value back - 
+but without potentially overwriting any changes to that value that other processes might have performed. 
+
+Next, write a client that uses your RAFT cluster to perform Sets, Gets, and CompareAndSets.
+Bendersky's code also doesn't do anything if you send a `Submit` to any server other than the leader. It may be useful to have your program return the 
+address (host:port) of the leader instead, as part of your gRPC reply, along with an indication that the operation was not attempted. Your client can then 
+retry the operation against the leader.
+
 Please timebox this part of the project to no more than two days, in order to leave time for the other sections.
-At the start of the third day, if your implementation is not complete, use Bendersky's. You can come back and complete your 
+At the start of the third day, if your implementation is not complete, begin modifying Bendersky's. You can come back and complete your 
 own implementation if you have time at the end of the sprint.
 
 ### Part 2: Add distributed tracing
@@ -142,6 +170,10 @@ costly in terms of network, storage, or SaaS bills.
 For this reason, many distributed tracing users use sampling or ratelimiting to control the number of traces that are
 collected. Read about [OTel Sampling and Ratelimiting](https://uptrace.dev/opentelemetry/sampling.html).
 
-Modify your solution to support sampling a specific percentage of requests, and to limit the total number of traces sent to no more than 100 per minute. (Hint: You typically want to get all or no spans for a whole trace, rather than dropping spans independently of the trace they're in).
+Modify your solution to support sampling a specific percentage of requests, and to limit the total number of traces sent to no more than 20 per minute per cluster member. 
+(Hint: You typically want to get all or no spans for a whole trace, rather than dropping spans independently of the trace they're in).
 
 Consider also whether some requests may be more important to trace than others. What may make a request more or less interesting than others?
+Note that certain kinds of sampling strategies are not possible to implement at the client. For instance, it is not possible to sample only failed 
+requests without first collecting all the spans: because we only know whether the request succeeds at the end of the operation.
+You can read about some of these concerns in [this article about head-based and tail-based sampling](https://uptrace.dev/opentelemetry/sampling.html).
