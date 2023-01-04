@@ -1,4 +1,5 @@
 .l-main {
+  max-width: var(--theme-spacing--container);
   @include on-event {
     outline: none;
   }
