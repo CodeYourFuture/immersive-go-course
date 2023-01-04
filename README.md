@@ -1,3 +1,7 @@
++++
+title="Projects"
++++
+
 ![](./readme-assets/giphy.gif)
 
 # Let's go!
