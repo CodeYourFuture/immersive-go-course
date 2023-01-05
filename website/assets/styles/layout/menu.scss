@@ -2,11 +2,13 @@
   --gap: var(--theme-spacing--gutter);
   @include grid-assign(heading, action, primary, secondary, container);
   @include pattern(graph, currentColor, b, false, 0.2);
+  overflow: hidden;
   background-color: var(--theme-color--paper);
 
   padding: 0;
   box-shadow: -20px -2px 30px var(--theme-color--ink-fade);
-
+  border-right: 1px solid var(--theme-color--contrast-max);
+  z-index: 1;
   min-height: calc(100vh - calc(100vh - 100%));
   min-width: var(--theme-spacing--container-min);
   max-width: calc(2 * var(--theme-spacing--container-min));
@@ -15,12 +17,13 @@
   top: 0;
   right: -100%;
   visibility: hidden;
-  transition: right cubic-bezier(0.895, 0.03, 0.685, 0.22) 0.4s;
 
   &.is-active {
     visibility: visible;
-    right: var(--gap);
+    right: calc(var(--gap) * 2);
     z-index: 1;
+    outline: none;
+    animation: slide-menu 0.8s ease-out forwards;
   }
 
   grid-template: "container";
@@ -29,12 +32,13 @@
     display: grid;
     grid-template:
       ". ....... ......... ......... ." var(--gap)
-      ". heading ......... action    ." auto
+      ". heading ......... action    ." min-content
       ". ....... ......... ......... ." var(--gap)
       ". primary primary   primary   ." 1fr
       ". ....... secondary secondary ." var(--theme-spacing--touchtarget)
       ". ....... ......... ......... ." var(--gap) / var(--gap)
       1fr 1fr var(--theme-spacing--touchtarget) var(--gap);
+    align-items: center;
   }
   &__heading {
     font: var(--theme-font--brand);
@@ -42,6 +46,10 @@
 
   &__link {
     text-transform: lowercase;
+  }
+
+  &__home {
+    text-decoration: none;
   }
 
   &__secondary {
@@ -57,5 +65,20 @@
     @media (prefers-color-scheme: dark) {
       mix-blend-mode: overlay;
     }
+  }
+}
+
+@keyframes slide-menu {
+  0% {
+    transform: translateX(100vw);
+  }
+  40% {
+    transform: translateX(100vw);
+  }
+  50% {
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: translateX(0);
   }
 }

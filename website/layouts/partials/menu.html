@@ -6,14 +6,28 @@
   tabindex="0"
 >
   <div class="l-menu__container">
-    <h2 class="l-menu__heading e-heading__2">{{.Site.Title}}</h2>
+    <h2 class="l-menu__heading e-heading__2">
+      <a href="/" class="l-menu__home">{{.Site.Title}}</a>
+    </h2>
     <button
       class="l-menu__action c-menu-toggle e-button js-menu-toggle"
       id="close-menu"
     >
-      <span class="c-menu-toggle__bar c-menu-toggle__bar--top"></span>
-      <span class="c-menu-toggle__bar c-menu-toggle__bar--middle"></span>
-      <span class="c-menu-toggle__bar c-menu-toggle__bar--bottom"></span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="c-menu-toggle__icon"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+
       <span class="is-invisible">Close Menu.</span>
     </button>
     <ul class="l-menu__primary e-list">
@@ -56,7 +70,7 @@
           </svg>
         </a>
       </li>
-      {{ if eq .Kind "page"}}
+      {{ if eq .Section "primers"}}
       <li class="l-menu__item e-list__item">
         <a class="l-menu__link e-link" href="#toc" title="table of contents">
           <svg

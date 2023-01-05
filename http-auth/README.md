@@ -1,10 +1,13 @@
-# Servers & HTTP requests
++++
+title="Servers & HTTP requests"
+author="Tom Ashworth"
++++
 
 In this project we are going to learn about long-lived processes, some networking and the fundamentals of HTTP.
 
 Timebox: 6 days
 
-Learning objectives:
+## Learning objectives:
 
 - Use Go's net/http package to build start a simple server that responds to local requests
 - Get to know HTTP GET and response codes

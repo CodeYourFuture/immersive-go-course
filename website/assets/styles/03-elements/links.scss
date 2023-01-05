@@ -13,6 +13,7 @@ a:visited:not([class]),
 
   @include on-event {
     text-decoration: underline;
+    outline: none;
   }
   &:focus {
     outline: 2px dotted;

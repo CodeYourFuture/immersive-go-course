@@ -8,16 +8,14 @@
       var(--theme-spacing--gutter),
       1fr
     )
-    var(--theme-spacing--container) minmax(var(--theme-spacing--gutter), 1fr);
+    calc(var(--theme-spacing--container) - var(--theme-spacing--menu)) minmax(var(--theme-spacing--gutter), 1fr);
 
   &__nav {
     display: grid;
 
-    grid-template:
-      ". heading heading action" auto / min-content 1fr var(
-        --theme-spacing--touchtarget
-      )
-      var(--theme-spacing--touchtarget);
+    grid-template: ". heading action" auto / min-content 1fr var(
+        --theme-spacing--menu
+      );
   }
 
   &__heading {
@@ -25,9 +23,6 @@
     color: var(--theme-color--brand);
     display: flex;
     align-items: center;
-  }
-  &__logo {
-    width: min-content;
   }
 
   &__action.is-fixed {
@@ -37,10 +32,16 @@
     right: 0;
     top: 0;
     height: 100vh;
+    z-index: 1;
+    min-width: var(--theme-spacing--menu);
+    max-width: var(--theme-spacing--menu);
     display: flex;
     flex-flow: column;
     justify-content: flex-start;
     gap: 0;
     padding-top: var(--theme-spacing--gutter);
+    @include on-event {
+      background-color: var(--theme-color--pop);
+    }
   }
 }

@@ -1,4 +1,7 @@
-# Docker & Cloud Deployment
++++
+title="Docker & Cloud Deployment"
+author="Tom Ashworth"
++++
 
 In this project, you'll build a simple Go server application and Dockerise it to run within a container. You'll write tests that run against the container, and then build GitHub actions to automate continuous testing and release of the application. You'll then run it in the cloud by pushing the container image to Amazon AWS Elastic Container Repository, and then launch it in Amazon AWS Elastic Container Service using the user interface.
 
@@ -6,7 +9,7 @@ In this project, you'll build a simple Go server application and Dockerise it to
 
 > ⚠️ You need a GitHub repo to complete this because we'll be using [GitHub Actions](https://docs.github.com/en/actions). If you are not already working in your own fork of the `immersive-go-course` repository, now would be a good time!
 
-Learning objectives:
+## Learning objectives:
 
 - Set up Docker locally
 - `Dockerfile` syntax & how to containerise an application

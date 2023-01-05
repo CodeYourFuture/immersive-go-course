@@ -14,7 +14,12 @@ $fallBackProjects := readDir "static/pictures/depths" | shuffle |first 1 }}
   {{ $cover := $cover.Fill "600x200" }}
 
   <!-- now show it -->
-  <img class="c-card__image" src="{{ $cover.RelPermalink }}" alt="" />
+  <img
+    loading="lazy"
+    class="c-card__image"
+    src="{{ $cover.RelPermalink }}"
+    alt=""
+  />
   {{ else }}
 
   <!-- but maybe just random pictures -->

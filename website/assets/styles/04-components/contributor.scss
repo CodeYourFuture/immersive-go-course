@@ -12,9 +12,13 @@
     "avatar name name" auto
     "avatar .... ......." 1fr/ 100px 1fr min-content;
   gap: var(--theme-spacing--1);
-  @include backdrop(true, true, 1);
+
   &__name {
     @include pin(center left);
+    font-weight: 900;
+    @include on-event(false, ".c-contributor") {
+      text-decoration: underline;
+    }
   }
   &__avatar {
     clip-path: circle();

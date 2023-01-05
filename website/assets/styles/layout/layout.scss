@@ -1,9 +1,13 @@
 .l-layout {
-  @include grid-assign(header, menu, main, footer);
+  @include grid-assign(header, main, footer);
   grid-template:
-    " header header header" auto
-    " ...... main   ......" 1fr
-    " footer footer footer" auto / minmax(var(--theme-spacing--gutter), 1fr)
-    var(--theme-spacing--container) minmax(var(--theme-spacing--gutter), 1fr);
+    " header header header ." auto
+    " ...... main   ...... ." 1fr
+    " ...... footer ...... ." auto /
+    minmax(var(--theme-spacing--gutter), 1fr)
+    calc(var(--theme-spacing--container) - var(--theme-spacing--menu))
+    minmax(var(--theme-spacing--gutter), 1fr)
+    var(--theme-spacing--menu);
+
   min-height: 100vh;
 }

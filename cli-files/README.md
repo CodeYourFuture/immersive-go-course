@@ -1,10 +1,13 @@
-# CLI & Files
++++
+title="CLI & Files"
+author="Tom Ashworth"
++++
 
 In this project you're going to get familiar with the [Go programming language][go] by rebuilding two very common tools that programmers and computer administrators use all the time: [cat][cat] and [ls][ls].
 
 Timebox: 4 days
 
-Objectives:
+## Objectives:
 
 - Install and use [cobra][cobra]
 - Use go build/go install/go get etc
