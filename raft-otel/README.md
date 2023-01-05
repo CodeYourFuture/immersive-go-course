@@ -110,7 +110,8 @@ This simply appends the `command` provided to a log.
 FSMs are a computer science concept (that you don't need to know any details about for this project): the idea that you can implement a program's core state as an abstract machine, with a specific set of states
 and a specific set of transitions between those states. Externally-provided commands are the trigger to move between states.
 
-Try modifying your code to instead implement Get, Set, and CompareAndSet commands - a highly-consistent key-value store - and make these available via gRPC methods. 
+Try modifying your code to instead implement Get, Set, and CompareAndSet commands - a highly-consistent key-value store - and make these available via gRPC methods.
+For instance, a Set command may have two fields, a key and a value, and a Get command may have one field, a key. If your RAFT cluster accepts a Set command setting X = 10, then a Set command setting X = 20, and then gets a Get command for X, it should return 20.
 There is already a `storage` module that you can use.
 
 **Note:** [CompareAndSwap](https://en.wikipedia.org/wiki/Compare-and-swap) (also called CompareAndSet, or CAS) 
