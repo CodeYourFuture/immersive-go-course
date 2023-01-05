@@ -107,7 +107,7 @@ If you are using Bendersky's code, you will notice that his RAFT implementation 
 This simply appends the `command` provided to a log. 
 
 **Note:** What Bendersky is doing here is rather sketchily demonstrating a theoretical [Finite State Machine](https://en.wikipedia.org/wiki/Finite-state_machine) (FSM).
-FSMs are a computer science concept: the idea that you can implement a program's core state as an abstract machine, with a specific set of states
+FSMs are a computer science concept (that you don't need to know any details about for this project): the idea that you can implement a program's core state as an abstract machine, with a specific set of states
 and a specific set of transitions between those states. Externally-provided commands are the trigger to move between states.
 
 Try modifying your code to instead implement Get, Set, and CompareAndSet commands - a highly-consistent key-value store - and make these available via gRPC methods. 
