@@ -36,9 +36,8 @@ Read about the operational characteristics of distributed consensus algorithms i
 
 ### Project work for this section {#project-work-for-this-section}
 
-Follow along with this long tutorial and try to get a working Raft implementation running. This is a real programming challenge.
-
-- [https://eli.thegreenplace.net/2020/implementing-raft-part-0-introduction/](https://eli.thegreenplace.net/2020/implementing-raft-part-0-introduction/)
+See [raft-otel](https://github.com/CodeYourFuture/immersive-go-course/tree/main/raft-otel) project.
+This project is an opportunity to explore the RAFT distributed consensus protocol through the medium of distributed tracing.
 
 ## Further Optional Reading {#further-optional-reading}
 
