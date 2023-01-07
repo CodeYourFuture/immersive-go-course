@@ -2,7 +2,7 @@ name: buggy-app tests
 on: [push]
 defaults:
   run:
-    working-directory: buggy-app
+    working-directory: projects/buggy-app
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -11,8 +11,8 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version-file: "buggy-app/go.mod"
-          cache-dependency-path: "buggy-app/go.sum"
+          go-version-file: "projects/buggy-app/go.mod"
+          cache-dependency-path: "projects/buggy-app/go.sum"
           cache: true
       - name: Test
         run: make migrate test
