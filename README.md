@@ -36,6 +36,12 @@ Most exercises finish with a list of optional extension tasks. It's highly recom
    <br>Build an image processing pipeline with cloud storage
 1. [Buggy App](./buggy-app/)
    <br>Run, debug, and fix a buggy application
+1. [Memcache](./memcached-clusters)
+   <br>Explore sharding and replication of state
+1. [Kafka Cron](./kafka-cron)
+   <br>Build a distributed multi-server application handling variable load, with Kafka as a task queue
+1. [RAFT and OTel](./raft-otel)
+   <br>Build a complex distributed system for with strong consistency, and instrument it with tracing
 
 ## Contributing
 
