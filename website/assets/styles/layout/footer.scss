@@ -1,11 +1,10 @@
 .l-footer {
-  position: relative;
-  @include grid-assign(impressum, mode);
+  @include grid-assign(github, impressum, mode);
 
   grid-template:
-    "......... ." var(--theme-spacing--6)
-    "impressum mode" minmax(0, 1fr)
-    "......... mode" var(--theme-spacing--touchtarget)
-    "......... ." var(--theme-spacing--gutter) /
-    1fr var(--theme-spacing--touchtarget);
+    "...... . ......... ." var(--theme-spacing--6)
+    "github . impressum mode" minmax(0, 1fr)
+    "github . ......... mode" var(--theme-spacing--touchtarget)
+    "...... . ......... ." var(--theme-spacing--gutter) /
+    var(--theme-spacing--touchtarget) var(--theme-spacing--1) 1fr var(--theme-spacing--touchtarget);
 }
