@@ -1,3 +1,8 @@
++++
+title="RAFT implementation"
+author="Laura Nolan"
++++
+
 # RAFT implementation with Distributed Tracing
 
 In this project we're going to build (or reuse) an implementation of RAFT, a distributed consensus algorithm, and 
