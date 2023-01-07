@@ -3,29 +3,10 @@ $fallBackProjects := readDir "static/pictures/depths" | shuffle |first 1 }}
 
 <a class="c-card" href="{{.Permalink}}">
   <h3 class="c-card__title">{{.Title}}</h3>
-  {{ with .Params.author }}
-  <p class="c-card__byline">{{. }}</p>
-  {{ end}}
-  <!--cut cover images -->
-  {{ $cover := .Resources.GetMatch "hero" }}
-  <!-- make sure the cover image exists first!-->
-  {{ if $cover }}
-  <!-- now resize the resource-->
-  {{ $cover := $cover.Fill "600x200" }}
-
-  <!-- now show it -->
-  <img
-    loading="lazy"
-    class="c-card__image"
-    src="{{ $cover.RelPermalink }}"
-    alt=""
-  />
-  {{ else }}
-
-  <!-- but maybe just random pictures -->
+  <!-- just random pictures -->
   <img loading="lazy" class="c-card__image" src="{{ if eq .Section "projects"
   }}{{ range $fallBackProjects }}{{ $.Site.BaseURL }}pictures/depths/{{ .Name
-  }}{{ end }}{{ else }}{{ range
+  }}{{ end }} {{ else }}{{ range
   $fallBack}}{{$.Site.BaseURL}}pictures/svgs/neons/{{ .Name }}{{ end }}{{ end
-  }}" alt="" /> {{end}}
+  }}" alt="" />
 </a>

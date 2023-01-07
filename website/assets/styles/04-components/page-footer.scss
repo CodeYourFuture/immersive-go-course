@@ -2,8 +2,8 @@
   border-top: var(--theme-border--thick);
   border-image: var(--theme-border-image);
 
-  &__author,
-  &__author-link {
+  &__section,
+  &__section-link {
     font: 100 var(--theme-type-size--3) var(--theme-font--display);
     margin-bottom: var(--theme-spacing--6);
     text-decoration: none;
