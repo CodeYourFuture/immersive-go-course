@@ -18,7 +18,7 @@
     breadcrumbs,
     lastmod,
     toc,
-    author
+    edit
   );
   @include grid-breakout();
   grid-template:
@@ -34,7 +34,7 @@
     display: grid;
     grid-template:
       ".           .   .        " var(--gap)
-      "breadcrumbs .   author   " min-content
+      "breadcrumbs .   edit     " min-content
       "title       .   .        " min-content
       "toc         toc toc      " auto
       ".           .   lastmod  " min-content / 1fr var(--gap) minmax(0, 1fr);
@@ -45,14 +45,14 @@
     text-shadow: -2px 1px 0 var(--theme-color--pop);
   }
   &__lastmod,
-  &__author {
+  &__edit {
     background: var(--theme-color--accent);
     color: var(--theme-color--contrast-max);
     font-size: var(--theme-type-size--6);
     padding: calc(var(--theme-spacing--1) / 2);
     text-align: right;
   }
-  &__author {
+  &__edit {
     background: var(--theme-color--ink-fade);
     color: var(--theme-color--ink);
     clip-path: var(--arrow);
