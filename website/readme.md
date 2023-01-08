@@ -4,9 +4,7 @@ This is a super small static Hugo site. Assets are handled by Hugo Pipes and the
 
 ## Important, parent repo is source of truth
 
-Project pages are the readmes from the parent repo copied in to Hugo on build. If you want to change the project page content, open a PR there.
-
-The other content -- /workbooks, /primers, /about -- has been exported from Google Docs and placed in version control here. Let me know if you have a better idea!
+Content pages are readmes from the root folder copied in to Hugo on build. If you want to change the content, open a PR there.
 
 ### first run
 
@@ -17,16 +15,22 @@ https://gohugo.io/installation/
 brew install hugo
 ```
 
-You need Node ^18 LTS so if you're not running that
+### to populate the content folder
 
 ```zsh
-nvm use 18.12.1
+./website/build.sh
 ```
 
 ### to develop
 
 ```zsh
-yarn dev
+hugo serve
 ```
 
-That's it. It's probably running on `/localhost:1313`
+### to stage
+
+Open a PR to main and Netlify will create a branch preview for you.
+
+### to deploy
+
+Site deploys automatically when you merge your PR to main.
