@@ -3,25 +3,27 @@
   @include grid-assign(heading, action, primary, secondary, container);
   @include pattern(graph, currentColor, b, false, 0.2);
   overflow: hidden;
-  background-color: var(--theme-color--paper);
-
-  padding: 0;
-  box-shadow: -20px -2px 30px var(--theme-color--ink-fade);
-  border-right: 1px solid var(--theme-color--contrast-max);
-  z-index: 1;
-  min-height: calc(100vh - calc(100vh - 100%));
-  min-width: var(--theme-spacing--container-min);
-  max-width: calc(2 * var(--theme-spacing--container-min));
-
   position: fixed;
   top: 0;
   right: -100%;
   visibility: hidden;
+  background-color: var(--theme-color--paper);
+  border-right: 1px solid var(--theme-color--contrast-max);
+  min-height: calc(100vh - calc(100vh - 100%));
+  min-width: var(--theme-spacing--container-min);
+  max-width: calc(2 * var(--theme-spacing--container-min));
+  z-index: 1;
+
+  --box-shadow: var(--theme-color--ink-fade);
+  box-shadow: -20px -2px 30px var(--box-shadow);
+
+  .is-dark-mode & {
+    --box-shadow: var(--theme-color--contrast-max);
+  }
 
   &.is-active {
     visibility: visible;
-    right: calc(var(--gap) * 2);
-    z-index: 1;
+    right: var(--theme-spacing--menu);
     outline: none;
     animation: slide-menu 0.8s ease-out forwards;
   }
@@ -40,16 +42,20 @@
       1fr 1fr var(--theme-spacing--touchtarget) var(--gap);
     align-items: center;
   }
-  &__heading {
-    font: var(--theme-font--brand);
-  }
 
   &__link {
     text-transform: lowercase;
+    text-decoration: none;
   }
 
+  &__heading {
+    font: var(--theme-font--brand);
+  }
   &__home {
-    text-decoration: none;
+    @include on-event {
+      outline: 1px dotted;
+      color: var(--theme-color--accent);
+    }
   }
 
   &__secondary {
