@@ -1,7 +1,5 @@
 +++
 title="Preparation"
-author="Daniel Wagner Hall"
-weight="1"
 +++
 
 ## Prerequisite learning

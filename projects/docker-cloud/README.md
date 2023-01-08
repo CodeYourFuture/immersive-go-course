@@ -1,6 +1,5 @@
 +++
 title="Docker & Cloud Deployment"
-author="Tom Ashworth"
 +++
 
 In this project, you'll build a simple Go server application and Dockerise it to run within a container. You'll write tests that run against the container, and then build GitHub actions to automate continuous testing and release of the application. You'll then run it in the cloud by pushing the container image to Amazon AWS Elastic Container Repository, and then launch it in Amazon AWS Elastic Container Service using the user interface.

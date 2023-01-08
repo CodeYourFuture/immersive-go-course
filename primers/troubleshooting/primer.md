@@ -1,7 +1,5 @@
 +++
-title="Troubleshooting Primer"
-author="Laura Nolan and Radha Kumari"
-date="28 Dec 2022 12:22:11 BST"    
+title="Troubleshooting Primer"   
 +++
 
 # Troubleshooting Primer

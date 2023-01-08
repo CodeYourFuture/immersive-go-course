@@ -1,7 +1,5 @@
 +++
-title="4. Asynchronous Work and Pipelines"
-author="Laura Nolan"
-date="28 Dec 2022 12:22:11 BST"    
+title="4. Asynchronous Work and Pipelines" 
 +++
 
 # 4

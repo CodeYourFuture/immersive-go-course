@@ -1,6 +1,5 @@
 +++
-title="Versions"
-date="28 Dec 2022 12:22:11 BST"    
+title="Versions"   
 +++
 
 ## CYF+ Iterations Log
