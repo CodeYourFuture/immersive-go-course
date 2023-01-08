@@ -1,3 +1,4 @@
+{{ if or (eq .Section "primers") (eq .Section "projects")}}
 <footer class="c-page-footer c-copy">
   <h4 class="c-page-footer__section">
     <a
@@ -43,3 +44,4 @@
     >{{ end}} {{ end}}
   </nav>
 </footer>
+{{ end }}
