@@ -10,7 +10,7 @@ for dir in $(find . -maxdepth 1 -type d -not -name '.*' -not -name website -not 
   cp -r "${dir}" website/content/projects/
 done
 
-cp -r primers workbooks website/content/
+cp -r primers website/content/
 
 mkdir -p website/content/about
 cp CONTRIBUTING.md website/content/about/contributing.md
