@@ -12,10 +12,12 @@
         {{.Title}}
       </h1>
       {{with .Params.showTitle }}{{ else }} {{ if or (eq .Section "projects")
-      (eq .Section "primers")}}
+      (eq .Section "primers")}} {{$pathAsString := print $.Site.Params.tree
+      .Path }} {{$changeIndexToReadMe := replace $pathAsString "index.md"
+      "README.md"}}
       <a
         class="c-page-header__edit e-heading__5 e-link is-none--lt-container"
-        href="{{$.Site.Params.tree}}"
+        href="{{$changeIndexToReadMe}}"
         >Edit on Github</a
       >
       {{ end}} {{ partial "lastmod.html" . }} {{ end}} {{ if and (gt .WordCount
