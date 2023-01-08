@@ -18,7 +18,7 @@ brew install hugo
 ### to populate the content folder
 
 ```zsh
-./build.sh
+./website/build.sh
 ```
 
 ### to develop
