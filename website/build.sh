@@ -1,6 +1,19 @@
 #!/bin/bash -eu
 
-if "$(command -v hugo)" >/dev/null 2>/dev/null; then
+case "$(uname)" in
+  Darwin)
+    sed_i=("sed" "-i" "")
+    ;;
+  Linux)
+    sed_i=("sed" "-i")
+    ;;
+  *)
+    echo >&2 "Unrecognised uname: $(uname) - script assumes Linux or Darwin"
+    exit 1
+    ;;
+esac
+
+if command -v hugo >/dev/null 2>/dev/null; then
   hugo=hugo
 else
   td="$(mktemp -d)"
@@ -27,6 +40,8 @@ mv website/content/projects/README.md website/content/projects/_index.md
 for file in $(find website/content/projects -name README.md); do
   mv "${file}" "${file%README.md}index.md"
 done
+
+find website/content -name '*.md' -print0 | xargs -0 "${sed_i[@]}" -e '/^<!--forhugo$/d' -e '/^forhugo-->$/d'
 
 cd website
 "${hugo}"
