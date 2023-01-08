@@ -1,25 +1,29 @@
 #!/bin/bash -eu
 
-td="$(mktemp -d)"
-curl -L https://github.com/gohugoio/hugo/releases/download/v0.109.0/hugo_extended_0.109.0_Linux-64bit.tar.gz | tar xzf - -C "${td}" hugo
-chmod 0755 "${td}/hugo"
+if "$(command -v hugo)" >/dev/null 2>/dev/null; then
+  hugo=hugo
+else
+  td="$(mktemp -d)"
+  case "$(uname)" in
+    Darwin)
+      curl -L https://github.com/gohugoio/hugo/releases/download/v0.109.0/hugo_extended_0.109.0_darwin-universal.tar.gz | tar xzf - -C "${td}" hugo
+      ;;
+    Linux)
+      curl -L https://github.com/gohugoio/hugo/releases/download/v0.109.0/hugo_extended_0.109.0_Linux-64bit.tar.gz | tar xzf - -C "${td}" hugo
+      ;;
+  esac
+  chmod 0755 "${td}/hugo"
+  hugo="${td}/hugo"
+fi
 
-mkdir -p website/content/projects
-
-for dir in $(find . -maxdepth 1 -type d -not -name '.*' -not -name website -not -name primers -not -name workbooks); do
-  cp -r "${dir}" website/content/projects/
-done
-
-cp -r primers website/content/
+cp -r prep primers projects website/content/
 
 mkdir -p website/content/about
 cp CONTRIBUTING.md website/content/about/contributing.md
-
-cp README.md website/content/projects/_index.md
 
 for file in $(find website/content/projects -name README.md); do
   mv "${file}" "${file%README.md}index.md"
 done
 
 cd website
-"${td}/hugo"
+"${hugo}"
