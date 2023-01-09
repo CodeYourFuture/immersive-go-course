@@ -1,6 +1,5 @@
 +++
 title="GRPC Client and Server Communication"
-author="Laura Nolan"
 +++
 
 Timebox: 3 days

@@ -28,14 +28,23 @@
   </ol>
 </article>
 {{ partial "breadcrumbs.html" . }} {{ end }}
-<!-- end version pages -->
-<!-- other list pages -->
-{{ if not (eq .Section "versions") }} {{ with .Content }}
+<!-- 
+  end version pages 
+-->
+<!-- 
+  other list pages 
+-->
+{{ if not (eq .Section "versions") }}
+<!-- 
+  main content 
+-->
+{{ with .Content }}
 <article class="c-copy">{{.}}</article>
-{{ end }}
-<ul class="c-cells">
-  {{ range .Pages.ByTitle }}
-  <li class="c-cells__cell">{{ partial "card.html" . }}</li>
-  {{ end }}
-</ul>
-{{ end}} {{ end }}
+{{ end}}
+<!-- 
+  page links
+-->
+{{ partial "cells.html" .}}
+
+<!-- end if not Versions -->
+{{ end}} {{end}}

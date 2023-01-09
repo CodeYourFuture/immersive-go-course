@@ -6,7 +6,7 @@
     "image image image" 100px
     ".     .      ." var(--theme-spacing--1)
     ".     title  ." auto
-    ".     byline ." min-content / var(--theme-spacing--1) 1fr var(--theme-spacing--1);
+    ".     .      ." var(--theme-spacing--1) / var(--theme-spacing--1) 1fr var(--theme-spacing--1);
 
   background-color: var(--theme-color--paper);
   box-shadow: 2px 3px 0 var(--theme-color--pop),

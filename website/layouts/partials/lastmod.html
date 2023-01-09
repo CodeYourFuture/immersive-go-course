@@ -1,0 +1,17 @@
+{{$p := path.Base (path.Split .Path).Dir }}
+<!-- fallback commit object -->
+{{$fallBackDate := dict "date" "1970"}} {{$fallBackAuthor := dict "author"
+$fallBackDate}} {{$commitObject := slice (dict "commit" $fallBackAuthor )}}
+<!-- api call -->
+{{
+$api:="https://api.github.com/repos/CodeYourFuture/immersive-go-course/commits"
+}} {{ $url := print $api "?path=" $p }} {{ $commitObject := getJSON $url }}
+<!-- range over commit -->
+{{ range first 1 $commitObject }}
+<h2 class="c-lastmod c-page-header__lastmod">
+  .Lastmod
+  <a href="{{$.Site.Params.tree}}{{$p}}">
+    <time datetime="{{ .commit.author.date}}">{{ .commit.author.date}}</time>
+  </a>
+</h2>
+{{ end}}

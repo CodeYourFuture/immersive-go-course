@@ -1,6 +1,5 @@
 +++
 title="Batch Processing"
-author="Tom Ashworth"
 +++
 
 In this project, you'll build a simple image processing pipeline: reading a list of image URLs from a CSV file, downloading each image, processing it, and uploading it to cloud storage.

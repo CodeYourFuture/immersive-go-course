@@ -11,27 +11,17 @@
       >
         {{.Title}}
       </h1>
-      {{ with .Params.author}}
+      {{with .Params.showTitle }}{{ else }} {{ if or (eq .Section "projects")
+      (eq .Section "primers")}} {{$pathAsString := print $.Site.Params.tree
+      .Path }} {{$changeIndexToReadMe := replace $pathAsString "index.md"
+      "README.md"}}
       <a
-        class="c-page-header__author e-heading__5 e-link is-none--lt-container"
-        href="{{$.Site.BaseURL}}about/contributors"
-        >{{.}}</a
+        class="c-page-header__edit e-heading__5 e-link is-none--lt-container"
+        href="{{$changeIndexToReadMe}}"
+        >Edit on Github</a
       >
-      {{ end}} {{with .Params.showTitle }}{{ else }}
-      <h2 class="c-page-header__lastmod">
-        .Lastmod
-        <a href="{{.Site.Params.tree}}{{.File.BaseFileName}}">
-          {{if not .Lastmod.IsZero }} {{ $lm:= .Lastmod.Format "January 2, 2006"
-          }}
-          <time datetime="{{ .Lastmod }}"
-            >{{ .Lastmod.Format "January 2, 2006" }}</time
-          >
-          {{ else }} {{$lm:= now.Format "January 2, 2006" }}
-          <time datetime="{{ now}}">{{ $lm }}</time>
-          {{ end}}
-        </a>
-      </h2>
-      {{ end}} {{ if and (gt .WordCount 400 ) (.TableOfContents) }}
+      {{ end}} {{ partial "lastmod.html" . }} {{ end}} {{ if and (gt .WordCount
+      400 ) (.TableOfContents) }}
       <section class="c-page-header__toc c-toc" id="toc">
         {{ .TableOfContents }}
       </section>

@@ -1,21 +1,15 @@
 .c-page-footer {
   border-top: var(--theme-border--thick);
   border-image: var(--theme-border-image);
-
-  &__author,
-  &__author-link {
-    font: 100 var(--theme-type-size--3) var(--theme-font--display);
-    margin-bottom: var(--theme-spacing--6);
-    text-decoration: none;
-    text-transform: none;
-    text-align: center;
-    color: var(--theme-color--ink);
+  @include grid-assign(backwards, edit, forwards);
+  &__section,
+  &__section-link {
+    margin: 0 auto var(--theme-spacing--6) auto;
   }
 
   &__section-nav {
     display: grid;
-    width: 100%;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template: "backwards edit forwards" auto / 1fr 1fr 1fr;
   }
 
   &__forwards {

@@ -1,6 +1,5 @@
 +++
 title="Buggy App"
-author="Tom Ashworth"
 +++
 
 In this project, you're going to run, debug, and fix a buggy application. This code here is a "notes" application with users and notes. It simulates a real-world application that has grown and developed over time: the code isn't perfect, there are tests missing and it contains bugs. The task is to find and fix these bugs. There are _at least_ 5 distinct and important bugs for you to find a fix.

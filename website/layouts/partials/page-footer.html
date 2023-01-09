@@ -1,24 +1,20 @@
+{{ if or (eq .Section "primers") (eq .Section "projects")}}
 <footer class="c-page-footer c-copy">
-  {{ with .Params.author}}
-  <h4 class="c-page-footer__author">
+  <h4 class="c-page-footer__section">
     <a
-    class="c-page-footer__author-link e-link"
-    href="{{$.Site.BaseURL}}about/contributors"
-    >{{.}}</a
-  >
+      class="c-page-footer__section-link e-link"
+      href="{{.Site.BaseURL}}{{ .Section}}"
+      >{{ .Section}}</a
+    >
   </h4>
-  {{ end}}
-{{ if eq .Section "primers"  }}
+  {{$pathAsString := print $.Site.Params.tree .Path }} {{$changeIndexToReadMe :=
+  replace $pathAsString "index.md" "README.md"}}
   <nav class="c-page-footer__section-nav">
-    {{if .NextInSection}}<a class="c-page-footer__backwards" href="{{.NextInSection.Permalink}}"
-    >&larr; {{.NextInSection.Title}}</a
-  >{{ end}} 
-    {{ if eq .Section "projects"}}
-
     <a
       class="e-button e-button--icon c-page-footer__edit"
-      href="{{ .Site.Params.edit }}{{ .Title | urlize }}/README.md"
-      ><svg title="Edit this page on GitHub"
+      href="{{$changeIndexToReadMe}}"
+      ><svg
+        role="presentation"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -34,31 +30,18 @@
       </svg>
       <span class="is-invisible">Edit this page on GitHub</span></a
     >
-    {{ else }}
-    <a
-      class="e-button e-button--icon c-page-footer__edit"
-      href="{{ .Site.Params.edit }}{{.File.Path}}"
-      ><svg title="Edit this page on GitHub"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="e-button__icon"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-        />
-      </svg>
-      <span class="is-invisible">Edit this page on GitHub</span></a
-    >
-    {{end}}
+    <!-- we probably only want to navigate through primers which are subsections of one thing -->
+    {{ if (eq .Section "primers") }} {{if .NextInSection}}<a
+      class="c-page-footer__backwards"
+      href="{{.NextInSection.Permalink}}"
+      >&larr; {{.NextInSection.Title}}</a
+    >{{ else }}
+    <span class="c-page-footer__backwards"></span>
 
-{{if .PrevInSection}}<a class="c-page-footer__forwards" href="{{.PrevInSection.Permalink}}"
-    >{{.PrevInSection.Title}} &rarr;</a
-  >{{ end}}
-
-  {{ end}}
+    {{ end}} {{if .PrevInSection}}
+    <a class="c-page-footer__forwards" href="{{.PrevInSection.Permalink}}"
+      >{{.PrevInSection.Title}} &rarr;</a
+    >{{ end}} {{ end}}
+  </nav>
 </footer>
+{{ end }}
