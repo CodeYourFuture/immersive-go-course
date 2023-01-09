@@ -13,21 +13,21 @@ case "$(uname)" in
     ;;
 esac
 
-if command -v hugo >/dev/null 2>/dev/null; then
-  hugo=hugo
-else
-  td="$(mktemp -d)"
-  case "$(uname)" in
-    Darwin)
+td="$(mktemp -d)"
+case "$(uname)" in
+  Darwin)
+    if command -v hugo >/dev/null 2>/dev/null; then
+      hugo=hugo
+    else
       curl -L https://github.com/gohugoio/hugo/releases/download/v0.109.0/hugo_extended_0.109.0_darwin-universal.tar.gz | tar xzf - -C "${td}" hugo
-      ;;
-    Linux)
-      curl -L https://github.com/gohugoio/hugo/releases/download/v0.109.0/hugo_extended_0.109.0_Linux-64bit.tar.gz | tar xzf - -C "${td}" hugo
-      ;;
-  esac
-  chmod 0755 "${td}/hugo"
-  hugo="${td}/hugo"
-fi
+    fi
+    ;;
+  Linux)
+    curl -L https://github.com/gohugoio/hugo/releases/download/v0.109.0/hugo_extended_0.109.0_Linux-64bit.tar.gz | tar xzf - -C "${td}" hugo
+    ;;
+esac
+chmod 0755 "${td}/hugo"
+hugo="${td}/hugo"
 
 cp -r prep primers projects website/content/
 
