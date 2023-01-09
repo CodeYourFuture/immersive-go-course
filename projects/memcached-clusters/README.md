@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Memcached Clusters: Replicated and Sharded"
 +++
+forhugo-->
 
 This project should be done after reading Section 2 of the [Distributed Systems Primer](https://docs.google.com/document/d/1WoOTLTdtDqnL3fv3YVfI32kfySHqh7y1UfLizBJ3LXY/edit?usp=sharing).
 

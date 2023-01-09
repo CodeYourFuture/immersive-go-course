@@ -1,3 +1,4 @@
+<!--forhugo
 +++
 title= "{{ replace .Name "-" " " | title }}"
 summary= {{.GitInfo.Subject}}
@@ -6,3 +7,4 @@ date= {{ .Date }}
 publishDate= {{ .Date }}
 lastmod= {{ .GitInfo.AuthorDate}}
 +++
+forhugo-->

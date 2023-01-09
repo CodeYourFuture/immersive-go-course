@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="CLI & Files"
 +++
+forhugo-->
 
 In this project you're going to get familiar with the [Go programming language][go] by rebuilding two very common tools that programmers and computer administrators use all the time: [cat][cat] and [ls][ls].
 

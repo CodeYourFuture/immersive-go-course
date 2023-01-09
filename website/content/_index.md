@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Immersive Engineering Programme"
 +++
+forhugo-->
 
 -> % We are [Code Your Future](https://codeyourfuture.io) and, whoever _you_ are, you are welcome here.
 

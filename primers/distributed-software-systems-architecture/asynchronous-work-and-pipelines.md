@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="4. Asynchronous Work and Pipelines" 
 +++
+forhugo-->
 
 # 4
 

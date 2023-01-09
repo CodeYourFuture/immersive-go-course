@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Preparation"
 +++
+forhugo-->
 
 ## Prerequisite learning
 

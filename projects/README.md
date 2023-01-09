@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Projects"
 +++
+forhugo-->
 
 ## Requirements
 

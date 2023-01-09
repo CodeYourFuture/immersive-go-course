@@ -1,8 +1,10 @@
+<!--forhugo
 +++
 title="CYF+01 Prep Workbook"
 date="01 Oct 2022"    
 versions=["1-0-0"]
 +++
+forhugo-->
 
 # Prep
 
