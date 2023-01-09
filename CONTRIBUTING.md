@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Contributing"
 +++
+forhugo-->
 
 # Contributing to Code Your Future Immersive Go Course
 

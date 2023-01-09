@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="2. State"   
 +++
+forhugo-->
 
 # 2
 

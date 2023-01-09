@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="GRPC Client and Server Communication"
 +++
+forhugo-->
 
 Timebox: 3 days
 

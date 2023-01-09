@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Immersive Engineering Programme"
 +++
+forhugo-->
 
 ![](./readme-assets/giphy.gif)
 

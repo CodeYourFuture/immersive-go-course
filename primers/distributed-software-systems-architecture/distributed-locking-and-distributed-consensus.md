@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="5. Distributed Locking and Distributed Consensus"
 +++
+forhugo-->
 
 # 5
 

@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="RAFT implementation"
 +++
+forhugo-->
 
 # RAFT implementation with Distributed Tracing
 
