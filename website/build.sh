@@ -20,14 +20,16 @@ case "$(uname)" in
       hugo=hugo
     else
       curl -L https://github.com/gohugoio/hugo/releases/download/v0.109.0/hugo_extended_0.109.0_darwin-universal.tar.gz | tar xzf - -C "${td}" hugo
+      chmod 0755 "${td}/hugo"
+      hugo="${td}/hugo"
     fi
     ;;
   Linux)
     curl -L https://github.com/gohugoio/hugo/releases/download/v0.109.0/hugo_extended_0.109.0_Linux-64bit.tar.gz | tar xzf - -C "${td}" hugo
+    chmod 0755 "${td}/hugo"
+    hugo="${td}/hugo"
     ;;
 esac
-chmod 0755 "${td}/hugo"
-hugo="${td}/hugo"
 
 cp -r prep primers projects website/content/
 
