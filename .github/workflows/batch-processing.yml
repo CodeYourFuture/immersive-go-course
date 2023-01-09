@@ -2,7 +2,7 @@ name: batch-processing tests
 on: [push]
 defaults:
   run:
-    working-directory: batch-processing
+    working-directory: projects/batch-processing
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -11,7 +11,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version-file: "batch-processing/go.mod"
+          go-version-file: "projects/batch-processing/go.mod"
           cache: false
       - name: Test
         run: make test

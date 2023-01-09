@@ -1,0 +1,9 @@
+@mixin grid-default {
+  display: grid;
+  gap: var(--theme-spacing--gutter);
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(var(--theme-spacing--container-min), 1fr)
+  );
+  padding: 0;
+}

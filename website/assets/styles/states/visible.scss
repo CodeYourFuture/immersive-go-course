@@ -1,0 +1,5 @@
+// this makes text invisible but accessible to screenreaders, unlike display:none
+
+.is-visible {
+  @include screen(show);
+}

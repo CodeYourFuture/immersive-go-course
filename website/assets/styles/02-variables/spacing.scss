@@ -1,0 +1,29 @@
+$c-min: 300px;
+$c-max: 1200px; // this is here so you can reference in media queries if you want
+
+$spacing__levels: 1, 2, 3, 4, 5, 6;
+:root {
+  @each $size in $spacing__levels {
+    --theme-spacing--#{$size}: clamp(
+      #{($size * 2) * 1px},
+      #{$size}vw + 1px,
+      #{$size * 10px}
+    );
+  }
+
+  --theme-spacing--container: clamp(
+    var(--theme-spacing--container-min),
+    calc(100vw - calc(var(--theme-spacing--gutter) * 2)),
+    var(--theme-spacing--container-max)
+  ); //responsive flow
+
+  --theme-spacing--container-min: #{$c-min};
+  --theme-spacing--container-max: #{$c-max};
+  --theme-spacing--gutter: var(--theme-spacing--2);
+  --theme-spacing--offset: var(--theme-spacing--1); //set by eye is fine
+  --theme-spacing--linelength: 80ch; // readability maximum
+  --theme-spacing--touchtarget: 48px; // access minimum
+  --theme-spacing--menu: calc(
+    var(--theme-spacing--gutter) * 2
+  ); // the big long menu trigger
+}

@@ -1,0 +1,19 @@
+table {
+  display: block;
+  width: 100%;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+  border-bottom: var(--theme-border--thick);
+  border-image: var(--theme-border-image);
+}
+
+thead th {
+  font: var(--theme-font--system);
+  background-color: var(--theme-color--block);
+}
+
+td {
+  padding: var(--theme-spacing--1);
+  background-color: var(--theme-color--block);
+}

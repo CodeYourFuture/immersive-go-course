@@ -1,0 +1,12 @@
+@mixin offscreen($state) {
+  @if $state==hide {
+    position: absolute;
+    left: -100vw;
+    opacity: 0;
+    transition: all 0.3s;
+  } @else if $state==show {
+    left: 0;
+    z-index: 1001;
+    opacity: 1;
+  }
+}

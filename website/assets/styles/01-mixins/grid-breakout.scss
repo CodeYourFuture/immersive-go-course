@@ -1,0 +1,7 @@
+// https://css-tricks.com/code-as-documentation-new-strategies-with-css-grid/
+
+@mixin grid-breakout {
+  // this classic one-liner breaks an inner element out of its container
+  // it's a strategy not limited to grid but in this framework it's breaking out of a main grid
+  margin: 0 calc(-50vw + 50%) 0 calc(-50vw + 50%);
+}

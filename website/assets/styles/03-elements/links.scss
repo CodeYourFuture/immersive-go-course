@@ -1,0 +1,21 @@
+a {
+  color: currentColor;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+a:not([class]),
+a:link:not([class]),
+a:visited:not([class]),
+.e-link {
+  color: currentColor;
+  text-decoration: dotted underline;
+
+  @include on-event {
+    text-decoration: underline;
+    outline: none;
+  }
+  &:focus {
+    outline: 2px dotted;
+  }
+}

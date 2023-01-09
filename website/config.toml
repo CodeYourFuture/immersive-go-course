@@ -1,0 +1,30 @@
+baseURL = "/"
+languageCode = "en-us"
+title = "CYF+"
+languageLang = "en"
+sectionPagesMenu = "main"
+enableGitInfo = true
+
+[params]
+description = "A free and open source immersive engineering programme. Practical, hands on projects in Go, distributed systems engineering, site reliability engineering, software engineering. Pace, scale, and complexity."
+repo = "https://github.com/CodeYourFuture/immersive-go-course/"
+tree = "https://github.com/CodeYourFuture/immersive-go-course/tree/main/"
+edit = "https://github.com/CodeYourFuture/immersive-go-course/edit/main/"
+hero = "/static/depths/dddepth-085.webp"
+
+[frontmatter]
+lastmod = [":git", "date", "publishDate"]
+
+[markup]
+[markup.tableOfContents]
+endLevel = 6
+ordered = true
+startLevel = 2
+[markup.highlight]
+lineNos = false
+codeFences = true
+guessSyntax = true
+
+disableKinds = ["taxonomy", "term"]
+[taxonomies]
+series = "versions"

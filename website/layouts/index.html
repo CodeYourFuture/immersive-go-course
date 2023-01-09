@@ -1,0 +1,19 @@
+{{ define "main" }}
+<article>
+  <header class="l-page__header c-page-header">
+    <div class="c-page-header__container">
+      <h1 class="c-page-header__title e-heading__1">{{.Title}}</h1>
+    </div>
+  </header>
+
+  {{.Content}}
+</article>
+<nav class="c-toc">
+  <ul>
+    <li><a href="{{.Site.BaseURL}}about">About</a></li>
+    <li><a href="{{.Site.BaseURL}}versions">Versions</a></li>
+    <li><a href="{{.Site.BaseURL}}projects">Projects</a></li>
+    <li><a href="{{.Site.BaseURL}}primers">Primers</a></li>
+  </ul>
+</nav>
+{{ end }}

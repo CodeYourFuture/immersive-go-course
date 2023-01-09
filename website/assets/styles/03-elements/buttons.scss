@@ -1,0 +1,66 @@
+.e-button {
+  // reset
+  appearance: none;
+  font: 900 100% var(--theme-font--display);
+  text-decoration: none;
+  text-align: center;
+  line-height: 0.875;
+  white-space: nowrap;
+  display: inline-flex;
+  place-items: center;
+  place-content: center;
+  min-width: fit-content;
+  height: fit-content;
+  gap: var(--theme-spacing--1);
+
+  // vars to override in other places
+  --button-color: var(--theme-color--ink);
+  --button-background-color: var(--theme-color--block);
+  --button-border-color: var(--theme-color--accent);
+  --button-border: 2px solid var(--button-border-color);
+  --button-border-radius: var(--theme-border-radius);
+  --button-box-shadow: 2px 5px var(--theme-color--accent);
+  --button-padding: 3px var(--theme-spacing--1);
+
+  // apply all these
+  $buttonVars: color, background-color, border, border-radius, box-shadow,
+    padding;
+  @each $rule in $buttonVars {
+    #{$rule}: var(--button-#{$rule});
+  }
+
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    border-color 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  @include on-event {
+    color: var(--theme-color--accent);
+    background-color: var(--theme-color--paper);
+    box-shadow: 0px 0px var(--theme-color--accent);
+    border-color: currentColor;
+    text-decoration: none;
+  }
+  &:focus {
+    outline: 3px dotted;
+  }
+
+  // sometimes buttons have an icon or are only visibly an icon
+
+  &__icon,
+  &--icon {
+    // enforce tap sizing
+    $taps: height, width, min-width, max-width;
+    @each $rule in $taps {
+      #{$rule}: var(--theme-spacing--touchtarget);
+    }
+    // don't leak button styles into icons
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    color: currentColor;
+    place-content: center;
+
+    @include on-event {
+      background: transparent;
+    }
+  }
+}

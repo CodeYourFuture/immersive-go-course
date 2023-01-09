@@ -1,0 +1,9 @@
+// https://css-tricks.com/code-as-documentation-new-strategies-with-css-grid/
+@mixin grid-assign($elements...) {
+  display: grid;
+  @each $element in $elements {
+    &__#{$element} {
+      grid-area: $element;
+    }
+  }
+}

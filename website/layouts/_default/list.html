@@ -1,0 +1,41 @@
+{{ define "main" }}
+<header class="c-page-header c-page-header--list">
+  <!-- set up page header-->
+
+  <div class="c-page-header__container">
+    <h1 class="c-page-header__title e-heading e-heading__1">{{.Title}}</h1>
+
+    <aside class="c-toc c-page-header__toc is-none--lt-container">
+      <ol>
+        {{ range .Pages }}
+        <li>
+          <a href="{{.Permalink}}">{{.Title}}</a>
+        </li>
+        {{ end}}
+      </ol>
+    </aside>
+  </div>
+</header>
+
+<!-- version pages -->
+{{ if (eq .Section "versions") }}
+<article class="{{ with .Content }}c-copy{{end}}">
+  {{ .Content }}
+  <ol class="c-timeline">
+    {{ range .Pages.Reverse }}
+    <li class="c-timeline__entry">{{ partial "timeline.html" . }}</li>
+    {{ end }}
+  </ol>
+</article>
+{{ partial "breadcrumbs.html" . }} {{ end }}
+<!-- end version pages -->
+<!-- other list pages -->
+{{ if not (eq .Section "versions") }} {{ with .Content }}
+<article class="c-copy">{{.}}</article>
+{{ end }}
+<ul class="c-cells">
+  {{ range .Pages.ByTitle }}
+  <li class="c-cells__cell">{{ partial "card.html" . }}</li>
+  {{ end }}
+</ul>
+{{ end}} {{ end }}

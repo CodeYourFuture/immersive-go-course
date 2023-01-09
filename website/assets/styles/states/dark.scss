@@ -1,0 +1,4 @@
+.is-dark-mode,
+:root:has(.is-dark-mode) {
+  @include dark-palette;
+}

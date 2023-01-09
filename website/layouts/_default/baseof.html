@@ -1,0 +1,12 @@
+{{- partial "head.html" . -}}
+<body class="is-light-mode">
+  <a class="c-skip-link e-button" id="skip-link" href="#main">Skip to main</a>
+  <div class="l-layout">
+    {{ partial "header.html" . }} {{ partial "menu.html" . }}
+    <main id="main" class="l-layout__main l-main" tabindex="0">
+      {{ block "main" . }} {{ end }}
+    </main>
+
+    {{- partial "foot.html" . -}}
+  </div>
+</body>

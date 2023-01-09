@@ -1,0 +1,48 @@
+.l-header {
+  @include grid-assign(nav);
+  @include pattern(dots, var(--theme-color--pop), null, true, 0.5);
+  grid-template:
+    " . ... . " var(--theme-spacing--gutter)
+    " . nav ." minmax(0, 1fr)
+    " . ... ." var(--theme-spacing--gutter) / minmax(
+      var(--theme-spacing--gutter),
+      1fr
+    )
+    calc(var(--theme-spacing--container) - var(--theme-spacing--menu)) minmax(var(--theme-spacing--gutter), 1fr);
+
+  &__heading {
+    font: var(--theme-font--brand);
+    color: var(--theme-color--brand);
+  }
+  &__home {
+    @include on-event {
+      color: var(--theme-color--accent);
+      outline: none;
+    }
+  }
+
+  &__icon {
+    grid-area: icon;
+  }
+
+  &__action {
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    padding-top: var(--theme-spacing--gutter);
+    background-color: var(--theme-color--pop);
+    border-color: var(--theme-color--pop);
+    &.is-fixed {
+      min-width: var(--theme-spacing--menu);
+      width: var(--theme-spacing--menu);
+    }
+    @include on-event {
+      background-color: var(--theme-color--accent);
+      color: var(--theme-color--contrast-max);
+    }
+  }
+}
