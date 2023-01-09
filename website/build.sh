@@ -20,6 +20,8 @@ cp -r prep primers projects website/content/
 
 cp CONTRIBUTING.md website/content/about/contributing.md
 
+cp projects/metadata.json website/data/projects/metadata.json
+
 mv website/content/projects/README.md website/content/projects/_index.md
 
 for file in $(find website/content/projects -name README.md); do
