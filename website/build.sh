@@ -20,12 +20,10 @@ cp -r prep primers projects website/content/
 
 cp CONTRIBUTING.md website/content/about/contributing.md
 
+mv website/content/projects/README.md website/content/projects/_index.md
+
 for file in $(find website/content/projects -name README.md); do
   mv "${file}" "${file%README.md}index.md"
-done
-
-for file in $(find website/content/projects -maxdepth 1 -mindepth 1 -name index.md ) ; do
-  mv "${file}" "${file%index.md}_index.md"
 done
 
 cd website
