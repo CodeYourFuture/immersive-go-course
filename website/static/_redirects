@@ -1,3 +1,4 @@
 # https://docs.netlify.com/routing/redirects/
 
 /contributing.md /about/contributing.md 302
+/prep/README.md /prep/readme 302
