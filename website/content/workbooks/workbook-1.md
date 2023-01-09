@@ -1,11 +1,9 @@
-<!--forhugo
 +++
 title="CYF+01 Sprint 1"
 date="24 Oct 2022"    
 versions=["1-0-0"]
 hero="pictures/depths/dddepth--085.webp"
 +++
-forhugo-->
 
 ## Study
 

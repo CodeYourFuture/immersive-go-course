@@ -1,8 +1,6 @@
-<!--forhugo
 +++
 title="Versions"   
 +++
-forhugo-->
 
 ## CYF+ Iterations Log
 

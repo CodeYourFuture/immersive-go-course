@@ -1,10 +1,8 @@
-<!--forhugo
 +++
 title="CYF+01 Sprint 3"
 date="21 Nov 2022"    
 versions=["1-0-0"]
 +++
-forhugo-->
 
 ## Study
 
