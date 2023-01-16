@@ -10,10 +10,10 @@ import (
 	_ "github.com/Jille/grpc-multi-resolver"
 	pb "github.com/Jille/raft-grpc-example/proto"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 	_ "google.golang.org/grpc/health"
 	ntw "moul.io/number-to-words"
-	"otelgrpc"
 )
 
 func main() {
@@ -25,8 +25,10 @@ func main() {
 	conn, err := grpc.Dial("multi:///localhost:50051,localhost:50052,localhost:50053",
 		grpc.WithDefaultServiceConfig(serviceConfig), grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
-		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(retryOpts...), otelgrpc.UnaryClientInterceptor())),
-		grpc.WithStreamInterceptor(grpc_retry.StreamClientInterceptor(retryOpts...), otelgrpc.StreamClientInterceptor())
+		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(retryOpts...)),
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
+		grpc.WithStreamInterceptor(otelgrpc.StreamClientInterceptor()),
+	)
 	if err != nil {
 		log.Fatalf("dialing failed: %v", err)
 	}

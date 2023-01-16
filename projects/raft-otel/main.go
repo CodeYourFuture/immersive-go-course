@@ -17,6 +17,9 @@ import (
 	boltdb "github.com/hashicorp/raft-boltdb"
 	"github.com/honeycombio/honeycomb-opentelemetry-go"
 	"github.com/honeycombio/opentelemetry-go-contrib/launcher"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -40,6 +43,7 @@ func main() {
 		log.Fatalf("error setting up OTel SDK - %e", err)
 	}
 	defer otelShutdown()
+	var tracer = otel.Tracer("raft-grpc-example")
 
 	flag.Parse()
 
@@ -59,16 +63,22 @@ func main() {
 
 	wt := &wordTracker{}
 
+	// start the span for the server registration
+	ctx, span := tracer.Start(ctx, "register_server",
+		trace.WithSpanKind(trace.SpanKindServer))
 	r, tm, err := NewRaft(ctx, *raftId, *myAddr, wt)
 	if err != nil {
 		log.Fatalf("failed to start raft: %v", err)
 	}
-	s := grpc.NewServer()
+	s := grpc.NewServer(grpc.UnaryInterceptor(otelgrpc.UnaryServerInterceptor()),
+		grpc.StreamInterceptor(otelgrpc.StreamServerInterceptor()))
 	pb.RegisterExampleServer(s, &rpcInterface{
 		wordTracker: wt,
 		raft:        r,
 	})
 	tm.Register(s)
+	// end the span for the server registration
+	span.End()
 	leaderhealth.Setup(r, s, []string{"Example"})
 	raftadmin.Register(s, r)
 	reflection.Register(s)
