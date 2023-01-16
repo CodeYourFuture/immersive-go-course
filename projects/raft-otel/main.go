@@ -43,7 +43,7 @@ func main() {
 		log.Fatalf("error setting up OTel SDK - %e", err)
 	}
 	defer otelShutdown()
-	var tracer = otel.Tracer("raft-grpc-example")
+	var tracer = otel.Tracer("raft-otel-service")
 
 	flag.Parse()
 
@@ -66,6 +66,7 @@ func main() {
 	// start the span for the server registration
 	ctx, span := tracer.Start(ctx, "register_server",
 		trace.WithSpanKind(trace.SpanKindServer))
+	span.SetName("register_server")
 	r, tm, err := NewRaft(ctx, *raftId, *myAddr, wt)
 	if err != nil {
 		log.Fatalf("failed to start raft: %v", err)
