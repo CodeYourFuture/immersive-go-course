@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc"
 	_ "google.golang.org/grpc/health"
 	ntw "moul.io/number-to-words"
+	"otelgrpc"
 )
 
 func main() {
@@ -24,7 +25,8 @@ func main() {
 	conn, err := grpc.Dial("multi:///localhost:50051,localhost:50052,localhost:50053",
 		grpc.WithDefaultServiceConfig(serviceConfig), grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
-		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(retryOpts...)))
+		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(retryOpts...), otelgrpc.UnaryClientInterceptor())),
+		grpc.WithStreamInterceptor(grpc_retry.StreamClientInterceptor(retryOpts...), otelgrpc.StreamClientInterceptor())
 	if err != nil {
 		log.Fatalf("dialing failed: %v", err)
 	}

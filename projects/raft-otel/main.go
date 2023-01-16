@@ -15,6 +15,8 @@ import (
 	"github.com/Jille/raftadmin"
 	"github.com/hashicorp/raft"
 	boltdb "github.com/hashicorp/raft-boltdb"
+	"github.com/honeycombio/honeycomb-opentelemetry-go"
+	"github.com/honeycombio/opentelemetry-go-contrib/launcher"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -28,6 +30,17 @@ var (
 )
 
 func main() {
+	// enable multi-span attributes
+	bsp := honeycomb.NewBaggageSpanProcessor()
+	// use honeycomb distro to setup OpenTelemetry SDK
+	otelShutdown, err := launcher.ConfigureOpenTelemetry(
+		launcher.WithSpanProcessor(bsp),
+	)
+	if err != nil {
+		log.Fatalf("error setting up OTel SDK - %e", err)
+	}
+	defer otelShutdown()
+
 	flag.Parse()
 
 	if *raftId == "" {
