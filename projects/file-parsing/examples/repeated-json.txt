@@ -1,0 +1,7 @@
+# This file contains lines of data stored in JSON format. Each line contains exactly one record stored as an object.
+# Lines starting with # are comments and should be ignored.
+{"name": "Aya", "high_score": 10}
+{"name": "Prisha", "high_score": 30}
+# Charlie didn't do fantastically :(
+{"name": "Charlie", "high_score": -1}
+{"name": "Margot", "high_score": 25}

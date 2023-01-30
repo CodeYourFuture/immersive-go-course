@@ -1,0 +1,6 @@
+[
+  {"name": "Aya", "high_score": 10},
+  {"name": "Prisha", "high_score": 30},
+  {"name": "Charlie", "high_score": -1},
+  {"name": "Margot", "high_score": 25}
+]
