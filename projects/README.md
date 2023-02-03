@@ -20,6 +20,8 @@ Most exercises finish with a list of optional extension tasks. It's highly recom
 
 1. [CLI & Files](./cli-files)
    <br>An introduction to building things with Go by replicating the unix tools `cat` and `ls`.
+1. [File Parsing](./file-parsing)
+   <br>Practice parsing different formats of files, both standard and custom.
 1. [Servers & HTTP requests](./http-auth)
    <br>Learn about long-running processes, HTTP and `curl`
 1. [Servers & Databases](./server-database)
