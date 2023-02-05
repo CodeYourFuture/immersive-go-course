@@ -1,6 +1,8 @@
 {
   "order": [
+    "output-and-error-handling",
     "cli-files",
+    "file-parsing",
     "http-auth",
     "server-database",
     "multiple-servers",
