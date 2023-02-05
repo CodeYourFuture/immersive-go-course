@@ -126,8 +126,9 @@ Or the same for `curl`:
 
 shows lots of very specific information:
 
-<details><summary>Click to expand the full output of the exit codes section of `man curl`</summary>
-<pre>
+<details><summary>Click to expand the full output of the exit codes section of <code>man curl</code></summary>
+
+```
 EXIT CODES
        There are a bunch of different error codes and their corresponding error messages that may appear under error conditions. At the time of this writing, the exit codes are:
 
@@ -298,7 +299,7 @@ EXIT CODES
        96     QUIC connection error. This error may be caused by an SSL library error. QUIC is the protocol used for HTTP/3 transfers.
 
        XX     More error codes will appear here in future releases. The existing ones are meant to never change.
-</pre>
+```
 </details>
 
 ### Handling errors in your code
@@ -394,9 +395,9 @@ Our task is to write a client, in Go, which makes HTTP requests to that server a
 
 We should focus in this project on making sure:
 1. If the server replies with a retryable error, we will retry it appropriately. For a 429 response code, this means reading the `Retry-After` response header, calling `time.Sleep` until the appropriate time has passed, and trying again.
-  * If we're going to sleep for more than 1 second, we should notify the user that things may be a bit slow because we're doing a retry.
-  * If the server tells us we should sleep for more than 5 seconds, we should give up and tell the user we can't get them the weather.
-  * If we can't determine how long to sleep for, consider what the best thing to do is - you should decide whether we should sleep for some amount of time (and if so what) and then retry, or give up. Make sure to write down why you decided what you dod.
+   * If we're going to sleep for more than 1 second, we should notify the user that things may be a bit slow because we're doing a retry.
+   * If the server tells us we should sleep for more than 5 seconds, we should give up and tell the user we can't get them the weather.
+   * If we can't determine how long to sleep for, consider what the best thing to do is - you should decide whether we should sleep for some amount of time (and if so what) and then retry, or give up. Make sure to write down why you decided what you dod.
 1. If the server terminates our connection, we will give up and tell the user that we can't get them the weather.
 
 Make sure all error messages are clear and useful to the user, that we're properly printing to standard out or standard error when appropriate, and that our program always exits with an appropriate exit code.
