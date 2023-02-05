@@ -35,6 +35,7 @@ cp -r prep primers projects website/content/
 
 cp CONTRIBUTING.md website/content/about/contributing.md
 
+mkdir -p website/data/projects
 cp projects/metadata.json website/data/projects/metadata.json
 
 mv website/content/projects/README.md website/content/projects/_index.md
