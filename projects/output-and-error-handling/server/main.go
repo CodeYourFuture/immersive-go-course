@@ -16,9 +16,9 @@ func main() {
 		switch randomNumber {
 		// 50% of the time, we just report the weather. 30% nice, 20% less so.
 		case 0, 1, 2:
-			w.Write([]byte("Today it will be sunny!\n"))
+			w.Write([]byte("Today it will be sunny!"))
 		case 3, 4:
-			w.Write([]byte("I'd bring an umbrella, just in case...\n"))
+			w.Write([]byte("I'd bring an umbrella, just in case..."))
 		// 30% of the time, we say we're too busy and say try again in a few seconds, in a few different ways.
 		case 5:
 			// Generate a random number between 1 and 10, for the number of seconds to tell the client to wait before retrying:
