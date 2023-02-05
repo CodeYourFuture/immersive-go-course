@@ -27,7 +27,9 @@ In this project, we have been supplied with a server - its code lives in the `se
 * Sometimes the server simulates being overloaded by too many requests, and responds with a status code 429. When this happens, the client should wait the amount of time indicated in the `Retry-After` response header, and attempt the request again. You can learn about [the `Retry-After` header on MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After). Note that it has two formats, and may contain either a number of seconds or a timestamp.
 * Other times, it may drop a connection before responding. When this happens, you should assume the server is non-responsive (and that you making more requests to it may make things worse), and give up your request, telling the user something irrecoverable went wrong.
 
-Have a read of the server code and make sure you understand what it's doing, and what kinds of responses you may need to handle. We are not expected to change the server code as part of this project - it is intentionally buggy because we sometimes need to handle bad responses.
+Have a read of the server code and make sure you understand what it's doing, and what kinds of responses you may need to handle.
+
+We are not expected to change the server code as part of this project - it is intentionally buggy because we sometimes need to handle bad responses. We may, however, want to make edits to it while you're developing your client to help you better manually test out your code (randomness is hard to test against!). Our final client code should work against the server code as it was given to us with no modifications.
 
 We're going to focus in this project on how we handle errors, and how we present output to the user.
 
