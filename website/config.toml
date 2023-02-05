@@ -18,6 +18,9 @@ startLevel = 2
 lineNos = false
 codeFences = true
 guessSyntax = true
+[markup.goldmark.renderer]
+# Enable HTML codeblocks, e.g. for <details> blocks
+unsafe = true
 
 disableKinds = ["taxonomy", "term"]
 [taxonomies]
