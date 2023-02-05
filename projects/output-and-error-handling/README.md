@@ -63,7 +63,7 @@ The main reason we have these two different locations is that often times we wan
 
 For example, imagine your program writes out a series of scores, one per line, and you were going to write those scores to a file which another program may analyse. If the output file had "Waiting for HTTP request..." or "Server error" printed in it, that would be annoying to process later on, but as a user, you my want to know why your program appears to be hanging or failing.
 
-Another example is when something goes wrong - in your score-recording program, you may want to (reasonably) assume that anything it outputs is a number. But if something goes wrong (say, your network connection was down so the scores couldn't be fetched), reporting that on standard error means you won't accidentally try to add the error string "Network was down" to some other number. (TODO: This explanation doesn't seem very clear).
+Another example is when something goes wrong - in your score-recording program, you may want to (reasonably) assume that anything it outputs is a number. But if something goes wrong (say, your network connection was down so the scores couldn't be fetched), reporting that on standard error means you won't accidentally try to add the error string "Network was down" to some other number.
 
 #### Standard out and standard error in Go
 
