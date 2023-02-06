@@ -25,7 +25,7 @@ We will write a program which may encounter several kinds of error. We will hand
 
 In this project, we have been supplied with a server. Our server code lives in the `server` subdirectory of this project. Run it by `cd`ing into that directory, and running `go run`. The server is an HTTP server, which listens on port 8080 and responds in a few different ways:
 
-- If you make an HTTP GET request to it, it will respond with the current weather. When this happens, you should display it to the user on the terminal.
+- If you make an HTTP [`GET`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/GET) request to it, it will respond with the current weather. When this happens, you should display it to the user on the terminal.
 - Sometimes this server will overload and respond with a status code 429. When this happens, the client should:
   1. wait the amount of time indicated in the `Retry-After`[^1] response header, and
   2. attempt the request again.
