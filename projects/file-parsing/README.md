@@ -55,7 +55,7 @@ The format is as follows:
 The tool `od` (which you can learn more about [here](https://man7.org/linux/man-pages/man1/od.1.html)) can be useful for exploring binary data. For instance, we can run:
 
 ```console
-% od -t x1 projects/file-parsing/examples/custom-binary-le.bin
+> od -t x1 projects/file-parsing/examples/custom-binary-le.bin
 0000000    ff  fe  0a  00  00  00  41  79  61  00  1e  00  00  00  50  72
 0000020    69  73  68  61  00  ff  ff  ff  ff  43  68  61  72  6c  69  65
 0000040    00  19  00  00  00  4d  61  72  67  6f  74  00                
@@ -99,21 +99,21 @@ Two examples of this are [`jq`](https://stedolan.github.io/jq/) (which allows yo
 For example, you can use `jq` to answer the question "Who had the highest score" without needing to write a whole program:
 
 ```console
-% jq -r '. | max_by(.high_score).name' file-parsing/examples/json.txt
+> jq -r '. | max_by(.high_score).name' file-parsing/examples/json.txt
 Prisha
 ```
 
 Or use `fx` to do the same, but using more familiar JavaScript as the query language:
 
 ```console
-% fx file-parsing/examples/json.txt '.sort((l, r) => r.high_score - l.high_score)[0].name'
+> fx file-parsing/examples/json.txt '.sort((l, r) => r.high_score - l.high_score)[0].name'
 Prisha
 ```
 
 Similarly, a program called [`csvq`](https://github.com/mithrandie/csvq) can be used to query CSV files in a SQL-like query language:
 
 ```console
-# cat examples/data.csv | csvq 'SELECT * ORDER BY `high score` DESC LIMIT 1'
+> cat examples/data.csv | csvq 'SELECT * ORDER BY `high score` DESC LIMIT 1'
 +--------+------------+
 |  name  | high score |
 +--------+------------+

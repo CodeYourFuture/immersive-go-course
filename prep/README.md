@@ -80,7 +80,7 @@ It doesn't matter what this does: what's important is the input command and the 
 Input command:
 
 ```console
-curl -i 'http://localhost:8080/'
+> curl -i 'http://localhost:8080/'
 ```
 
 Expected output:

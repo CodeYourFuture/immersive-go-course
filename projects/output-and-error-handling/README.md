@@ -60,7 +60,7 @@ Think of these as "files" you can write to. These files are connected to your te
 You can connect, or redirect, these "files" somewhere else. Run this command:
 
 ```console
-echo hello > /tmp/the-output-from-echo
+> echo hello > /tmp/the-output-from-echo
 ```
 
 `echo`'s job is to write something to standard out. But if you run this command, you won't see "hello" output to the terminal. Instead, it will get written to the file `/tmp/the-output-from-echo`. You redirected echo's standard out to the file you named. If you `cat /tmp/the-output-from-echo` you'll see "hello" was written in that file.
@@ -68,7 +68,7 @@ echo hello > /tmp/the-output-from-echo
 You can redirect standard error by writing `2>` instead of `>`:
 
 ```console
-echo hello 2> /tmp/error-from-echo
+> echo hello 2> /tmp/error-from-echo
 ```
 
 In this example, you'll still see "hello" on your terminal. This is because you didn't redirect standard out anywhere. Also notice that `/tmp/error-from-echo` was created, but is empty. This is because `echo` didn't write anything to standard error.
@@ -76,7 +76,7 @@ In this example, you'll still see "hello" on your terminal. This is because you 
 You can redirect both by using both redirect instructions:
 
 ```console
-echo hello > /tmp/file-1 2> /tmp/file-2
+> echo hello > /tmp/file-1 2> /tmp/file-2
 ```
 
 Often, we want to pass the output of our program to some other program or file for further processing. Standard error is a place you can write information which a user may want, but which you don't want to pass forward.
@@ -130,13 +130,13 @@ In Go, you can choose what code to exit your program with by calling [`os.Exit`]
 From a terminal, you can check the exit code of a process you just ran by inspecting the environment variable `$?`. In this example, `pwd` is a successful command, and `cd /doesnotexist` is an unsuccessful one:
 
 ```console
-% pwd
+> pwd
 /tmp
-% echo $?
+> echo $?
 0
-% cd /doesnotexist
+> cd /doesnotexist
 cd: no such file or directory: /doestnotexist
-% echo $?
+> echo $?
 1
 ```
 
@@ -144,7 +144,7 @@ Many common utility programs document their exit codes in their manpages. You ca
 [^2]: If you find yourself stuck in a manpage, pressing `q` will exit from it.
 
 ```console
-% man cat
+> man cat
 ```
 
 shows the somewhat vague but still useful:
@@ -157,7 +157,7 @@ EXIT STATUS
 Or the same for `curl`:
 
 ```console
-% man curl
+> man curl
 ```
 
 shows lots of very specific information:
