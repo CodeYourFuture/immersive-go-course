@@ -87,11 +87,11 @@ Imagine your program writes out a series of scores, one per line. Next, you writ
 
 You have two different use cases: As a user, you want to know why your program appears to be hanging or failing. As a consumer of the output, you only want the scores. If the output file had "Waiting for HTTP request… or "Server error" printed in it, that would be annoying to process.
 
-What about when something goes wrong? Say, your network connection goes down and you cannot fetch your scores. In your score-analysing program, you may want to assume that anything the it analyses is a number. You might need to add numbers together. Reporting your problem on standard error means you won't try to add the error string "Network was down" to a number.
+What about when something goes wrong? Say, your network connection goes down and you cannot fetch your scores. In your score-analysing program, you may want to assume that anything it analyses is a number. You might need to add numbers together. Reporting your problem on standard error means you won't try to add the error string "Network was down" to a number.
 
 #### Standard out and standard error in Go
 
-In go, we access standard out and standard error with `os.Stdout` and `os.Stderr`.
+In Go, we access standard out and standard error with `os.Stdout` and `os.Stderr`.
 
 Write to them by writing code like `fmt.Fprint(os.Stdout, "Hello")` or `fmt.Fprint(os.Stderr, "Something went wrong")`. The "F” before "printf” stands for "file”. We're saying "print some string to a file I'll specify as the first argument”. In Unix systems, we often like to pretend anything we read or write is a file.
 
@@ -464,9 +464,9 @@ We should focus in this project on handling errors and retries.
 
 If the server replies with a retryable error, we will retry it appropriately. For a `429` response code, this means:
 
-1. reading the Retry-After response header
-1. calling `time.Sleep` until the appropriate time has passed
-1. trying again.
+1. Reading the Retry-After response header.
+1. Calling `time.Sleep` until the appropriate time has passed.
+1. Trying again.
 
 Make sure all error messages are clear and useful to the user, that we're properly printing to standard out or standard error when appropriate, and that our program always exits with an appropriate exit code.
 
@@ -490,6 +490,6 @@ If the server terminates our connection, we will give up and tell the user that 
 
 ### Make sure that:
 
-1. all error messages are clear and useful to the user,
-2. we're properly printing to standard out or standard error when appropriate
-3. our program always exits with an appropriate exit code.
+1. All error messages are clear and useful to the user.
+2. We're properly printing to standard out or standard error when appropriate.
+3. Our program always exits with an appropriate exit code.
