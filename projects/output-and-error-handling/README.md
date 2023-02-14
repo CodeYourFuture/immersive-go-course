@@ -470,6 +470,10 @@ If the server replies with a retryable error, we will retry it appropriately. Fo
 
 Make sure all error messages are clear and useful to the user, that we're properly printing to standard out or standard error when appropriate, and that our program always exits with an appropriate exit code.
 
+#### Creating the program
+
+We'll create the program in the same directory as this README.md file. In a terminal, `cd` to this directory, and run `go mod init github.com/CodeYourFuture/immersive-go-course/projects/output-and-error-handling`. This will create a `go.mod` file (which indicates a Go program lives here). Then we will need to manually create a `main.go` file and start writing our program in it.
+
 #### time.Sleep
 
 ##### If we're going to sleep for more than 1 second:
