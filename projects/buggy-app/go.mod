@@ -8,7 +8,7 @@ require (
 	github.com/jackc/pgx/v5 v5.0.2
 	github.com/pashagolub/pgxmock/v2 v2.1.0
 	golang.org/x/crypto v0.0.0-20220919173607-35f4265a4bc0
-	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
+	golang.org/x/net v0.7.0
 	google.golang.org/grpc v1.50.0
 	google.golang.org/protobuf v1.27.1
 )
@@ -22,7 +22,7 @@ require (
 	github.com/jackc/puddle/v2 v2.0.0 // indirect
 	github.com/lib/pq v1.10.7 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
-	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
-	golang.org/x/text v0.3.8 // indirect
+	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
 	google.golang.org/genproto v0.0.0-20220314164441-57ef72a4c106 // indirect
 )
