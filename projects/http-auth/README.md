@@ -10,9 +10,9 @@ Timebox: 6 days
 
 ## Learning objectives:
 
-- Use Go’s net/http package to build start a simple server that responds to local requests
-- Use HTTP GET and response codes
-- Transfer data with cURL
+- Use Go's net/http package to build start a server that responds to local requests
+- Make HTTP GET requests using cURL
+- Respond to HTTP get requests with relevant response codes from a Go server
 - Define URL, header, body and content-type
 - Accept parameters in via GET in the query string
 - Accept data via a POST request
