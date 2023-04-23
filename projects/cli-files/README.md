@@ -10,8 +10,9 @@ Timebox: 4 days
 
 ## Objectives:
 
+- Make a go program from scratch
 - Use go build/go install/go get etc
-- Understand what a process is & the basics of process - lifecycle
+- Describe the basics of a process and process lifecycle
 - Accept arguments on the CLI
 - Open, read (and close) files from CLI arguments
 - Reading directories for files
