@@ -11,8 +11,8 @@ Timebox: 6 days
 ## Learning objectives:
 
 - Build a simple API server that talks JSON
-- Understand how a server and a database work together
-- Use SQL to read data from a database
+- Describe how a server and a database work together
+- Read data from a database with SQL
 - Accept data over a POST request and write it to the database
 
 ## Project
