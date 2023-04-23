@@ -16,7 +16,6 @@ Timebox: 5 days
 - Configure nginx to talk to 2-3 copies of the API server
 - Resolve CORS issues
 - Configure a reverse proxy, routing on path
-- Conduct server health checks
 
 ### In future:
 
