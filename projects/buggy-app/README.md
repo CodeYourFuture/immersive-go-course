@@ -10,10 +10,13 @@ In this project, you're going to run, debug, and fix a buggy application. This c
 
 ## Learning objectives:
 
-- How can we quickly read, understand and fix existing application code?
-- How do we QA running code by thinking about security, edge cases and performance?
-- How do we ensure safe data access with authentication & authorisation?
-- What are some common architectures for services in tech companies?
+- Read, understand and fix existing application code
+- Interpret architecture diagrams to debug an existing application
+- Interpret database specifications to debug an existing application
+- QA running code by thinking about security, edge cases and performance
+- Ensure safe data access with authentication & authorisation
+- Describe some common architectures for services in tech companies
+- Report your findings to a technical colleague
 
 ## Project
 
