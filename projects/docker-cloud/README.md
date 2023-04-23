@@ -13,7 +13,7 @@ In this project, you'll build a simple Go server application and Dockerise it to
 ## Learning objectives:
 
 - Set up Docker locally
-- `Dockerfile` syntax & how to containerise an application
+- Containerise an application using Docker syntax
 - Run applications locally using Docker
 - Push container images to a repository ([ECR](https://aws.amazon.com/ecr/))
 - Deploy images to Elastic Cloud resources using Elastic Container Service

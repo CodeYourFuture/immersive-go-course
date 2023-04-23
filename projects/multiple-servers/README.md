@@ -10,13 +10,14 @@ Timebox: 5 days
 
 ## Learning objectives:
 
-- Basic microservices ideas, separating concerns of services
+- Describe microservices
+- Separate concerns of microservices
+- Replicate a local setup in the cloud on a virtual machine
 - Configure nginx to talk to 2-3 copies of the API server
-- Some web security ideas (CORS)
-- Reverse proxy configuration, routing on path
-- Health checks
+- Resolve CORS issues
+- Configure a reverse proxy, routing on path
 
-In future:
+### In future:
 
 - Running applications in the cloud
 - Using a cloud-hosted databases
@@ -109,11 +110,13 @@ Specifically, the `cmd/` files will import functionality from `api` and `static`
 In reality, starting each will look like this:
 
 API server:
+
 ```console
 > DATABASE_URL='postgres://localhost:5432/go-server-database' go run ./cmd/api-server --port 8081
 ```
 
 Static server:
+
 ```console
 > go run ./cmd/static-server --path assets --port 8082
 ```
