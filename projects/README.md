@@ -22,6 +22,8 @@ Most exercises finish with a list of optional extension tasks. It's highly recom
    <br>An introduction to how to handle errors in Go, and how to present information to users of programs run on the command line.
 1. [CLI & Files](./cli-files)
    <br>An introduction to building things with Go by replicating the unix tools `cat` and `ls`.
+1. [Interfaces](./interfaces)
+   <br>An introduction to interfaces in Go.
 1. [File Parsing](./file-parsing)
    <br>Practice parsing different formats of files, both standard and custom.
 1. [Servers & HTTP requests](./http-auth)
