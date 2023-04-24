@@ -11,6 +11,7 @@ Before you start this course, there's a few things we assume you've done:
 - You're familiar with the essentials of writing code in JavaScript
 - You have experience with JavaScript in the browser and in [Node](https://nodejs.org/en/)
 - You've completed the [Tour of Go](https://go.dev/tour/welcome/1)
+- Read the [Pointers chapter](https://www.golang-book.com/books/intro/8) of [An Introduction to Programming in Go](https://www.golang-book.com/books/intro), and do the problems listed in the chapter.
 
 This is important because we don't cover the basic language features of Go: you need to be familiar with writing Go functions and methods, plus the basics of types in Go. You'll also need to know how to navigate [packages and documentation](https://pkg.go.dev/), and we have a [short guide on how to do that](#learn-how-to-navigate-go-documentation).
 
