@@ -13,7 +13,7 @@ we are going to use distributed tracing to understand its behaviour.
 
 - Describe the differences between distributed tracing and logging and metrics
 - Implement RAFT
-- Add distributed tracing
+- Instrument an application with distributed tracing
 - Use distributed tracing to get a detailed understanding of complex application behaviour
 - Minimise costs of distributed tracing
 
