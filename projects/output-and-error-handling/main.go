@@ -16,58 +16,25 @@ const (
 	retryAfter Headers = "Retry-After"
 )
 
-var httpClient = http.Client{
-	Timeout: time.Second * 30,
+type fetcher struct {
+	client http.Client
 }
 
-func main() {
-	for {
-		resp, err := get()
-		if err != nil {
-			writeStdErr(err.Error())
-			return
-		}
-
-		switch {
-		case resp.StatusCode == 200:
-			body, _ := io.ReadAll(resp.Body)
-			writeStdOut(string(body) + "\n")
-			return
-		case resp.StatusCode == 429:
-			duration, err := parseRetryHeader(resp.Header.Get(retryAfter))
-			if err != nil {
-				break
-			}
-			writeStdOut(fmt.Sprintf("waiting for: %v\n", duration))
-			time.Sleep(duration)
-			continue
-		default:
-			break
-		}
+func NewFetcher() *fetcher {
+	return &fetcher{
+		http.Client{
+			Timeout: time.Second * 30,
+		},
 	}
 }
 
-func parseRetryHeader(retry string) (time.Duration, error) {
-	wait, err := time.Parse(http.TimeFormat, retry)
-	switch {
-	case err == nil:
-		return wait.Sub(time.Now()), nil
-	default:
-		wait, err := strconv.Atoi(retry)
-		if err != nil {
-			return 0, err
-		}
-		return time.Duration(wait), nil
-	}
-}
-
-func get() (*http.Response, error) {
+func (f *fetcher) fetch() (*http.Response, error) {
 	req, err := http.NewRequest(http.MethodGet, serverURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error creating a new request: %w\n", err)
 	}
 
-	resp, err := httpClient.Do(req)
+	resp, err := f.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("connection to the server failed: %w\n", err)
 	}
@@ -75,17 +42,49 @@ func get() (*http.Response, error) {
 	return resp, nil
 }
 
-func writeStdOut(format string) {
-	write(os.Stdout, format)
-}
+func main() {
+	f := NewFetcher()
 
-func writeStdErr(format string) {
-	write(os.Stderr, format)
-}
+	for {
+		resp, err := f.fetch()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, fmt.Sprintf("error fetching the weather data: %v\n", err))
+			os.Exit(1)
+		}
 
-func write(w io.Writer, format string) {
-	if _, err := fmt.Fprintf(w, format); err != nil {
-		fmt.Fprintf(os.Stderr, fmt.Sprintf("error writing to console: %v\n", err))
-		return
+		switch resp.StatusCode {
+		case http.StatusOK:
+			body, _ := io.ReadAll(resp.Body)
+			fmt.Fprintf(os.Stdout, string(body)+"\n")
+			os.Exit(0)
+		case http.StatusTooManyRequests:
+			duration, err := parseRetryHeader(resp.Header.Get(retryAfter))
+			if err != nil {
+				fmt.Fprintf(os.Stderr, fmt.Sprintf("unexpecte retry error: %v\n", err))
+				fmt.Fprintf(os.Stdout, "retrying the request")
+				continue
+			}
+			fmt.Fprintf(os.Stdout, fmt.Sprintf("server asked to wait and retry after: %v\n", duration))
+			time.Sleep(duration)
+			continue
+		default:
+			fmt.Fprintf(os.Stderr, "unexpected status code received: %v\n", err)
+			os.Exit(1)
+		}
 	}
+}
+
+func parseRetryHeader(retry string) (time.Duration, error) {
+	var err error
+	wait, err := time.Parse(http.TimeFormat, retry)
+	if err == nil {
+		return wait.Sub(time.Now()), nil
+	}
+
+	waitInSeconds, err := strconv.Atoi(retry)
+	if err == nil {
+		return time.Duration(waitInSeconds), err
+	}
+
+	return -1, fmt.Errorf("unable to parse the retry header: %w", err)
 }
