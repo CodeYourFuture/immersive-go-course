@@ -13,13 +13,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type config struct {
-	PORT int `json:"port"`
-	DB   struct {
-		DSN string `json:"dsn"`
-	} `json:"db"`
-}
-
 func main() {
 	svr := &server.Server{}
 	if err := svr.MountLogger(); err != nil {
