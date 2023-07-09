@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/go-chi/chi/v5"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"os"
@@ -28,7 +29,7 @@ func main() {
 	if err := svr.MountImageService(); err != nil {
 		os.Exit(1)
 	}
-	mux := http.NewServeMux()
+	mux := chi.NewRouter()
 	v1.Register(mux, svr)
 
 	mux.Handle("/metrics", promhttp.Handler())

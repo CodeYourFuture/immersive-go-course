@@ -3,8 +3,10 @@ package v1
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
+	"server-database/internal/pagination"
 	"strconv"
 	"strings"
 
@@ -18,33 +20,20 @@ const (
 	indent queryParams = "indent"
 )
 
-type Images struct {
+type Image struct {
 	logger  *log.Logger
 	service service.Imager
 }
 
-// NewImages is a constructor of the images
-func NewImages(log *log.Logger, svc service.Imager) *Images {
-	return &Images{
+// NewImage is a constructor of the images
+func NewImage(log *log.Logger, svc service.Imager) *Image {
+	return &Image{
 		logger:  log,
 		service: svc,
 	}
 }
 
-func (i *Images) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	switch req.Method {
-	case http.MethodGet:
-		i.Get(w, req)
-	case http.MethodPost:
-		i.Post(w, req)
-	case http.MethodDelete:
-		i.Delete(w, req)
-	default:
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-	}
-}
-
-func (i *Images) Delete(w http.ResponseWriter, request *http.Request) {
+func (i *Image) Delete(w http.ResponseWriter, request *http.Request) {
 	id, err := fetchId(request)
 	if err != nil {
 		i.logger.Printf("error fetching id: %v\n", err)
@@ -66,7 +55,9 @@ func (i *Images) Delete(w http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func (i *Images) Get(w http.ResponseWriter, request *http.Request) {
+func (i *Image) Get(w http.ResponseWriter, request *http.Request) {
+	fmt.Print(request.URL.Path)
+
 	id := request.URL.Query().Get("id")
 	if id == "" {
 		http.Error(w, "id required", http.StatusBadRequest)
@@ -106,7 +97,37 @@ func (i *Images) Get(w http.ResponseWriter, request *http.Request) {
 	Respond(i.logger, w, image, http.StatusOK, nil)
 }
 
-func (i *Images) Post(w http.ResponseWriter, req *http.Request) {
+func (i *Image) List(w http.ResponseWriter, req *http.Request) {
+	page := req.URL.Query().Get("page")
+	perPage := req.URL.Query().Get("perPage")
+
+	pageInt, _ := strconv.Atoi(page)
+	perPageInt, _ := strconv.Atoi(perPage)
+
+	if perPageInt == 0 {
+		pageInt = 1
+	}
+
+	if perPageInt == 0 {
+		perPageInt = 10
+	}
+
+	p := pagination.Pagination{
+		Page:    pageInt,
+		PerPage: perPageInt,
+	}
+
+	images, err := i.service.List(req.Context(), p)
+	if err != nil {
+		i.logger.Printf("error fetching list of images: %w", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	Respond(i.logger, w, images, http.StatusOK, nil)
+}
+
+func (i *Image) Post(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
 	decoder := json.NewDecoder(req.Body)

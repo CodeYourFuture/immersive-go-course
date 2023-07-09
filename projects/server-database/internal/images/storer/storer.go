@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"server-database/internal/pagination"
 	"time"
 
 	"server-database/internal/images"
@@ -18,6 +19,7 @@ type Store interface {
 	Insert(*images.Image) error
 	Get(ctx context.Context, id int) (*images.Image, error)
 	Delete(ctx context.Context, id int) error
+	List(ctx context.Context, p pagination.Pagination) ([]images.Image, error)
 }
 
 type Manager struct {
@@ -83,8 +85,46 @@ func (m *Reader) Get(ctx context.Context, id int) (*images.Image, error) {
 	return &image, nil
 }
 
-func (m *Reader) List() error {
-	return nil
+func (m *Reader) List(ctx context.Context, p pagination.Pagination) ([]images.Image, error) {
+	query := `
+	SELECT id, title, url, alt_text, created_at, resolution 
+	FROM public.images
+	LIMIT $1 OFFSET $2	
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, time.Second*3)
+	defer cancel()
+
+	rows, err := m.db.QueryContext(ctx, query, p.Limit(), p.OffSet())
+	if err != nil {
+		return nil, fmt.Errorf("failed to query the db: %w\n", err)
+	}
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+
+		}
+	}(rows)
+
+	var imgs []images.Image
+	for rows.Next() {
+		var img images.Image
+		err := rows.Scan(
+			&img.ID,
+			&img.Title,
+			&img.URL,
+			&img.AltText,
+			&img.CreatedAt,
+			&img.Resolution,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan the image: %w", err)
+		}
+
+		imgs = append(imgs, img)
+	}
+
+	return imgs, nil
 }
 
 func (m *Writer) Insert(image *images.Image) error {
@@ -96,10 +136,6 @@ func (m *Writer) Insert(image *images.Image) error {
 
 	args := []any{image.Title, image.URL, image.AltText, image.Resolution}
 	return m.db.QueryRow(query, args...).Scan(&image.ID, &image.CreatedAt)
-}
-
-func (m *Writer) Update() error {
-	return nil
 }
 
 func (m *Writer) Delete(ctx context.Context, id int) error {

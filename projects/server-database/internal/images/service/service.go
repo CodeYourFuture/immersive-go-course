@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"server-database/internal/pagination"
 
 	"github.com/lib/pq"
 
@@ -15,6 +16,7 @@ type Imager interface {
 	Create(ctx context.Context, payload *images.CreateImagePayload) (int, error)
 	Get(ctx context.Context, id int) (*images.Image, error)
 	Delete(ctx context.Context, id int) error
+	List(ctx context.Context, p pagination.Pagination) ([]images.Image, error)
 }
 
 type Service struct {
@@ -27,6 +29,10 @@ func New(logger *log.Logger, store storer.Store) *Service {
 		log:   logger,
 		store: store,
 	}
+}
+
+func (s *Service) List(ctx context.Context, p pagination.Pagination) ([]images.Image, error) {
+	return s.store.List(ctx, p)
 }
 
 func (s *Service) Delete(ctx context.Context, id int) error {
