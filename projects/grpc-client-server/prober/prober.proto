@@ -12,10 +12,13 @@ service Prober {
 // The request message 
 message ProbeRequest {
   string endpoint = 1;
+  uint64 num_of_requests = 2;
 }
 
 // The response message containing the result
 message ProbeReply {
-  float latency_msecs = 1;
+  float average_latency_msecs = 1;
+  uint64 total_request_counts = 2;
+  uint64 total_requests_with_2XX_status_code = 3;
 }
 
