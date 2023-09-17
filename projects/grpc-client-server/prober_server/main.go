@@ -11,12 +11,26 @@ import (
 	"sync"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
 	pb "github.com/CodeYourFuture/immersive-go-course/grpc-client-server/prober"
 	"google.golang.org/grpc"
 )
 
 var (
-	port = flag.Int("port", 50051, "The server port")
+	port         = flag.Int("port", 50051, "The server port")
+	probeLatency = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "probe_average_latency",
+		Help: "probe latency for request",
+	},
+		[]string{"endpoint"},
+	)
+	probeTotalRequests = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+		Name: "probe_total_requests",
+	},
+		[]string{"endpoint"},
+	)
 )
 
 // server is used to implement prober.ProberServer.
@@ -79,6 +93,9 @@ func (s *server) DoProbes(ctx context.Context, in *pb.ProbeRequest) (*pb.ProbeRe
 		}
 	}
 
+	probeLatency.WithLabelValues(in.GetEndpoint()).Set(float64(totalElapsedTimeInMS / float32(totalSuccessfulRequestCount)))
+	probeTotalRequests.WithLabelValues(in.GetEndpoint()).Set(float64(in.NumOfRequests))
+
 	return &pb.ProbeReply{
 		AverageLatencyMsecs:             totalElapsedTimeInMS / float32(totalSuccessfulRequestCount),
 		TotalRequestCounts:              in.NumOfRequests,
@@ -97,7 +114,16 @@ func main() {
 	pb.RegisterProberServer(s, &server{
 		logger: logger,
 	})
+	prometheus.MustRegister(probeLatency, probeTotalRequests)
 	log.Printf("server listening at %v", lis.Addr())
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		logger.Println("attempting to start the metrics endpoint :4000")
+		if err := http.ListenAndServe(":4000", nil); err != nil {
+			logger.Printf("failed to start the metrics endpoint: %v\n", err)
+			return
+		}
+	}()
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
