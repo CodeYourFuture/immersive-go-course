@@ -61,6 +61,20 @@ Implement functions on `OurByteBuffer` so that all the tests pass.
 
 (Hint: We need to implement our functions on _pointers_ to `OurByteBuffer`, not to _copies_ of it).
 
+#### Limitations
+
+When implementing a type we're going to use in different places, it's important to think about the limitations of our type.
+
+Some examples of limitations for `OurByteBuffer` may be:
+- Is there a maximum about of data an `OurByteBuffer` can store?
+- What operations are safe or unsafe to perform concurrently on an `OurByteBuffer` from different threads?
+- Are there any important performance characteristics? e.g. is it much faster or slower to `Write` one large amount of data to it than write the same amount of data one byte at a time?
+- Are there any important memory characteristics? e.g. does an `OurByteBuffer` always retain all data that was stored in it, or does it free some of its memory after it's been read?
+
+It can be useful to note these limitations in a doc comment for the type, or method, they apply to. This will help someone using your type to use it the best way. Make sure you write these docs.
+
+When you need to pick (or implement) a type which implements an interface, it's important to think about these limitations.
+
 ### Implementing a custom filter
 
 Implement a new struct called `FilteringPipe`.
