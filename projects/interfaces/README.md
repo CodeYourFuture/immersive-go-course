@@ -26,7 +26,7 @@ Interfaces allow us to write code which relies on other types having some behavi
 
 Two common interfaces in Go are [`io.Reader`](https://pkg.go.dev/io#Reader) and [`io.Writer`](https://pkg.go.dev/io#Writer). We can write a function which accepts an `io.Reader` as a parameter, and that function can know it can read bytes from that parameter, without worrying about where they're coming from.
 
-In this exercise, we're going to implement two structs in Go, and have them implement some interfaces.
+In this exercise, we're going to implement two [structs](https://go.dev/tour/moretypes/2) in Go, and have them implement some interfaces.
 
 Make a new Go program, and we'll begin:
 
