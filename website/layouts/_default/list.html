@@ -21,6 +21,20 @@
 
 <!-- version pages -->
 {{ if (eq .Section "versions") }}
+
+{{ if eq .Page.Path "versions/flattened/1-0-0.md" }}
+  {{ .Content }}
+  {{ range .Site.Taxonomies.versions }}
+    {{ range .Pages.Reverse }}
+      <div style="margin-bottom: 40px; border-bottom: 1px solid black; width: 55vw;">
+        <h1>{{ .Page.Title }}</h1>
+        {{ .Page.Content }}
+      </div>
+    {{ end }}
+  {{ end }}
+
+{{ else }}
+
 <article class="{{ with .Content }}c-copy{{end}}">
   {{ .Content }}
   <ol class="c-timeline">
@@ -29,7 +43,9 @@
     {{ end }}
   </ol>
 </article>
-{{ partial "breadcrumbs.html" . }} {{ end }}
+{{ partial "breadcrumbs.html" . }}
+{{ end }}
+{{ end }}
 <!-- 
   end version pages 
 -->
