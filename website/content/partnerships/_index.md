@@ -79,7 +79,7 @@ Additionally we can tailor specific topics or projects to the specific needs of 
 
 CYF+ has run one cohort with Slack, where both participants were converted to full-time employees just 6 months into their internships.
 
-TODO: Insert a pull quote from V
+"Hiring SREs is challenging, but this program enables us to cultivate a diverse talent pool. In my humble opinion, investing in such initiatives is the most reliable way to onboard junior engineers, with a high success rate on the job. These programs not only benefit candidates but also provide valuable mentorship and growth opportunities for our existing team, inspiring and motivating everyone involved. The CYF+ graduates we hired are thriving. We couldn’t be happier with the results." - [V Brennan](https://www.linkedin.com/in/vcbrennan/), Senior Director of Engineering, Slack
 
 ## Profiles
 
