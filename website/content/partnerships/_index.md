@@ -83,14 +83,12 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 
 ## Profiles
 
- <!--TODO: Fix the layout stuff here-->
-
 ### Our graduates
 
 [Watch a video of graduates presenting at SRECon23 EMEA about their experience with the course.](https://www.youtube.com/watch?v=bRatSl8BKGc)
 
 <section class="c-person-profile">
-  <img src="rita.jpg" alt="Rita Glushkova" />
+  <img src="static/rita.jpg" alt="Rita Glushkova" />
 
   Rita graduated from CYF+ in 2023 and is now a full-time SRE at Slack. Before enrolling in the main CYF course in 2022, she had no background or experience in writing software. She should write some things about how meaningful this experience has been for her, and how it has impacted her life.  <!--TODO: Fill this in-->
 
@@ -98,7 +96,7 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 </section>
 
 <section class="c-person-profile">
-  <img src="berkeli.jpg" alt="Berkeli Halmyradov" />
+  <img src="static/berkeli.jpg" alt="Berkeli Halmyradov" />
 
   I learned about CYF during a very difficult time in my life right at the peak of the pandemic, when I thought there was no hope. Almost 3 years later, I’m now working as a Site Reliability Engineer at Slack and it's all thanks to CYF, CYF+, and the amazing volunteers that work tirelessly to help students become engineers. For me, CodeYourFuture isn't just a bootcamp, it's a community where everyone is welcome regardless of their background or situation.
 
@@ -108,7 +106,7 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 ### Some of our volunteers
 
 <section class="c-person-profile">
-  <img src="dwhsquare.jpg" alt="Daniel Wagner-Hall" />
+  <img src="static/dwhsquare.jpg" alt="Daniel Wagner-Hall" />
 
   [Daniel Wagner-Hall](https://github.com/illicitonion) acts as a mentor for the trainees on the course, as well as helping to create course content. He's been a volunteer with CYF since 2020, and has worked at companies like Google, Twitter, and Apple. He's developed systems that reliably serve millions of queries per second, maintains [several](https://github.com/bazelbuild/rules_rust) [significant](https://crates.io/crates/num_enum) [open](https://www.selenium.dev/project/structure/#selenium_committers) [source](https://github.com/bazel-contrib/target-determinator) [projects](https://www.pantsbuild.org/docs/team), and loves to help people grow.
   <div style="clear: both"></div>
@@ -129,8 +127,11 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 </section>
 
 <section class="c-person-profile">
+  <img src="static/abdi.jpg" alt="Abdirizak Mohamed" />
 
-  Abdi is a good one, and should write some cool stuff about how great he is.
+  [Abdirizak Mohamed](https://www.linkedin.com/in/abdirizak-mohamed-63778117b/) is a software engineer who has worked for several companies, including Zoopla and most recently Amazon. At Amazon, he works on improving the resiliency of the Prime Video platform, including owning a project to automate the management of assets required for widely distributed load tests.
+
+  Abdirizak has been with CYF for several years, primarily delivering course content during weekly classes, buddying with trainees, and providing feedback on coursework. For CYF+ he supports trainees by holding office hours and reviewing exercise submissions.
 
   <div style="clear: both"></div>
 </section>
