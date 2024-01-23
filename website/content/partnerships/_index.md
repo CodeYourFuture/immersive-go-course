@@ -90,7 +90,7 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 <section class="c-person-profile">
   <img src="static/rita.jpg" alt="Rita Glushkova" />
 
-  Rita graduated from CYF+ in 2023 and is now a full-time SRE at Slack. Before enrolling in the main CYF course in 2022, she had no background or experience in writing software. She should write some things about how meaningful this experience has been for her, and how it has impacted her life.  <!--TODO: Fill this in-->
+  "CYF+ turned my life around by 180 degrees. What initially felt like a distant dream has now become my everyday reality. It was one of the biggest challenges I undertook, but every minute of it was a transformative experience to become a better, more knowledgeable, and confident software engineer. It opened doors to Big Tech and prepared me to work in a world where millions of requests flood every second. Through CYF+ I met the most amazing mentors, worked with advanced technologies, and presented at a conference. Thanks to CYF+ and everyone involved, I am finally living the life I always wanted!" - [Margarita Glushkova](https://www.linkedin.com/in/margarita-glushkova-894344105/)
 
   <div style="clear: both"></div>
 </section>
@@ -98,7 +98,7 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 <section class="c-person-profile">
   <img src="static/berkeli.jpg" alt="Berkeli Halmyradov" />
 
-  I learned about CYF during a very difficult time in my life right at the peak of the pandemic, when I thought there was no hope. Almost 3 years later, I’m now working as a Site Reliability Engineer at Slack and it's all thanks to CYF, CYF+, and the amazing volunteers that work tirelessly to help students become engineers. For me, CodeYourFuture isn't just a bootcamp, it's a community where everyone is welcome regardless of their background or situation.
+  "I learned about CYF during a very difficult time in my life right at the peak of the pandemic, when I thought there was no hope. Almost 3 years later, I’m now working as a Site Reliability Engineer at Slack and it's all thanks to CYF, CYF+, and the amazing volunteers that work tirelessly to help students become engineers. For me, CodeYourFuture isn't just a bootcamp, it's a community where everyone is welcome regardless of their background or situation." - [Berkeli Halmyradov](https://www.linkedin.com/in/berkeli/)
 
   <div style="clear: both"></div>
 </section>
