@@ -120,8 +120,11 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 </section>
 
 <section class="c-person-profile">
+  <img src="static/radha.jpg" alt="Radha Kumari" />
 
-  Radha is also great, and should _also_ write a profile here too.
+  My name is [Radha Kumari](https://www.linkedin.com/in/kumari-radha-a3419b25/) and I'm a Staff Software Engineer at Slack. I'm part of the Demand Engineering Team, responsible for all of Slack's ingress Traffic and how internal services interact with each other.
+
+  I have had the privilege of working alongside some amazing human beings in designing this innovative and unique course aimed at teaching infrastructure and Site Reliability Engineering (SRE) skills to Refugees and low-income people. Mentoring individuals through this program and witnessing their growth has been incredibly rewarding, reinforcing my belief in the transformative power of education and mentorship.
 
   <div style="clear: both"></div>
 </section>
