@@ -1,5 +1,10 @@
 #!/bin/bash -eu
 
+SCRIPT_DIR="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}" && cd .. && pwd)"
+
+cd "${REPO_ROOT}"
+
 case "$(uname)" in
   Darwin)
     sed_i=("sed" "-i" "")
