@@ -2,13 +2,15 @@
 
 CYF+ is an immersive education programme involving guided independent study and a work placement.
 
+The core offering of CYF+ is to de-risk hiring high-potential junior engineers from diverse backgrounds into high-impact jobs.
+
 We partner with top-of-industry tech companies to hire excellent diverse and disadvantaged people into junior roles where they thrive.
 
 Previously we have run this programme to train software-engineering focused SREs, and we can support other software- and data-engineering focused roles.
 
 ## Who is Code Your Future?
 
-[Code Your Future](https://codeyourfuture.io/) is an established charity based primarily in the UK providing a year-long part-time bootcamp to get disadvantaged people into good jobs in tech. (See the [curriculum overview for the main course](https://deploy-preview-530--cyf-curriculum.netlify.app/overview/).)  <!--TODO: Link to a deployed version of this overview when there is one-->
+[Code Your Future](https://codeyourfuture.io/) is an established charity based primarily in the UK providing a year-long part-time bootcamp to get disadvantaged people into good jobs in tech.
 
 The CYF+ programme aims to take our top performing graduates and get them into the very top of the industry.
 
@@ -56,7 +58,7 @@ Our aim is to transition from 100% CYF mentorship at the start of the programme,
 
 ## What CYF+ teaches
 
-CYF+ caters its curriculum to the needs of the specific hiring partner. In 2023 [we partnered with Slack](https://slack.com/intl/en-gb/blog/news/slack-cyf-plus-engineering-employment-pathways-refugees) to hire two SREs for their Demand Engineering team, so put together projects and material focusing on distributed systems thinking, troubleshooting, and handling scale and failure, as well as using Go as the main programming language. [You can see the content of the first run's course here](https://deploy-preview-152--cyf-systems.netlify.app/versions/flattened/1-0-0/). <!--TODO: Link to a deployed version when merged.-->
+CYF+ caters its curriculum to the needs of the specific hiring partner. In 2023 [we partnered with Slack](https://slack.com/intl/en-gb/blog/news/slack-cyf-plus-engineering-employment-pathways-refugees) to hire two SREs for their Demand Engineering team, so put together projects and material focusing on distributed systems thinking, troubleshooting, and handling scale and failure, as well as using Go as the main programming language. [You can see the content of the first run's course here](https://systems.codeyourfuture.io/versions/1-0-0/).
 
 The course will always include:
 * Quality code - making conscious decisions about what the best, most readable, most maintainable way to write code is.
@@ -109,13 +111,6 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
   <img src="static/dwhsquare.jpg" alt="Daniel Wagner-Hall" />
 
   [Daniel Wagner-Hall](https://github.com/illicitonion) acts as a mentor for the trainees on the course, as well as helping to create course content. He's been a volunteer with CYF since 2020, and has worked at companies like Google, Twitter, and Apple. He's developed systems that reliably serve millions of queries per second, maintains [several](https://github.com/bazelbuild/rules_rust) [significant](https://crates.io/crates/num_enum) [open](https://www.selenium.dev/project/structure/#selenium_committers) [source](https://github.com/bazel-contrib/target-determinator) [projects](https://www.pantsbuild.org/docs/team), and loves to help people grow.
-  <div style="clear: both"></div>
-</section>
-
-<section class="c-person-profile">
-
-  Laura Nolan is great, and should write an embarrassing profile here about how fancy she is.
-
   <div style="clear: both"></div>
 </section>
 
