@@ -3,8 +3,11 @@ $neons := readDir "static/pictures/svgs/neons" | shuffle | first 1 }}
 
 <script>
   function randomBG() {
+    const baseUrl = "{{.Site.BaseURL}}";
+    const neon = "{{ range $neons }}{{ .Name }}{{ end }}";
+    const quad = "{{ range $quads }}{{ .Name }}{{ end }}";
     const style = document.createElement("style");
-    style.textContent = `body, html {background-image:url("{{.Site.BaseURL}}pictures/svgs/neons/{{ range $neons }}{{ .Name }}{{ end }}"),url("{{.Site.BaseURL}}pictures/svgs/quads/{{ range $quads }}{{ .Name }}{{ end }}"),radial-gradient(circle,var(--theme-color--paper) 0%,var(--theme-color--block) 50%,var(--theme-color--paper) 100%);
+    style.textContent = `body, html {background-image:url("${baseUrl}pictures/svgs/neons/${neon}"),url("${baseUrl}pictures/svgs/quads/${quad}"),radial-gradient(circle,var(--theme-color--paper) 0%,var(--theme-color--block) 50%,var(--theme-color--paper) 100%);
       background-size: cover;
     }`;
 
