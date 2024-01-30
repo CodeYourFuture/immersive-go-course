@@ -115,6 +115,15 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 </section>
 
 <section class="c-person-profile">
+  <img src="static/lauranolan.jpg" alt="Laura Nolan" />
+
+  [Laura Nolan](https://www.linkedin.com/in/laura-nolan-bb7429/) is a principal software engineer, known for writing and speaking about Site Reliability Engineering (SRE) and software operations topics. She is a contributor to [the O'Reilly Site Reliability Engineering book](https://www.oreilly.com/library/view/site-reliability-engineering/9781491929117/), and contributes her knowledge to developing the CYF+ curriculum as well as mentoring trainees on the course.
+
+  Laura initially worked with CYF as part of her former role at Slack, but CYF impressed her so much with its sheer efficiency and focus on its mission to diversify tech that she stayed as a volunteer.
+  <div style="clear: both"></div>
+</section>
+
+<section class="c-person-profile">
   <img src="static/radha.jpg" alt="Radha Kumari" />
 
   My name is [Radha Kumari](https://www.linkedin.com/in/kumari-radha-a3419b25/) and I'm a Staff Software Engineer at Slack. I'm part of the Demand Engineering Team, responsible for all of Slack's ingress Traffic and how internal services interact with each other.
