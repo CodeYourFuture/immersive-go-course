@@ -2,6 +2,7 @@
 title="CYF+02 Sprint 3"
 date="01 Jan 2024"    
 versions=["1-1-0"]
+weight=4
 +++
 
 # Provisional start date: 6 May 2024

@@ -2,6 +2,7 @@
 title="CYF+02 Sprint 5"
 date="01 Jan 2024"    
 versions=["1-1-0"]
+weight=6
 +++
 
 # Provisional start date: 3 June 2024

@@ -3,6 +3,7 @@ title="CYF+02 Sprint 2"
 date="01 Jan 2024"    
 versions=["1-1-0"]
 hero="dddepth--085.webp"
+weight=3
 +++
 
 # Provisional start date: 22 Apr 2024

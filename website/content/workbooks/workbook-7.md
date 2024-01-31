@@ -1,8 +1,9 @@
 +++
-title="CYF+02 Sprint 1 Workbook"
+title="CYF+02 Sprint 1"
 date="01 Jan 2024"    
 versions=["1-1-0"]
 hero="pictures/depths/dddepth--085.webp"
+weight=2
 +++
 
 # Provisional start date: 08 April 2024
