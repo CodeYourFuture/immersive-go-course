@@ -30,7 +30,7 @@ Complete the prep and first _two_ projects from the [Immersive Go](https://githu
 
 ## Reading
 
-Dip in to some longer books — but don't feel you need to read the whole lot!
+Dip in to some longer books, but don't feel you need to read the whole lot!
 
 - [ ] [Google - Site Reliability Engineering](https://sre.google/sre-book/table-of-contents/)
 - [ ] [The Unix Tools Philosophy](https://www.linuxtopia.org/online_books/gnu_linux_tools_guide/the-unix-tools-philosophy.html)

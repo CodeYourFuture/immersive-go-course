@@ -4,7 +4,7 @@ date="01 Jan 2024"
 versions=["1-1-0"]
 +++
 
-# Provisional start date: 06 May 2024
+# Provisional start date: 20 May 2024
 
 ## Study
 
@@ -18,4 +18,4 @@ versions=["1-1-0"]
 
 ## Product
 
-TODO: Product board here
+Monitoring and alerting is a key part of any production system. You will be working with your product team to understand the monitoring and alerting in place on your codebase.

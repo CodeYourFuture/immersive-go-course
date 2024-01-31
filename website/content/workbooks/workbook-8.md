@@ -5,7 +5,7 @@ versions=["1-1-0"]
 hero="dddepth--085.webp"
 +++
 
-# Provisional start date: 15 Apr 2024
+# Provisional start date: 22 Apr 2024
 
 ## Study
 
@@ -21,4 +21,4 @@ hero="dddepth--085.webp"
 
 ## Product
 
-TODO: Product board here
+Your product work is ramping up, and so is the complexity of your study. How will you manage your time?

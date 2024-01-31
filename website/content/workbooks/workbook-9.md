@@ -4,7 +4,7 @@ date="01 Jan 2024"
 versions=["1-1-0"]
 +++
 
-# Provisional start date: 29 Apr 2024
+# Provisional start date: 6 May 2024
 
 ## Study
 
@@ -34,4 +34,4 @@ versions=["1-1-0"]
 
 ## Product
 
-TODO: Product board here
+You're starting to learn efficiencies and optimisations. How will you apply them to your product work?
