@@ -33,4 +33,4 @@ In the CYF+ process your goal is to demonstrate the profile of an engineer at a 
 
 ## Product
 
-You will join [CYF Products](https://codeyourfuture.io/volunteers/) as a junior engineer. You will deployed on a team delivering a product with real users, stakeholders and deadlines. Your challenge is to work with your team to deliver a product that meets the needs of your users, while managing the competing demands of stakeholders, deadlines, and your own learning priorities. Communication, organisation, and collaboration are key skills here.
+You will join [CYF Products](https://codeyourfuture.io/volunteers/) as a junior engineer. You will be deployed on a team delivering a product with real users, stakeholders and deadlines. Your challenge is to work with your team to deliver a product that meets the needs of your users, while managing the competing demands of stakeholders, deadlines, and your own learning priorities. Communication, organisation, and collaboration are key skills here.
