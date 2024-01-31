@@ -15,6 +15,7 @@ versions=["1-1-0"]
 
 - [ ] [RAFT OTEL](../../projects/raft-otel) Do the raft-otel project. This large project explores a distributed consensus protocol using distributed tracing.
 - [ ] [DataStores]() TODO: Add datastores project
+- [ ] [Troubleshooting project #3](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.cjnguaxmynan) TOADD
 
 ## Product
 
