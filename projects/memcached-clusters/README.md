@@ -10,8 +10,9 @@ Timebox: 2 days
 
 ## Learning objectives:
 
-- Understand the differences between sharded and replicated datastores
-- Use mcrouter, a widely-used proxy that can be used to create both sharded and replicated memcached clusters
+- Describe the differences between sharded and replicated datastores
+- Use mcrouter to create both sharded and replicated memcached clusters
+- Build a Go program to determine the topology of a memcached cluster
 
 ## Read about mcrouter
 

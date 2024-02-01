@@ -12,12 +12,12 @@ In this project, you'll build a simple image processing pipeline: reading a list
 
 ## Learning objectives:
 
-- What is batch processing and how does it differ from building servers?
-- How do we use Go to use run existing software to complete tasks?
-- What is cloud storage technology and how do we read from it & upload data to it?
-- How do we read, modify and extend existing code?
-  <!-- - How do we build resilience into batch processing software? -->
-  <!-- - How do we deploy batch processing tasks in the cloud? -->
+- Define batch processing and how it differs from building servers
+- Configure a makefile to run a Docker image
+- Use Go to use run existing software to complete tasks
+- Design and build a CLI application to batch process images
+- Read from and upload data to cloud storage technology
+- Read, modify and extend existing code
 
 Timebox: 2 days
 

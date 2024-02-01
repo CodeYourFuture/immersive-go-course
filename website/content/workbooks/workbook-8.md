@@ -1,10 +1,12 @@
 +++
-title="CYF+01 Sprint 2"
-date="07 Nov 2022"    
-versions=["1-0-0"]
+title="CYF+02 Sprint 2"
+date="01 Jan 2024"    
+versions=["1-1-0"]
 hero="dddepth--085.webp"
 weight=3
 +++
+
+# Provisional start date: 22 Apr 2024
 
 ## Study
 
@@ -20,4 +22,4 @@ weight=3
 
 ## Product
 
-https://github.com/orgs/CodeYourFuture/projects/19/views/6?filterQuery=+-status%3ABacklog%2CDone+
+Your product work is ramping up, and so is the complexity of your study. How will you manage your time?

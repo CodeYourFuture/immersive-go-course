@@ -9,11 +9,13 @@ forhugo-->
 In this project we're going to build (or reuse) an implementation of RAFT, a distributed consensus algorithm, and
 we are going to use distributed tracing to understand its behaviour.
 
-Learning Objectives
+## Learning Objectives
 
-- How is distributed tracing different from logging and from metrics?
-- How can we use distributed tracing to get a detailed understanding of complex application behaviour?
-- How can costs of distributed tracing be minimized?
+- Describe the differences between distributed tracing and logging and metrics
+- Implement RAFT
+- Instrument an application with distributed tracing
+- Use distributed tracing to get a detailed understanding of complex application behaviour
+- Minimise costs of distributed tracing
 
 Timebox: 5 days
 

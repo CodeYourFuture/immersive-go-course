@@ -10,9 +10,10 @@ In this project we're going to build a simple distributed `cron` system, based o
 
 ## Learning Objectives
 
-- How can we use a distributed queue in software architecture?
-- How can we deal with errors in a system based on distributed queues?
-- How can we instrument a complex application with metrics? How should we design alerting?
+- Use a distributed queue in software architecture
+- Deal with errors in a system based on distributed queues
+- Instrument a complex application with metrics
+- Design alerting in a complex application
 
 Timebox: 5 days
 

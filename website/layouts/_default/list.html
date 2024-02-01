@@ -5,6 +5,7 @@
   <div class="c-page-header__container">
     <h1 class="c-page-header__title e-heading e-heading__1">{{.Title}}</h1>
 
+    {{ if .Pages }}
     <aside class="c-toc c-page-header__toc is-none--lt-container">
       <ol>
         {{ range .Pages }}
@@ -14,6 +15,7 @@
         {{ end}}
       </ol>
     </aside>
+    {{ end }}
   </div>
 </header>
 
@@ -22,7 +24,7 @@
 <article class="{{ with .Content }}c-copy{{end}}">
   {{ .Content }}
   <ol class="c-timeline">
-    {{ range .Pages.Reverse }}
+    {{ range .Pages }}
     <li class="c-timeline__entry">{{ partial "timeline.html" . }}</li>
     {{ end }}
   </ol>
