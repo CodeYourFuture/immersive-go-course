@@ -19,4 +19,4 @@ weight=5
 
 ## Product
 
-Monitoring and alerting is a key part of any production system. You will be working with your product team to understand the monitoring and alerting in place on your codebase.
+Monitoring and alerting is a key part of any production system. As you continue your product work, make sure to understand the monitoring and alerting in place on your codebase and how it could be improved.
