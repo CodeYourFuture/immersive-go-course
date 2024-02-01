@@ -1,9 +1,11 @@
 +++
-title="CYF+01 Sprint 4"
-date="05 Dec 2022"    
-versions=["1-0-0"]
+title="CYF+02 Sprint 4"
+date="01 Jan 2024"    
+versions=["1-1-0"]
 weight=5
 +++
+
+# Provisional start date: 20 May 2024
 
 ## Study
 
@@ -17,4 +19,4 @@ weight=5
 
 ## Product
 
-https://github.com/orgs/CodeYourFuture/projects/19/views/6?filterQuery=+-status%3ABacklog%2CDone+
+Monitoring and alerting is a key part of any production system. As you continue your product work, make sure to understand the monitoring and alerting in place on your codebase and how it could be improved.

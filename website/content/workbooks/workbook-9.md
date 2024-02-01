@@ -1,9 +1,11 @@
 +++
-title="CYF+01 Sprint 3"
-date="21 Nov 2022"    
-versions=["1-0-0"]
+title="CYF+02 Sprint 3"
+date="01 Jan 2024"    
+versions=["1-1-0"]
 weight=4
 +++
+
+# Provisional start date: 6 May 2024
 
 ## Study
 
@@ -19,7 +21,7 @@ weight=4
 
 ## Projects
 
-- [ ] [Multiple servers](../../projects/multiple-servers) Revisit
+- [ ] [Multiple servers](../../projects/multiple-servers) Revisit this project and deploy it with Docker and GH Actions
 - [ ] [Troubleshooting project #3](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.cjnguaxmynan) TOADD
 
 #### Optional (but recommended) software ops tutorials:
@@ -33,4 +35,4 @@ weight=4
 
 ## Product
 
-https://github.com/orgs/CodeYourFuture/projects/19/views/6?filterQuery=+-status%3ABacklog%2CDone+
+You're starting to learn efficiencies and optimisations. How will you apply them to your product work?
