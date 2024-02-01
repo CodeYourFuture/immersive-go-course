@@ -20,6 +20,8 @@ The CYF+ Immersive Engineering Programme is an intensive three month course. The
 - [ ] Learn the basics of the Go programming language: [Get Started - The Go Programming Language](https://go.dev/learn/)
 - [ ] Read this, you might find it useful for working through your first projects: [How to use the fmt package in Golang](https://www.educative.io/answers/how-to-use-the-fmt-package-in-golang)
 - [ ] And optionally [Learn Go with tests](https://quii.gitbook.io/learn-go-with-tests/)
+- [ ] Read the [Pointers chapter](https://www.golang-book.com/books/intro/8) of [An Introduction to Programming in Go](https://www.golang-book.com/books/intro), and do the problems listed in the chapter.
+- [ ] Read about [stack and heap memory](https://courses.engr.illinois.edu/cs225/fa2022/resources/stack-heap/) - note that the examples here are C++ not Go, but you should be able to follow them. One important difference between these languages is that in Go, you don't need to worry about whether a value lives on the heap or the stack (in fact, Go is allowed to choose where your variable lives, and even move it around) - this means that it's ok to return a pointer to a stack variable in Go. You also don't need to call `delete` yourself in Go - Go is [a garbage collected language](https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)) so it will delete variables when they're no longer needed.
 
 ## Projects
 
