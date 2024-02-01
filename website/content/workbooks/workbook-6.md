@@ -9,6 +9,10 @@ weight=1
 
 The CYF+ Immersive Engineering Programme is an intensive three month course. There's a lot to get through and you'll need to hit the ground running. To prepare for this exciting opportunity, you will:
 
+## Computers
+
+TODO: Add background reading on how computers work.
+
 ## Linux
 
 - [ ] Play [the Bandit](https://overthewire.org/wargames/bandit/) - you must be able to complete up to level 20 (repeatedly)
