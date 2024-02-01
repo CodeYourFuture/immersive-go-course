@@ -29,7 +29,7 @@ The CYF+ Immersive Engineering Programme is an intensive three month course. The
 
 ## Projects
 
-Complete the prep and first _two_ projects from the [Immersive Go](https://github.com/CodeYourFuture/immersive-go-course) course
+Complete the [prep](https://github.com/CodeYourFuture/immersive-go-course/blob/main/prep/README.md) and first _five_ [projects](https://github.com/CodeYourFuture/immersive-go-course/blob/main/projects/README.md) from the [Immersive Go](https://github.com/CodeYourFuture/immersive-go-course) course
 
 - [ ] [Prep](https://github.com/CodeYourFuture/immersive-go-course/tree/main/prep)
 - [ ] [CLI Files](https://github.com/CodeYourFuture/immersive-go-course/tree/main/projects/cli-files)
