@@ -21,7 +21,7 @@ weight=4
 
 ## Projects
 
-- [ ] [Multiple servers](../../projects/multiple-servers) Revisit
+- [ ] [Multiple servers](../../projects/multiple-servers) Revisit this project and deploy it with Docker and GH Actions
 - [ ] [Troubleshooting project #3](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.cjnguaxmynan) TOADD
 
 #### Optional (but recommended) software ops tutorials:
