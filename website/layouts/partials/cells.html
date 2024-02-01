@@ -1,9 +1,7 @@
 <ul class="c-cells">
   {{ if (eq .Section "projects") }}
   <!-- projects are ordered by a manifest on the repo to make it friendly for back end devs -->
-  {{ $projects := getJSON
-  "https://raw.githubusercontent.com/CodeYourFuture/immersive-go-course/main/projects/metadata.json"}}
-  {{ range $projects.order }}
+  {{ range .Site.Data.projects.metadata.order }}
   <li class="c-cells__cell">
     {{$project := print .}} {{$pageObject := $.Site.GetPage $project}} {{ with
     $pageObject}} {{ partial "card.html" .}} {{end}}

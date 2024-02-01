@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Buggy App"
 +++
+forhugo-->
 
 In this project, you're going to run, debug, and fix a buggy application. This code here is a "notes" application with users and notes. It simulates a real-world application that has grown and developed over time: the code isn't perfect, there are tests missing and it contains bugs. The task is to find and fix these bugs. There are _at least_ 5 distinct and important bugs for you to find a fix.
 
@@ -8,10 +10,13 @@ In this project, you're going to run, debug, and fix a buggy application. This c
 
 ## Learning objectives:
 
-- How can we quickly read, understand and fix existing application code?
-- How do we QA running code by thinking about security, edge cases and performance?
-- How do we ensure safe data access with authentication & authorisation?
-- What are some common architectures for services in tech companies?
+- Read, understand and fix existing application code
+- Interpret architecture diagrams to debug an existing application
+- Interpret database specifications to debug an existing application
+- QA running code by thinking about security, edge cases and performance
+- Ensure safe data access with authentication & authorisation
+- Describe some common architectures for services in tech companies
+- Report your findings to a technical colleague
 
 ## Project
 

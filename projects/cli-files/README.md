@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="CLI & Files"
 +++
+forhugo-->
 
 In this project you're going to get familiar with the [Go programming language][go] by rebuilding two very common tools that programmers and computer administrators use all the time: [cat][cat] and [ls][ls].
 
@@ -8,9 +10,9 @@ Timebox: 4 days
 
 ## Objectives:
 
-- Install and use [cobra][cobra]
+- Make a go program from scratch
 - Use go build/go install/go get etc
-- Understand what a process is & the basics of process - lifecycle
+- Describe the basics of a process and process lifecycle
 - Accept arguments on the CLI
 - Open, read (and close) files from CLI arguments
 - Reading directories for files
@@ -104,12 +106,6 @@ package cmd
 func Execute() {}
 ```
 
-We're going to use the [Cobra][cobra] package to make these commands. It does a lot of magic for you.
-
-Install the Cobra package using the `go get` command: `go get -u github.com/spf13/cobra@latest`
-
-The Cobra [user guide](https://github.com/spf13/cobra/blob/master/user_guide.md) will show you how to make a root command that prints hello in `cmd/root.go`.
-
 To use your command, install and run it: `go install .`
 
 To run the code, you need to tell your command line where executable code compiled from go lives. The way to do this is different depending on your operating system, but here's [a guide on the Go website](https://go.dev/doc/install) — look at anything that mentions `go/bin` on your `PATH`.
@@ -135,7 +131,7 @@ rain.txt
 
 The real `ls` allows you pass a directory to be read: `ls assets`.
 
-Extend your `go-ls` to allow the command to take arguments (look for `cobra.ArbitraryArgs`) and then, when passed an argument such as `go-ls assets`, read from the passed directory.
+Extend your `go-ls` to allow the command to take arguments (look for `os.Args`) and then, when passed an argument such as `go-ls assets`, read from the passed directory.
 
 Make that this directory path can be relative: `go-ls ..` and `go-ls ../go-ls` should both work.
 
@@ -147,17 +143,11 @@ Make `go-ls -h` include a helpful description.
 
 ### go-cat
 
-This one we're going to make in a different way, so we can see how to use tools to initialise go projects more quickly.
+We're going to make a second command line tool, which needs to be in its own directory and have its own `main.go` with its own `main` function.
 
-We'll use the [cobra-cli](https://github.com/spf13/cobra-cli/blob/main/README.md) to initialise a new project. There's a guide on that page to installing it, but it's likely `go install github.com/spf13/cobra-cli@latest`.
+Make a `go-cat` directory, `cd` into it, and run `go mod init go-cat` ([documentation here](https://pkg.go.dev/cmd/go#hdr-Initialize_new_module_in_current_directory)). This will generate a `go.mod` file for you, instead of you needing to make one yourself.
 
-Then `cd` to the `cli-files` directory.
-
-Make a `go-cat` directory, `cd` into it, and run `go mod init go-cat` ([documentation here](https://pkg.go.dev/cmd/go#hdr-Initialize_new_module_in_current_directory)).
-
-Then run `cobra-cli init .`. [This command](https://github.com/spf13/cobra-cli/blob/main/README.md) will create your initial application code for you.
-
-Take a look at all the files it has created. See how they differ or are similar to what you did in the `go-ls` example.
+Make equivalents of the other files you made for `go-ls` as well.
 
 Let's try it out: `go install . && go-cat`. It will do nothing, but it's a start.
 
@@ -166,7 +156,6 @@ Now it's over to you: set up a command that takes a path to a file as an argumen
 [go]: https://go.dev/
 [cat]: https://en.m.wikipedia.org/wiki/Cat_(Unix)
 [ls]: https://en.m.wikipedia.org/wiki/Ls
-[cobra]: https://github.com/spf13/cobra#overview
 [os]: https://pkg.go.dev/os
 
 ## Extensions

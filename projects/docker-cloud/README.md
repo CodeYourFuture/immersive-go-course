@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Docker & Cloud Deployment"
 +++
+forhugo-->
 
 In this project, you'll build a simple Go server application and Dockerise it to run within a container. You'll write tests that run against the container, and then build GitHub actions to automate continuous testing and release of the application. You'll then run it in the cloud by pushing the container image to Amazon AWS Elastic Container Repository, and then launch it in Amazon AWS Elastic Container Service using the user interface.
 
@@ -11,7 +13,7 @@ In this project, you'll build a simple Go server application and Dockerise it to
 ## Learning objectives:
 
 - Set up Docker locally
-- `Dockerfile` syntax & how to containerise an application
+- Containerise an application using Docker syntax
 - Run applications locally using Docker
 - Push container images to a repository ([ECR](https://aws.amazon.com/ecr/))
 - Deploy images to Elastic Cloud resources using Elastic Container Service

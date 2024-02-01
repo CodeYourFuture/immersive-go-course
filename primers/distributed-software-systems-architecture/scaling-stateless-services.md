@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="3. Scaling Stateless Services"
 +++
+forhugo-->
 
 # 3
 

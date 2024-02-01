@@ -1,14 +1,20 @@
+<!--forhugo
 +++
 title="GRPC Client and Server Communication"
 +++
+forhugo-->
 
 Timebox: 3 days
 
 ## Learning objectives:
 
-- Learn what gRPC is and how it differs from HTTP
-- Understand what kinds of issues can occur in a real system and how to defend against them
-- Learn what observability is, and what are some kinds of observability you'd find in use in production?
+- Define gRPC and how this differs from HTTP
+- Install gRPC tools and complete HelloWorld
+- Build a gRPC based prober
+- Describe what kinds of issues can occur in a real system and how to defend against them
+- Define observability
+- List some kinds of observability you’d find in use in production
+- Serve and collect Prometheus Metrics
 
 ## What is gRPC?
 

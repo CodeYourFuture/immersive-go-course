@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Multiple servers"
 +++
+forhugo-->
 
 Create file server to serve static HTML files. Create an API server that serves JSON from a database. Run the API and file server as two separate servers. Try to load the website & see CORS issue. Put nginx in front of the file server and the API so they are on a single port and hostname. Learn about how to run services in VMs in the cloud. Replicate this local setup in the cloud on a single VM, with all services running on the same host. Route requests to the service.
 
@@ -8,13 +10,14 @@ Timebox: 5 days
 
 ## Learning objectives:
 
-- Basic microservices ideas, separating concerns of services
+- Describe microservices
+- Separate concerns of microservices
+- Replicate a local setup in the cloud on a virtual machine
 - Configure nginx to talk to 2-3 copies of the API server
-- Some web security ideas (CORS)
-- Reverse proxy configuration, routing on path
-- Health checks
+- Resolve CORS issues
+- Configure a reverse proxy, routing on path
 
-In future:
+### In future:
 
 - Running applications in the cloud
 - Using a cloud-hosted databases
@@ -76,7 +79,7 @@ There's a good, short guide to workloads on [scaleyourapp.com](https://scaleyour
 
 Our file layout for this project will look like this:
 
-```console
+```
 api/
     api.go
 assets/
@@ -106,12 +109,16 @@ Specifically, the `cmd/` files will import functionality from `api` and `static`
 
 In reality, starting each will look like this:
 
-```console
-# api server
-$ DATABASE_URL='postgres://localhost:5432/go-server-database' go run ./cmd/api-server --port 8081
+API server:
 
-# static server
-$ go run ./cmd/static-server --path assets --port 8082
+```console
+> DATABASE_URL='postgres://localhost:5432/go-server-database' go run ./cmd/api-server --port 8081
+```
+
+Static server:
+
+```console
+> go run ./cmd/static-server --path assets --port 8082
 ```
 
 > 💡 See the [prep README.md](../prep/README.md#command-line-examples) for an explanation of this command line example.
@@ -326,7 +333,7 @@ import (
 The rest is up to you: hook this together and make this work:
 
 ```console
-$ go run ./cmd/static-server
+> go run ./cmd/static-server
 Hello!
 ```
 
@@ -337,14 +344,14 @@ To do that, add support for a command like flag: `--path` which will be where th
 Make this work:
 
 ```console
-$ go run ./cmd/static-server --path assets
+> go run ./cmd/static-server --path assets
 path: assets
 ```
 
 We also want this server to run on a specific port. Make this work:
 
 ```console
-$ go run ./cmd/static-server --path assets --port 8082
+> go run ./cmd/static-server --path assets --port 8082
 path: assets
 port: 8082
 ```
@@ -362,7 +369,7 @@ It's possible to do this all in <20 lines of code.
 At the end, you should be able to run the server and visit [http://localhost:8082](http://localhost:8082) to see the image gallery!
 
 ```console
-$ go run ./cmd/static-server --path assets --port 8082
+> go run ./cmd/static-server --path assets --port 8082
 ```
 
 We aren't loading the list of images from an API yet; they're hard coded in the JavaScript. Making the API work is coming next.

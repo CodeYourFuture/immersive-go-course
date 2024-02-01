@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Servers & HTTP requests"
 +++
+forhugo-->
 
 In this project we are going to learn about long-lived processes, some networking and the fundamentals of HTTP.
 
@@ -8,9 +10,9 @@ Timebox: 6 days
 
 ## Learning objectives:
 
-- Use Go's net/http package to build start a simple server that responds to local requests
-- Get to know HTTP GET and response codes
-- Get familiar with cURL
+- Use Go's net/http package to build start a server that responds to local requests
+- Make HTTP GET requests using cURL
+- Respond to HTTP get requests with relevant response codes from a Go server
 - Define URL, header, body and content-type
 - Accept parameters in via GET in the query string
 - Accept data via a POST request

@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Projects"
 +++
+forhugo-->
 
 ## Requirements
 
@@ -16,8 +18,12 @@ Each project has its own directory with a README.md file that has instructions. 
 
 Most exercises finish with a list of optional extension tasks. It's highly recommended that you try them out. Note that often the extensions are open-ended and under-specified - make sure to think about them with a curious mind: Why are they useful? What trade-offs do they have?
 
+1. [Output and Error Handling](./output-and-error-handling)
+   <br>An introduction to how to handle errors in Go, and how to present information to users of programs run on the command line.
 1. [CLI & Files](./cli-files)
    <br>An introduction to building things with Go by replicating the unix tools `cat` and `ls`.
+1. [File Parsing](./file-parsing)
+   <br>Practice parsing different formats of files, both standard and custom.
 1. [Servers & HTTP requests](./http-auth)
    <br>Learn about long-running processes, HTTP and `curl`
 1. [Servers & Databases](./server-database)

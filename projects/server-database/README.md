@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Server and database"
 +++
+forhugo-->
 
 In this project, we will build another server. This one will have a simple API that serves data in JSON form. We will them convert the backend to read from a Postgres database, serving data for the API. We will then turn off the database and learn how to handle errors correctly.
 
@@ -9,8 +11,8 @@ Timebox: 6 days
 ## Learning objectives:
 
 - Build a simple API server that talks JSON
-- Understand how a server and a database work together
-- Use SQL to read data from a database
+- Describe how a server and a database work together
+- Read data from a database with SQL
 - Accept data over a POST request and write it to the database
 
 ## Project

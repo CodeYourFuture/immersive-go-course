@@ -1,6 +1,8 @@
+<!--forhugo
 +++
 title="Distributed Software Systems Architecture"
 +++
+forhugo-->
 
 ## About this primer {#about-this-document}
 
