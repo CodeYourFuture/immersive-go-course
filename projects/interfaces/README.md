@@ -92,4 +92,8 @@ filteringPipe.Write([]byte("start=1, end=10"))
 
 we'll end up writing `start=, end=` to `someWriter`.
 
-Make sure to write some tests for this type, too.
+Make sure to write some tests for this type, too. These should probably be [table-driven tests](https://dave.cheney.net/2019/05/07/prefer-table-driven-tests).
+
+## Thinking about trade-offs
+
+When you're finished, have a read of the [sample implementation in the `impl/interfaces` branch](https://github.com/CodeYourFuture/immersive-go-course/tree/impl/interfaces/projects/interfaces). Read through the [IMPLEMENTATION.md](https://github.com/CodeYourFuture/immersive-go-course/blob/impl/interfaces/projects/interfaces/IMPLEMENTATION.md) file. It talks a lot about two different implementations of the tests for this project. Think about the trade-offs involved in both approaches.
