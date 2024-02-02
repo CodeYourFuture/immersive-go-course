@@ -7,49 +7,39 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestWriteNoNumbers(t *testing.T) {
-	buf := bytes.NewBufferString("")
+func TestFilteringPipe(t *testing.T) {
+	for name, tc := range map[string]struct {
+		inputs []string
+		output string
+	}{
+		"no_numbers_in_input": {
+			inputs: []string{"hello"},
+			output: "hello",
+		},
+		"just_numbers": {
+			inputs: []string{"123"},
+			output: "",
+		},
+		"mixed_numbers_and_letters": {
+			inputs: []string{"start=1, end=10"},
+			output: "start=, end=",
+		},
+		"multiple_writes": {
+			inputs: []string{"start=", "1, end=10"},
+			output: "start=, end=",
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			buf := bytes.NewBufferString("")
 
-	fp := NewFilteringPipe(buf)
+			fp := NewFilteringPipe(buf)
 
-	n, err := fp.Write([]byte("hello"))
-	require.NoError(t, err)
-	require.Equal(t, 5, n)
-	require.Equal(t, "hello", buf.String())
-}
-
-func TestWriteJustNumbers(t *testing.T) {
-	buf := bytes.NewBufferString("")
-
-	fp := NewFilteringPipe(buf)
-
-	n, err := fp.Write([]byte("123"))
-	require.NoError(t, err)
-	require.Equal(t, 3, n)
-	require.Equal(t, "", buf.String())
-}
-
-func TestMultipleWrites(t *testing.T) {
-	buf := bytes.NewBufferString("")
-
-	fp := NewFilteringPipe(buf)
-
-	n, err := fp.Write([]byte("start="))
-	require.NoError(t, err)
-	require.Equal(t, 6, n)
-	n, err = fp.Write([]byte("1, end=10"))
-	require.NoError(t, err)
-	require.Equal(t, 9, n)
-	require.Equal(t, "start=, end=", buf.String())
-}
-
-func TestWriteMixedNumbersAndLetters(t *testing.T) {
-	buf := bytes.NewBufferString("")
-
-	fp := NewFilteringPipe(buf)
-
-	n, err := fp.Write([]byte("start=1, end=10"))
-	require.NoError(t, err)
-	require.Equal(t, 15, n)
-	require.Equal(t, "start=, end=", buf.String())
+			for _, input := range tc.inputs {
+				n, err := fp.Write([]byte(input))
+				require.NoError(t, err)
+				require.Equal(t, len(input), n)
+			}
+			require.Equal(t, tc.output, buf.String())
+		})
+	}
 }
