@@ -44,8 +44,8 @@ There are also other ways of accessing and manipulating data in `bytes.Buffer`, 
 The first task is to implement unit tests for this type.
 
 You should write unit tests which show at least the following (you can write more if you want!):
-* If you make a buffer named `b` containing some bytes, calling `b.Buffer()` returns the same bytes you created it with.
-* If you write some extra bytes to that buffer using `b.Write()`, a call to `b.Buffer()` returns both the initial bytes and the extra bytes.
+* If you make a buffer named `b` containing some bytes, calling `b.Bytes()` returns the same bytes you created it with.
+* If you write some extra bytes to that buffer using `b.Write()`, a call to `b.Bytes()` returns both the initial bytes and the extra bytes.
 * If you call `b.Read()` with a slice big enough to read all of the bytes in the buffer, all of the bytes are read.
 * If you call `b.Read()` with a slice smaller than the contents of the buffer, some of the bytes are read. If you call it again, the next bytes are read.
 
