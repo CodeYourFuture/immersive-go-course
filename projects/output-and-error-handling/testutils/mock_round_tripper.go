@@ -55,7 +55,7 @@ func (m *MockRoundTripper) AssertGotRightCalls() {
 func (m *MockRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 	m.t.Helper()
 
-	if len(m.responses) > m.requestCount+2 {
+	if m.requestCount >= len(m.responses) {
 		m.t.Fatalf("MockRoundTripper expected %d requests but got more", len(m.responses))
 	}
 	resp := m.responses[m.requestCount]
