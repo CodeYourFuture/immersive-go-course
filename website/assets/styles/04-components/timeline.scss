@@ -14,6 +14,7 @@ ol[class="c-timeline"] {
   &__entry,
   li[class="c-timeline__entry"] {
     display: flex;
+    flex-flow: wrap;
     border-left: var(--theme-border--thick);
     border-image: var(--theme-border-image);
     padding: 0 var(--box) var(--theme-spacing--5) 0;
@@ -35,15 +36,28 @@ ol[class="c-timeline"] {
     &:hover:before {
       background-color: var(--theme-color--pop);
     }
-
-    &:last-of-type {
-      border: 0;
-    }
   }
 
   &__title {
     @include on-event(false, ".c-timeline__entry") {
       text-decoration: underline;
+    }
+  }
+
+  &__details {
+    width: 100%;
+
+    summary > * {
+      display: inline-block;
+      margin-left: calc(
+        calc(var(--box) * 2) - 4px
+      ); // !mn this is the border width of the timeline
+    }
+
+    // calm down giant headings inside details
+    h1,
+    h2 {
+      font-size: var(--theme-type-size--4);
     }
   }
 }
