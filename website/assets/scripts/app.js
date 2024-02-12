@@ -43,5 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
         detail.open = !detail.open;
       });
     });
+    if (window.location.hash === "#toggle-details") {
+      toggleDetails.click(); // send people straight to the toggled details
+    }
   }
 });
