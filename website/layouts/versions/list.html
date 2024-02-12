@@ -1,0 +1,49 @@
+{{ define "main" }} {{$hasDetails := false}} {{ range .Pages }} {{ if .Content
+}} {{$hasDetails = true}} {{ end }} {{ end }}
+
+<header class="c-page-header c-page-header--list">
+  <!-- set up page header-->
+
+  <div class="c-page-header__container">
+    {{ partial "breadcrumbs.html" . }}
+    <h1 class="c-page-header__title e-heading e-heading__1">Run {{.Title}}</h1>
+    {{if $hasDetails}}<button
+      class="c-page-header__action e-button e-button--root"
+      id="toggle-details"
+    >
+      Toggle Details
+    </button>
+    {{end}} {{ if .Pages }}
+    <aside class="c-toc c-page-header__toc is-none--lt-container">
+      <ol>
+        {{ range .Pages }}
+        <li>
+          <a href="{{.Permalink}}">{{.Title}}</a>
+        </li>
+        {{ end}}
+      </ol>
+    </aside>
+    {{ end }}
+  </div>
+</header>
+
+<article class="{{ with .Content }}c-copy{{end}}">
+  {{ .Content }}
+  <ol class="c-timeline">
+    {{ range .Pages }}
+    <li class="c-timeline__entry">
+      {{ partial "timeline.html" . }} {{ if $hasDetails}}
+      <details class="c-timeline__details">
+        <summary class="c-timeline__summary">
+          <h4 class="c-timeline__summary-heading">Details</h4>
+        </summary>
+        <article class="c-timeline__details-content c-copy">
+          {{ .Content }}
+        </article>
+      </details>
+      {{ end }}
+    </li>
+    {{ end }}
+  </ol>
+</article>
+{{ partial "breadcrumbs.html" . }} {{end}}
