@@ -18,7 +18,8 @@
     breadcrumbs,
     lastmod,
     toc,
-    edit
+    edit,
+    action
   );
   @include grid-breakout();
   grid-template:
@@ -37,6 +38,7 @@
       "breadcrumbs .   edit     " min-content
       "title       .   .        " min-content
       "toc         toc toc      " auto
+      "action      .    .  " auto
       ".           .   lastmod  " min-content / 1fr var(--gap) minmax(0, 1fr);
   }
   &__title {

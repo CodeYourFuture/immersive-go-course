@@ -43,6 +43,12 @@
     outline: 3px dotted;
   }
 
+  //sometimes buttons in headings need to be reset to root font size
+
+  &--root {
+    font-size: var(--theme-type-size--5);
+  }
+
   // sometimes buttons have an icon or are only visibly an icon
 
   &__icon,
