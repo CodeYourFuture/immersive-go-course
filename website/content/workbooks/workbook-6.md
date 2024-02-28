@@ -11,7 +11,13 @@ The CYF+ Immersive Engineering Programme is an intensive three month course. The
 
 ## Computers
 
-TODO: Add background reading on how computers work.
+Read some of [How Computers Really Work by Matthew Justice](https://www.howcomputersreallywork.com/).
+
+You _must_ read chapters 1, 2, 7, 9, 10, 11, 12.
+
+Any other chapters may be interesting (feel free to read them! We particularly recommend 8), but aren't necessary.
+
+Note that this book isn't free - someone at CYF may be able to lend you a copy if you need.
 
 ## Linux
 
