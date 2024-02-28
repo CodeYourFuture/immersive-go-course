@@ -10,6 +10,7 @@ Before you start this course, there's a few things we assume you've done:
 
 - You're familiar with the essentials of writing code in JavaScript
 - You have experience with JavaScript in the browser and in [Node](https://nodejs.org/en/)
+- You have read some of [How Computers Really Work by Matthew Justice](https://www.howcomputersreallywork.com/). You _must_ read chapters 1, 2, 7, 9, 10, 11, 12. Any other chapters may be interesting (feel free to read them! We particularly recommend 8), but aren't necessary. Note that this book isn't free - someone at CYF may be able to lend you a copy if you need.
 - You've completed the [Tour of Go](https://go.dev/tour/welcome/1)
 - Learnt about pointers and memory:
   - Read the [Pointers chapter](https://www.golang-book.com/books/intro/8) of [An Introduction to Programming in Go](https://www.golang-book.com/books/intro), and do the problems listed in the chapter.
