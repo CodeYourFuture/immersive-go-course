@@ -45,7 +45,7 @@ Complete the [prep](https://github.com/CodeYourFuture/immersive-go-course/blob/m
 - [ ] [Output and Error Handling](https://github.com/CodeYourFuture/immersive-go-course/tree/main/projects/output-and-error-handling)
 - [ ] [CLI Files](https://github.com/CodeYourFuture/immersive-go-course/tree/main/projects/cli-files)
 - [ ] [File Parsing](https://github.com/CodeYourFuture/immersive-go-course/tree/main/projects/file-parsing)
-- [ ] TODO: Add a link to the threads project
+- [ ] [Concurrency](https://github.com/CodeYourFuture/immersive-go-course/tree/main/projects/concurrency)
 - [ ] [Servers & HTTP Requests](https://github.com/CodeYourFuture/immersive-go-course/tree/main/projects/http-auth)
 
 ## Reading
