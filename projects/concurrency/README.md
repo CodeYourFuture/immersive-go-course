@@ -11,12 +11,23 @@ Timebox: 3 days
 ## Learning Objectives:
 
 - Suggest orders of magnitude for the speed of different read operations
+- Explain why web applications are concurrent by default
 - Define the term "memory barrier"/"fence" in the context of memory models
 - Explain when and why synchronisation is needed
 - Choose appropriate synchronisation primitives for specific problems from atomics, wait-groups, mutexes/locks, read-write locks, and channels
 - Identify the critical section across multiple statements
 
 ## Background
+
+### Threads and concurrency
+
+Normally when we run a program, it runs one instruction at a time. It starts at the start of a `main` function and goes top-to-bottom (sometimes jumping into functions, and back out of them).
+
+There are limits to how fast any one instruction can be run. Processors have stopped getting faster. Instead, we now add more processors to a computer. This allows a computer to do more than one thing at a time. But it's much harder to tell a computer in what order things need to happen, or what things must/mustn't happen at the same time.
+
+Most practical projects, and almost all servers, use concurrency - running more than one thing at a time - to improve their performance. They start multiple threads which can independently perform work.
+
+But this concurrency doesn't come for free. It's really easy to write incorrect concurrent code, and this often results in serious (and hard to debug!) bugs, or bottlenecks which fall back to single-threaded performance.
 
 ### Memory models
 
@@ -62,7 +73,7 @@ func main() {
 
 In an ideal world, this program would always output 1000.
 
-In reality, if you run it 5 times, you will probably get 5 different answers.
+Extract the `main` function into a new function, and change `main` to call that function 5 times. Observe the results - the runs show different numbers.
 
 The root cause is that multiple threads are handling the variable `x`, and nothing is making sure they don't get in each other's way.
 
@@ -76,6 +87,37 @@ A problem here is that other operations from other threads may happen between th
 Two threads may both read `0` from step 1, compute `1` from step 2, and try to write `1` in step 2 (they did the same work).
 
 Or one thread may read `0`, all other 999 threads may do their work as we hope (incrementing `x` one at a time in turn to `999`), then the first thread may do its step 3 and write `1` back to `x`, undoing the work of the other threads.
+
+```mermaid
+sequenceDiagram
+    Thread0->>x: What's your value?
+    x->>Thread0: 0
+
+    Note right of Thread0: Other threads happen to get scheduled <br /> while Thread0 does its addition...
+
+    Thread1->>x: What's your value?
+    x->>Thread1: 0
+    Thread1->>Thread1: 0 + 1 = 1
+    Thread1->>x: Now you're 1
+
+    Thread2->>x: What's your value?
+    x->>Thread2: 1
+    Thread2->>Thread2: 1 + 1 = 2
+    Thread2->>x: Now you're 2
+
+    Thread3->>x: What's your value?
+    x->>Thread3: 2
+    Thread3->>Thread3: 2 + 1 = 3
+    Thread3->>x: Now you're 3
+
+    Note right of x: And so on 999 times...
+
+    Thread0->>Thread0: 0 + 1 = 1
+    Thread0->>x: Now you're 1
+
+    Note left of x: Oh no! All that work was undone!
+
+```
 
 There are three families of solutions to this problem:
 1. We can make sure no other thread is allowed to start doing these operations until one thread has completed all three. golangbot showed you how to do this with a `Mutex`.
@@ -108,6 +150,8 @@ The atomic version, though, does so as one operation. It's impossible for anothe
 
 This means that if there are other threads involved, the atomic version will always store back to `x` exactly 1 more than its value at the time of execution. It also returns a value - the value that was stored back. It does this because if we're using atomics, we know there are probably other threads involved, so we _know_ we can't just read `x` and know what the result was - it may have been changed since we stored it.
 
+Most atomic operations are implemented using [Compare And Swap ("CAS") operations](https://en.wikipedia.org/wiki/Compare-and-swap). In fact, a lot of other synchronisation primitives (e.g. Mutexes) are _also_ built on top of CAS operations.
+
 Try to modify the buggy code above to use atomics. Make sure that if you run it a few times, you always end up with `1000`.
 
 ##### Memory barriers / fences
@@ -119,6 +163,8 @@ This can be slow. Recall that we have these per-core caches because they're so m
 #### When are atomics good/bad to use?
 
 Atomics can be really useful when you need to operate on a single item of small data (e.g. a number). They are simple and easy to reason about. But they typically operate on one item in memory. If you need to operate on larger data (e.g. a string), multiple pieces of memory (e.g. two different numbers which must be changed together), or perform an operation not supported by atomics (e.g. multiplication), you probably can't use an atomic for that.
+
+When using atomics, your threads are never blocked, and never need to wait for each other. Mutexes, on the other hand, block threads, which means that even though you may have started 100 threads to do work concurrently, only one will actually be doing anything (if they all need the same lock). This means that atomics can provide better throughput than other synchronisation primitives.
 
 ### Mutexes
 
@@ -137,32 +183,70 @@ Let's take an example of tracking some statistics. Imagine we have a counter for
 This code would be buggy:
 
 ```go
-statsMutex.Lock()
-if success {
-    successfulRequests += 1
-} else {
-    failedRequests += 1
+type customerStats struct {
+	failedReqs  int
+	successReqs int
 }
-statsMutex.Unlock()
-statsMutex.Lock()
-totalRequests += 1
-statsMutex.Unlock()
+
+var (
+	lock            sync.Mutex
+	statsByCustomer = make(map[string]*customerStats)
+)
+
+func updateCustomerStats(customerId string, ok bool) {
+	// Does customer stats object exist in map?
+	lock.Lock()
+	_, exists := statsByCustomer[customerId]
+	lock.Unlock()
+
+	// Create stats obj if necessary
+	if !exists {
+		lock.Lock()
+		statsByCustomer[customerId] = &customerStats{}
+		lock.Unlock()
+	}
+
+	lock.Lock()
+	if ok {
+		statsByCustomer[customerId].successReqs++
+	} else {
+		statsByCustomer[customerId].failedReqs++
+	}
+	lock.Unlock()
+}
 ```
 
-This is because we release the lock between two things we want to appear as atomic. Instead we need to hold the lock across all of the operations that need to appear as atomic:
+This is because we release the lock between two things we want to appear as atomic. In this code:
 
 ```go
-statsMutex.Lock()
-if isSuccess {
-    successfulRequests += 1
-} else {
-    failedRequests += 1
-}
-totalRequests += 1
-statsMutex.Unlock()
+go func() {
+    updateCustomerStats("gina", true)
+}()
+
+go func() {
+    updateCustomerStats("gina", false)
+}()
 ```
 
-This is particularly important to consider when code is spread across functions. This code has the same bug as above:
+both threads may do the "exists" check, see there's no stats for that customer, and create a new empty stats object. Both will write the new stats object into the map, and one of them will overwrite the other, discarding the other thread's data.
+
+Instead we need to hold the lock across all of the operations that need to appear as atomic:
+
+```go
+    lock.Lock()
+    // Does customer stats object exist in map?
+    _, exists := statsByCustomer[customerId]
+
+    // Create stats obj if necessary
+    if !exists {
+        statsByCustomer[customerId] = &customerStats{}
+    }
+    lock.Unlock()
+```
+
+We would _probably_ either include the `++` operation in the same lock, or use atomic operations for the increments. But the absolutely critical section that needs to be done under the same lock is the check for whether something is in the map, and writing a new value into the map if there isn't already one.
+
+This is particularly important to consider when code is spread across functions. This code has a similar bug as above:
 
 ```go
 type server struct {
@@ -186,6 +270,8 @@ func (s *server) handleRequest() {
     recordResult(true)
 }
 ```
+
+In the above case, the number of total requests isn't modified under the same lock as the success/failed requests. This means if some other code computed a success rate by dividing the number of successful requests by the total number of requests, it may show <100% success when 100% of requests were successful!
 
 And this code would cause a deadlock, because one thread would be trying to acquire a lock it already holds:
 
@@ -252,9 +338,10 @@ Often times, when we use a cache, we want to limit how much memory it will use. 
 Imagine we have a limit of 3 items in our cache, and we already have three items in it. If we try to add an additional item, first, we need to remove one. We need to sort the entries by when they were most recently added or accessed, and remove the oldest.
 
 We also want to keep statistics about our cache. We want to be able to ask the following questions:
-1. How many entries were written to the cache and have never been read after being written (including for things which have been evicted)?
-2. What is the average number of times a cache entry is read (just for things currently in the cache)?
-3. How many reads and writes have been performed in the cache across all time (including for things which have been evicted)?
+1. What's the hit rate of our cache? i.e. when we tried to look up a value, how many times was it in the cache vs missing?
+2. How many entries were written to the cache and have never been read after being written (including for things which have been evicted)?
+3. What is the average number of times a cache entry is read (just for things currently in the cache)?
+4. How many reads and writes have been performed in the cache across all time (including for things which have been evicted)?
 
 We want these statistics to be strongly consistent (e.g. if we only ever write to the cache and never read from it, the answers to 1 and 3 should be the same).
 
@@ -306,3 +393,11 @@ This interface has some interesting differences in terms of concurrency. Some th
 2. We probably don't want to run `creator` more than once for any particular key. How can we avoid this?
 
 Try implementing this. Note: You don't need to use exactly this interface, just the idea that `Get` may `Put` as a side-effect. Hint: Channels may be useful!
+
+<script
+  src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
+  defer
+></script>
+<script>
+  mermaid.initialize({ startOnLoad: true });
+</script>
