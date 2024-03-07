@@ -1,6 +1,6 @@
 <!--forhugo
 +++
-title="1. Reliable RPCs"   
+title="1. Reliable RPCs"
 +++
 forhugo-->
 

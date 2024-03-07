@@ -1,94 +1,141 @@
 <!--forhugo
 +++
-title="2. State"   
+title="2. State"
 +++
 forhugo-->
 
 # 2
 
-## State {#section-2-state}
+## State
 
 **State*ful* and state*less***
 
-Components in distributed systems are often divided into stateful and stateless services. Stateless services don’t store any state between serving requests. Stateful services, such as databases and caches, do store state between requests. State _stays_.
+> Components in distributed systems are often divided into stateful and stateless services. Stateless services don’t store any state between serving requests. Stateful services, such as databases and caches, do store state between requests. State _stays_.
 
 When we need to scale up a stateless service we simply run more instances and loadbalance between them. Scaling up a stateful service is different: we need to deal with splitting up or replicating our data, and keeping things in sync.
 
 ### Caching {#caching}
 
-Caches are an example of a stateful service. A [cache service](https://aws.amazon.com/caching/) is a high-performance storage service that stores only a subset of data, generally the data most recently accessed by your service. A cache can generally serve data faster than the primary data store (for example, a database), because a cache stores a small set of data in RAM whereas a database stores all of your data on disk, which is slower.
+Caches are an example of a stateful service. A [cache service](https://aws.amazon.com/caching/) is a high-performance storage service that stores only a subset of data, generally the data most recently accessed by your service. A cache can generally serve data faster than the primary data store (for example, a database). A cache stores a small set of data in RAM whereas a database stores all of your data on disk, which is slower.
 
-However, caches are not _durable_ - when an instance of your cache service restarts, it does not hold any data. Until the cache has filled with a useful _working set_ of data, all requests will be _cache misses_, meaning that they need to be served from the primary datastore. The _hit rate_ is the percentage of cacheable data that can be served from the cache. Hit rate is an important aspect of cache performance which should be monitored.
+However, caches are not _durable_. When an instance of your cache service restarts, it does not hold any data. Until the cache has filled with a useful _working set_ of data, all requests will be _cache misses_, meaning that they need to be served from the primary datastore. The _hit rate_ is the percentage of cacheable data that can be served from the cache. Hit rate is an important aspect of cache performance which should be monitored.
 
-There are different strategies for getting data into your cache. The most common is _lazy loading_: your application always tries to load data from the cache first when it needs it. If it isn’t in the cache, the data is fetched from the primary data store and copied into the cache. You can also use a _write through_ strategy: every time your application writes data, it writes it to the cache at the same time as writing it to the datastore. However, when using this strategy, you have to deal with cases where the data isn’t in the cache (for instance, via lazy loading). Read about the [pros and cons](https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/Strategies.html#Strategies.WriteThrough) of these cache-loading strategies.
+There are different strategies for getting data into your cache.
 
-#### Why a cache service? {#why-a-cache-service}
+#### Lazy Loading
 
-Cache services, such as [memcached](https://www.memcached.org/) or [redis](https://redis.io/), are very often used in web application architectures to improve read performance, as well as to increase system throughput (the number of requests that can be served given a particular hardware configuration). You can also cache data in your application layer – but this adds complexity, because in order to be effective, requests affecting the same set of data must be routed to the same instance of your application each time. This means that your loadbalancer has to support the use of _[sticky sessions](https://www.linode.com/docs/guides/configuring-load-balancer-sticky-session/)._
+The most common strategy is _lazy loading_: your application always tries to load data from the cache first when it needs it. If it isn’t in the cache, the data is fetched from the primary data store and copied into the cache.
 
-In-application caches are less effective when your application is restarted frequently, because restarting your application means that all cached data is lost and the cache will be _cold_: it does not have a useful working set of data\_. \_In many organisations, web applications get restarted very frequently. There are two main reasons for this.
+#### Write through
+
+You can also use a _write through_ strategy: every time your application writes data, it writes it to the cache at the same time as writing it to the datastore. However, when using this strategy, you have to deal with cases where the data isn’t in the cache (for instance, via lazy loading). Read about the [pros and cons](https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/Strategies.html#Strategies.WriteThrough) of these cache-loading strategies.
+
+### Why a cache service?
+
+Cache services, such as [memcached](https://www.memcached.org/) or [redis](https://redis.io/), are very often used in web application architectures to improve read performance, as well as to increase system throughput (the number of requests that can be served given a particular hardware configuration).
+
+#### Sticky sessions
+
+You can also cache data in your application layer – but this adds complexity, because in order to be effective, requests affecting the same set of data must be routed to the same instance of your application each time. This means that your loadbalancer has to support the use of _[sticky sessions](https://www.linode.com/docs/guides/configuring-load-balancer-sticky-session/)._
+
+#### Restarts
+
+In-application caches are less effective when your application is restarted frequently, because restarting your application means that all cached data is lost and the cache will be _cold_: it does not have a useful working set of data. In many organisations, web applications get restarted very frequently. There are two main reasons for this.
 
 1. Deployment of new code. Many organisations using modern [CI/CD (Continuous Integration/Continuous Delivery)](https://en.wikipedia.org/wiki/CI/CD) deploy new code on every change, or if not on every change, many times a day.
 2. The use of _[autoscaling](https://en.wikipedia.org/wiki/Autoscaling)_. Autoscaling is the use of automation to adjust the number of running instances in a software service. It is very common to use autoscaling with stateless services, particularly when running on a cloud provider. Autoscaling is an easy way to scale your service up to serve a peak load, while not paying for unused resources at other times. However, autoscaling also means that the lifespan of instances of your service will be reduced.
 
 The use of a separate cache service means that the stateless web application layer can be deployed frequently and can autoscale according to workload while still using a cache effectively. Cache services typically are not deployed frequently and are less likely to use autoscaling.
 
-#### Hazards of using cache services {#hazards-of-using-cache-services}
+#### Hazards of using cache services
 
-Operations involving cache services must be done carefully. Any operation that causes all your caches to restart will leave your application with an entirely _cold_ cache - a cache with no data in it. All reads that your cache would normally have served will go to your primary datastore. There are multiple possible outcomes in this scenario.
+Operations involving cache services must be done carefully. **Any operation that causes all your caches to restart will leave your application with an entirely _cold_ cache** - a cache with no data in it. All reads that your cache would normally have served will go to your primary datastore.
+
+There are multiple possible outcomes in this scenario.
+
+##### First case
 
 In the first case, your primary datastore can handle the increased read load and the only consequence for your application will be an increase in duration of requests served. Your application will also consume additional system resources: it will hold more open transactions to your primary datastore than usual, and it will have more requests in flight than usual. Over time your cache service fills with a useful working set of data and everything returns to normal. Some systems offer a feature called _[cache warmup](https://github.com/facebook/mcrouter/wiki/Cold-cache-warm-up-setup)_ to speed this process up.
 
-In the second case, even though your datastore can handle the load, your application cannot handle the increase in in-flight requests. It may run out of resources such as worker threads, datastore connections, CPU, or RAM - this depends on the specific web application framework you are using. Applications in this state will serve errors or fail to respond to requests in a timely fashion.
+##### Second case
+
+In the second case, even though your datastore can handle the load, your application cannot handle the increase in in-flight requests. It may run out of resources such as worker threads, datastore connections, CPU, or RAM. (This depends on the specific web application framework you are using.) Applications in this state will serve errors or fail to respond to requests in a timely fashion.
+
+##### Third case
 
 In the third case, your primary datastore is unable to handle the entire load, and some requests to your datastore begin to fail or to time out. As discussed in the previous section, you should be setting a deadline for your datastore requests. In the absence of deadlines, your application will wait indefinitely for your overloaded datastore, and is likely to run out of system resources and then grind to a halt, until it is restarted. Setting deadlines allows your application to serve what requests it can without grinding to a halt. After some time your cache will fill and your application should return to normal.
 
 Read about an incident at Slack involving failure of a caching layer: [Slack’s Incident on 2-22-22](https://slack.engineering/slacks-incident-on-2-22-22/).
 
-#### Cache Invalidation {#cache-invalidation}
+### Cache Invalidation
 
-There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.
+> There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.
 
-Cache invalidation means removing or updating an entry in a cache. The reason that cache invalidation is hard is that caches are optimised towards fast reads, without synchronising with the primary datastore. If a cached item is updated then the application must either tolerate stale cached data or update all cache replicas that reference the updated item.
+Cache invalidation means removing or updating an entry in a cache.
 
-Caches generally support specifying a Time-To-Live (TTL). After the TTL passes, or expires, the item is removed from the cache and must be fetched again from the main datastore. This lets you put an upper limit on how stale cached data may be. It is useful to add some ‘jitter’ when specifying TTLs. This means varying the TTL duration slightly - for example, instead of always using a 60 second TTL, you might randomly choose a duration in the range 54 to 66 seconds, up to ten percent higher or lower. This reduces the likelihood of load spikes on backend systems as a result of coordinated waves of cache evictions.
+Cache invalidation is hard because caches are optimised towards fast reads, without synchronising with the primary datastore. If a cached item is updated then the application must either tolerate stale cached data, or update all cache replicas that reference the updated item.
 
-##### Immutable data {#immutable-data}
+Caches generally support specifying a Time-To-Live (TTL). After the TTL passes, or expires, the item is removed from the cache and must be fetched again from the main datastore. This lets you put an upper limit on how stale cached data may be.
 
-One of the simplest strategies to manage cache invalidation problems is to avoid updating data where possible. Instead, we can create new versions of the data. For example, if we are building an application that has profile pictures for users, if the user updates their profile picture we create a new profile picture with a new unique ID, and update the user data to refer to the new profile picture rather than the old one. Doing this means that there is no need to invalidate the old cached profile picture - we just stop referring to it. Eventually, the old picture will be removed from the cache, as the cache removes entries that have not been accessed recently.
+It is useful to add some ‘jitter’ when specifying TTLs. This means varying the TTL duration slightly. For example, instead of always using a 60 second TTL, you might randomly choose a duration in the range 54 to 66 seconds, up to ten percent higher or lower. This reduces the likelihood of load spikes on backend systems as a result of coordinated waves of cache evictions.
 
-In this strategy the profile picture data is immutable - meaning that it never changes. However, the user data does change, meaning that cached copies must be invalidated, or must have a short TTL so that users will see new profile pictures in a reasonable period of time.
+#### Immutable data
+
+One simple strategy to manage cache invalidation problems is to avoid updating data where possible. Instead, we can create new versions of the data.
+
+For example, if we are building an application that has profile pictures for users, when the user updates their profile picture we:
+
+1. create a new profile picture with a new unique ID
+2. update the user data to refer to the new profile picture rather than the old one.
+
+Doing this means that there is no need to invalidate the old cached profile picture: we just stop referring to it. Eventually, the old picture will be removed from the cache, as the cache removes entries that have not been accessed recently.
+
+In this strategy the profile picture data is immutable; it never changes. However, the user data _does_ change, meaning that cached copies must be invalidated, or must have a short TTL so that users will see new profile pictures in a reasonable period of time.
 
 Read more about [Ways to Maintain Cache Consistency](https://redis.com/blog/three-ways-to-maintain-cache-consistency/) in this article.
 
-#### Scaling Caches {#scaling-caches}
+### Scaling Caches
 
-##### Replicated Caches {#replicated-caches}
+#### Replicated Caches
 
 In very large systems, it may not be possible to serve all cache reads from one instance of a cache. Caches can run out of memory, connections, network capacity, or CPU. And with only one cache instance, if we lose or even update the instance, we will lose all of our cache capacity if we lose that single instance, or if we need to update it.
 
 We can solve these problems by running multiple cache instances. We could split the caches up according to the type of data to be cached. For example, in a collaborative document-editing system, we might have one cache for Users, one cache for Documents, one cache for Comments, and so on. This works, but we may still have more requests for one or more of these data types than a single cache instance can handle.
 
-A way to solve this problem is to replicate the caches. In a replicated cache setup, we would have two or more caches serving the same data - for instance, we might choose to run three replicas of the Users cache. Reads for Users data can go to any of the three replicas. However, when Users data is updated, we must either:
+A way to solve this problem is to replicate the caches. In a replicated cache setup, we would have two or more caches serving the same data. For instance, we might choose to run three replicas of the Users cache. Reads for Users data can go to any of the three replicas. However, when Users data is updated, we must either:
 
 - invalidate all three instances of the Users cache
 - tolerate stale data until the TTL expires (as described above)
 
-The need to invalidate all instances of the Users cache adds cost to every write operation: more latency, because we must wait for the slowest cache instance to respond; as well as higher use of bandwidth and other computing resources, because we have to do work on every cache instance that stores the data being invalidated. This cost increases the more replicated instances we run.
+##### The cost of invalidation
 
-There is an additional complication: what happens if we write to the Users database table, but cannot connect to one or more of the cache servers? In practice, this can happen and it means that inconsistency between datastores and caches is always a possibility in distributed systems.
+The need to invalidate all instances of the Users cache adds cost to every write operation. It costs us in more latency, because we must wait for the slowest cache instance to respond. It costs us in higher use of bandwidth and other computing resources, because we have to do work on every cache instance that stores the data being invalidated. This cost increases the more replicated instances we run.
+
+##### Inconsistency is always a possibility
+
+There is another complication: what happens if we write to the Users database table, but cannot connect to one or more of the cache servers? In practice, this can happen and it means that inconsistency between datastores and caches is always a possibility in distributed systems.
 
 There is further discussion of this problem below in the section on [CAP theorems](#the-cap-theorem).
 
-##### Sharded Caches {#sharded-caches}
+#### Sharded Caches
 
 Another approach to scaling cache systems is to shard the data instead of replicating it. This means that your data is split across multiple machines, instead of each instance of your cache storing all of the cached items. This is a good choice when the working set of recently accessed data is too large for any one machine. Each machine hosts a _partition_ of the data set. In this setup there is usually a router service that is responsible for proxying cache requests to the correct instance: the instance that stores the data to be accessed.
 
 Data sharding can be vertical or horizontal. In vertical sharding, we store different fields on different machines (or sets of machines). In horizontal sharding, we split the data up by rows.
 
-In the case of horizontal sharding, we can shard algorithmically - meaning that the shard to store a given row is determined by a function - or dynamically, meaning that the system maintains a lookup table that tracks where data ranges are stored.
+In the case of horizontal sharding, we can shard algorithmically or dynamically.
+
+##### Algorithmic sharding
+
+Algorithmic sharding means the shard to store a given row is determined by a function.
+
+##### Dynamic sharding
+
+Dynamic sharding means that the system maintains a lookup table that tracks where data ranges are stored.
 
 Read [Introduction to Distributed Data Storage by Quentin Truong](https://towardsdatascience.com/introduction-to-distributed-data-storage-2ee03e02a11d) for more on sharding.
+
+#### Problems with sharding
 
 A simple algorithmic sharding implementation might route requests to one of _N_ routers using a modulo operation: `cache_shard = id % num_shards`. The problem is that whenever a shard is added or removed, most of the keys will now be routed to a different cache server. This is equivalent to restarting all of our caches at once and starting cold. As discussed above, this is bad for performance, and potentially could cause an outage.
 
@@ -96,7 +143,7 @@ This problem is usually solved using a technique called [consistent hashing](htt
 
 You can read about [how Pinterest scaled its Cache Infrastructure](https://medium.com/pinterest-engineering/scaling-cache-infrastructure-at-pinterest-422d6d294ece) - it’s a useful example of a real architecture. They use an open-source system called [mcrouter](https://github.com/facebook/mcrouter/wiki) to horizontally scale their use of memcached. Mcrouter is one of the most widely-used distributed cache solutions in industry.
 
-#### Questions: {#questions}
+### Questions
 
 - What is a cache hit rate and why is it important?
 - What do we mean by ‘cold’ or ‘warm’ when we discuss caches?
@@ -106,60 +153,64 @@ You can read about [how Pinterest scaled its Cache Infrastructure](https://mediu
 - What is a TTL used for in caching?
 - Why should we cache in a standalone cache service, as opposed to within our application?
 
-### Databases {#databases}
+### Databases
 
 Most web applications we build include at least one database. Databases don’t have to be distributed systems: you can run a database on one machine. However, there are reasons that you might want to run a distributed database across two or more machines. The logic is similar to the rationale for running more than one cache server, as described above.
 
-1. Reliability: you don’t want to have an interruption in service if your database server experiences a hardware failure, power failure, or network failure.
-2. Capacity: you might run a distributed database to handle more load than a single database instance can serve.
+1. **Reliability:** you don’t want to have an interruption in service if your database server experiences a hardware failure, power failure, or network failure.
+2. **Capacity:** you might run a distributed database to handle more load than a single database instance can serve.
 
 To do either of these things we must _replicate_ the data, which means to copy the data to at least one other database instance.
 
-#### The CAP Theorem {#the-cap-theorem}
+#### The CAP Theorem
 
-Before discussing distributed datastores further, we must introduce the CAP Theorem.
+> **C**onsistency **A**vailability **P**artition tolerance
 
-The [CAP Theorem](https://en.wikipedia.org/wiki/CAP_theorem) is a computer science concept that states that any distributed data store can provide at most two of the following three properties:
+The [CAP Theorem](https://en.wikipedia.org/wiki/CAP_theorem) is a computer science concept that states that any distributed data store can provide at most **two** of the following three properties:
 
-- Consistency: every read should receive the most recently written data or else an error
-- Availability: every request receives a response, but there is no guarantee that it is based on the most recently written data
-- (Network) Partition tolerance: the system continues to operate even if network connectivity between some or all of the computers running the distributed data store is disrupted
+1. Consistency: every read should receive the most recently written data or else an error
+2. Availability: every request receives a response, but there is no guarantee that it is based on the most recently written data
+3. (Network) Partition tolerance: the system continues to operate even if network connectivity between some or all of the computers running the distributed data store is disrupted
 
 This seems complicated, but let’s break it down.
 
-###### Network Partition {#network-partition}
+##### Network Partition
 
-A network partition means that your computers cannot all communicate over the network. Imagine that you are running your service in two datacenters, and the fiber optic cables between them are dug up (there should be redundancy in these paths, of course, but accidents do happen that can take out multiple connections). This is a network partition. Your servers won’t be able to communicate with servers in the opposite datacenter. Configuration problems, or simply too much network traffic can also cause network partitions.
+Imagine that you are running your service in two datacenters, and the fiber optic cables between them are dug up. This is a network partition.
 
-Network partitions do occur, and there is no way that you can avoid this unpleasant fact of life. So in practice, distributed datastores have to choose between being consistent when network failures occur, or being available. It’s not a matter of choosing any two properties: you must choose either consistency and network partition tolerance or availability and network partition tolerance.
+A network partition means that your computers cannot all communicate over the network. Your servers won’t be able to communicate with servers in the opposite datacenter. Configuration problems, or simply too much network traffic can also cause network partitions.
 
-###### Consistency and availability {#consistency-and-availability}
+Network partitions do happen, and there is no way that you can avoid this unpleasant fact of life. So in practice, distributed datastores have to choose between being _consistent_ when network failures occur, or being _available_. It’s not a matter of choosing any two properties: you must choose either consistency and network partition tolerance _or_ availability and network partition tolerance.
+
+##### Consistency and availability
 
 Choosing consistency means that your application won’t be available on one side of the partition (or it might be read-only and serving old, stale data). Choosing availability means that your application will remain available, including for writes, but when the network partition is healed, you need a way of merging the writes that happened on different sides of the partition.
 
-The CAP Theorem is a somewhat simplified model of distributed datastores, and it has been [criticised](https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html) on that basis. However, it remains a reasonably useful model for learning about distributed datastore concepts. In general, replicated traditional datastores like MySQL choose consistency in the event of network partitions; [NoSQL datastores](https://www.mongodb.com/nosql-explained) such as Cassandra and Riak tend to choose availability.
+The CAP Theorem is a simplified model of distributed datastores, and it has been [criticised](https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html) on that basis. It remains a reasonably useful model for learning about distributed datastore concepts.
 
-(However, the behaviour of systems in the event of network failure can also vary based on how that specific datastore is configured, in terms of how .)
+In general, replicated traditional datastores like MySQL choose consistency in the event of network partitions; [NoSQL datastores](https://www.mongodb.com/nosql-explained) such as Cassandra and Riak tend to choose availability.
 
-#### Leader/Follower Datastore Replication {#leader-follower-datastore-replication}
+(However, the behaviour of systems in the event of network failure can also vary based on how that specific datastore is configured.)
 
-The most straightforward distributed datastore is the leader/follower datastore, also known as primary/secondary or single leader replication. The aim is to increase the availability and durability of the data: in other words, if we lose one of the datastore machines, we should not lose data and we should still be able to run the system.
+#### Leader/Follower Datastore Replication
 
-###### Synchronous Replication {#synchronous-replication}
+The most straightforward distributed datastore is the leader/follower datastore, also known as primary/secondary or single leader replication. The aim is to increase the availability and durability of the data. In other words, if we lose one of the datastore machines, we should not lose data and we should still be able to run the system.
+
+##### Synchronous Replication
 
 To do something synchronously means to do something at the same time as something else.
 
-In synchronous replication, the datastore client sends all writes to the leader. The leader has one or more followers. For every write, the leader sends those writes to its followers, and waits for all its followers to acknowledge completion of the write before the leader sends an acknowledgement to the client. Think of a race where all the runners are tied together with a rope. Leader and followers commit the data as part of the same database operation. Reads can go either to the leader, or to a follower, depending on how the datastore is configured. Reading from followers means that the datastore can serve a higher read load, which can be useful in applications that are serving a lot of traffic.
+In synchronous replication, the datastore client sends all writes to the leader. The leader has one or more followers. For every write, the leader sends those writes to its followers, and waits for all its followers to acknowledge completion of the write before the leader sends an acknowledgement to the client.
+
+Think of a race where all the runners are tied together with a rope. Leader and followers commit the data as part of the same database operation. Reads can go either to the leader, or to a follower, depending on how the datastore is configured. Reading from followers means that the datastore can serve a higher read load, which can be useful in applications that are serving a lot of traffic.
 
 There is one problem with synchronous replication: availability. Not only must the leader be available, but _all of the followers_ must be available as well. This is a problem: the system’s availability for writes will actually be lower than a single machine, because the chances of one of _N_ machines being unavailable are by definition higher than the chances of one machine being unavailable, because we have to add up the probabilities of downtime.
 
 For example, if one machine has 99.9% uptime and 0.1% downtime, and we have three machines, then we would expect the availability for all three together to be closer to 99.7% (i.e. 100% - 3 x 0.1%). Adding more replicas makes this problem worse. Response time is also a problem with synchronous replication, because the leader has to wait for all followers. This means that the system cannot commit writes faster than the slowest follower.
 
-<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image2.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
+![alt_text](./assets/leader-follower-diagram.png "leader follower diagram")
 
-![alt_text](images/image2.png "image_tooltip")
-
-###### Asynchronous and Semisynchronous Replication {#asynchronous-and-semisynchronous-replication}
+###### Asynchronous and Semisynchronous Replication
 
 We can solve these performance and availability problems by not requiring the leader to write to _all_ the followers before returning to the client. Asynchronous replication means that the leader can commit the transaction before replicating to any followers. Semisynchronous replication means that the leader must confirm the write at a subset of its followers before committing the transaction.
 
