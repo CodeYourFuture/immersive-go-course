@@ -6,14 +6,20 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
 )
 
-const serverPort = 8080
+func fetch(url string) (*http.Response, error) {
+	resp, err := http.Get(url)
+	fmt.Println(reflect.TypeOf(err))
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
 
 func main() {
-	requestURL := fmt.Sprintf("http://localhost:%d", serverPort)
-	resp, err := http.Get(requestURL)
-
+	resp, err := fetch("http://localhost:8080")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -23,8 +29,8 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	sb := string(body)
 
+	sb := string(body)
 	if resp.StatusCode == 200 {
 		fmt.Fprint(os.Stdout, sb)
 	}
