@@ -16,7 +16,7 @@ func main() {
 		fmt.Println("Sorry we cannot get you the weather")
 		return
 	}
-	
+
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
@@ -33,6 +33,13 @@ func main() {
 	case 429:
 		retrySeconds := 0
 		retryTime := resp.Header.Get("Retry-After")
+
+		if retryTime == "a while" {
+			fmt.Println("We will retry to get you the weather. Please wait 3 seconds")
+			time.Sleep(3 * time.Second)
+			main()
+		}
+
 		retryTimeDate, err := time.Parse(time.RFC1123, retryTime)
 
 		if err == nil {
