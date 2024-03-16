@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 const serverPort = 8080
@@ -22,7 +23,10 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
 	sb := string(body)
-	log.Print(sb)
+
+	if resp.StatusCode == 200 {
+		fmt.Fprint(os.Stdout, sb)
+	}
+
 }
