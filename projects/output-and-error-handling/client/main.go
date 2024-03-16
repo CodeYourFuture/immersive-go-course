@@ -10,22 +10,27 @@ import (
 )
 
 func main() {
+	// Connect to the server and getting a response
 	resp, err := http.Get("http://localhost:8080")
+	// Show error message if connection is not established
 	if err != nil {
 		handleError()
-		return
 	}
 
+	// Close the response body after been fully read
 	defer resp.Body.Close()
 
+	// Read response body and store it in a var
 	body, err := io.ReadAll(resp.Body)
 
+	// Show error message if we cannot read the response body
 	if err != nil {
 		handleError()
 	}
-
+	// Convert response body from binary to string
 	sb := string(body)
 
+	// Handle cases depending on the Status code of the response
 	switch resp.StatusCode {
 	case 200:
 		fmt.Fprint(os.Stdout, sb+"\n")
@@ -39,9 +44,10 @@ func main() {
 }
 
 func handleError() {
-	fmt.Println("Sorry we cannot get you the weather")
+	fmt.Println("Sorry we cannot get the weather")
 }
 
+// Handle response and retry depending on the Retry-After header
 func handleRateLimited(retryTime string) {
 	retrySeconds := 0
 	var err = error(nil)
