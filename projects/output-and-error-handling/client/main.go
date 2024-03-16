@@ -6,21 +6,19 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 )
 
-func fetch(url string) (*http.Response, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
-}
-
 func main() {
-	resp, err := fetch("http://localhost:8080")
+	resp, err := http.Get("http://localhost:8080")
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println("Sorry we cannot get you the weather")
+		return
 	}
+	
+	defer resp.Body.Close()
+
 	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
@@ -28,12 +26,34 @@ func main() {
 	}
 
 	sb := string(body)
+
 	switch resp.StatusCode {
 	case 200:
-		fmt.Fprint(os.Stdout, sb)
+		fmt.Fprint(os.Stdout, sb+"\n")
 	case 429:
-		fmt.Print(sb)
+		retrySeconds := 0
+		retryTime := resp.Header.Get("Retry-After")
+		retryTimeDate, err := time.Parse(time.RFC1123, retryTime)
+
+		if err == nil {
+			retrySeconds = int(time.Until(retryTimeDate).Seconds())
+		} else {
+			retrySeconds, err = strconv.Atoi(retryTime)
+			if err != nil {
+				log.Fatalf("Internal error")
+			}
+		}
+		if retrySeconds > 1 && retrySeconds <= 5 {
+			fmt.Printf("We will retry to get you the weather. Please wait %d seconds\n", retrySeconds)
+			time.Sleep(time.Duration(retrySeconds) * time.Second)
+			main()
+		} else {
+			fmt.Println("Sorry we cannot get you the weather")
+		}
 	case 500:
-		fmt.Print(sb)
+		fmt.Fprint(os.Stderr, sb+"\n")
+	default:
+		fmt.Println("Sorry we cannot get you the weather")
 	}
+
 }
