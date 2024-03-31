@@ -1,7 +1,7 @@
 {{ $fallBack := readDir "static/pictures/svgs/neons" | shuffle |first 1 }} {{
 $fallBackProjects := readDir "static/pictures/depths" | shuffle |first 1 }}
 
-<a class="c-card" href="{{.Permalink}}">
+<a class="c-card" href="{{.RelPermalink}}">
   <h3 class="c-card__title">{{.Title}}</h3>
   <!-- just random pictures -->
   <img loading="lazy" class="c-card__image" src="{{ if eq .Section "projects"

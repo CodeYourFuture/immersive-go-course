@@ -3,7 +3,7 @@
   <ol class="c-breadcrumbs__list">
     {{- range after 1 .Ancestors.Reverse }}
     <li class="c-breadcrumbs__item">
-      <a class="c-breadcrumbs__link" href="{{ .Permalink }}"
+      <a class="c-breadcrumbs__link" href="{{ .RelPermalink }}"
         >{{ .Title }}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +24,7 @@
     </li>
     {{- end }}
     <li class="c-breadcrumbs__item">
-      <a class="c-breadcrumbs__link" href="{{ .Permalink }}">{{ .Title }}</a>
+      <a class="c-breadcrumbs__link" href="{{ .RelPermalink }}">{{ .Title }}</a>
     </li>
   </ol>
 </nav>

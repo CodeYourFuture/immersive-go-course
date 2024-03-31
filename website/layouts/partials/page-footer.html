@@ -33,13 +33,13 @@
     <!-- we probably only want to navigate through primers which are subsections of one thing -->
     {{ if (eq .Section "primers") }} {{if .NextInSection}}<a
       class="c-page-footer__backwards"
-      href="{{.NextInSection.Permalink}}"
+      href="{{.NextInSection.RelPermalink}}"
       >&larr; {{.NextInSection.Title}}</a
     >{{ else }}
     <span class="c-page-footer__backwards"></span>
 
     {{ end}} {{if .PrevInSection}}
-    <a class="c-page-footer__forwards" href="{{.PrevInSection.Permalink}}"
+    <a class="c-page-footer__forwards" href="{{.PrevInSection.RelPermalink}}"
       >{{.PrevInSection.Title}} &rarr;</a
     >{{ end}} {{ end}}
   </nav>
