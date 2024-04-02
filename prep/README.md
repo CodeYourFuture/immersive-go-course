@@ -10,17 +10,34 @@ Before you start this course, there's a few things we assume you've done:
 
 - You're familiar with the essentials of writing code in JavaScript
 - You have experience with JavaScript in the browser and in [Node](https://nodejs.org/en/)
-- You have read some of [How Computers Really Work by Matthew Justice](https://www.howcomputersreallywork.com/). You _must_ read chapters 1, 2, 7, 9, 10, 11, 12. Any other chapters may be interesting (feel free to read them! We particularly recommend 8), but aren't necessary. Note that this book isn't free - someone at CYF may be able to lend you a copy if you need.
-- You've completed the [Tour of Go](https://go.dev/tour/welcome/1)
-- Learnt about pointers and memory:
+
+## Preparatory work
+
+### Computers and programming
+
+Before attempting any of the projects, you should:
+
+- [ ] Read some of [How Computers Really Work by Matthew Justice](https://www.howcomputersreallywork.com/). You _must_ read chapters 1, 2, 7, 9, 10, 11, 12. Any other chapters may be interesting (feel free to read them! We particularly recommend 8), but aren't necessary.
+  - Note that this book isn't free - someone at CYF may be able to lend you a copy if you need.
+  - You don't need to remember (or even fully understand) everything you read - the goal is just that you're familiar with the concepts as you learn more.
+- [ ] Complete the [Tour of Go](https://go.dev/tour/welcome/1)
+- [ ] Read [How to use the fmt package in Golang](https://www.educative.io/answers/how-to-use-the-fmt-package-in-golang)
+- [ ] Learn about pointers and memory:
   - Read the [Pointers chapter](https://www.golang-book.com/books/intro/8) of [An Introduction to Programming in Go](https://www.golang-book.com/books/intro), and do the problems listed in the chapter.
   - Read about [stack and heap memory](https://courses.engr.illinois.edu/cs225/fa2022/resources/stack-heap/) - note that the examples here are C++ not Go, but you should be able to follow them. One important difference between these languages is that in Go, you don't need to worry about whether a value lives on the heap or the stack (in fact, Go is allowed to choose where your variable lives, and even move it around) - this means that it's ok to return a pointer to a stack variable in Go. You also don't need to call `delete` yourself in Go - Go is [a garbage collected language](https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)) so it will delete variables when they're no longer needed.
+- [ ] Read and work through [Learn Go with tests](https://quii.gitbook.io/learn-go-with-tests/) up to and including the Mocking section.
 
 This is important because we don't cover the basic language features of Go: you need to be familiar with writing Go functions and methods, plus the basics of types in Go. You'll also need to know how to navigate [packages and documentation](https://pkg.go.dev/), and we have a [short guide on how to do that](#learn-how-to-navigate-go-documentation).
 
 Remember: you can _always_ Google or ask for help if you get stuck.
 
-## Set up and get to know your IDE
+### Linux
+
+- [ ] Play [the Bandit](https://overthewire.org/wargames/bandit/) - you must be able to complete up to level 20 (repeatedly)
+- [ ] Take this [Unix 101 course](https://www.opsschool.org/unix_101.html) (and then try 102)
+- [ ] Print out this [Linux-Cheat-Sheet](https://www.loggly.com/wp-content/uploads/2015/05/Linux-Cheat-Sheet-Sponsored-By-Loggly.pdf)
+
+### Set up and get to know your IDE
 
 We're going to assume you're using [Visual Studio Code](https://code.visualstudio.com/) in this course.
 
@@ -36,7 +53,7 @@ Some of the really useful ones:
 
 Write a bit of Go in VS Code and experiment with these features. A small investment now will save a lot of time in the future!
 
-## Learn how to navigate Go documentation
+### Learn how to navigate Go documentation
 
 The [Go standard library](https://pkg.go.dev/std) has lots of documentation and examples, such as [net/http](https://pkg.go.dev/net/http). To find documentation, you can use the search feature or Google something like `golang net/http`, which will generally help you find what you're looking for.
 
@@ -51,6 +68,24 @@ The structure is fairly similar between different packages. Let's take `fmt` as 
 - Lastly, Source Files is... the source code! Good Go libraries can be quite readable, so don't be scared to jump in. You'll probably learn a lot,
 
 > 💡 The best way to get familiar with a new package, particularly if the documentation is a bit dense (like for the the `fmt` package), is to look at the Examples section. It will have some basic and advanced usage that you can often use straight away.
+
+### Projects
+
+Complete the first few [projects](/projects) up-to and including "Servers & HTTP requests".
+
+If you are getting feedback on these projects, we recommend making pull requests (against your fork) early, and get feedback on each before starting the next.
+
+If you have spare time, we also recommend completing the stretch goals of each project before moving on to the next one - it's better to take time to learn all the lessons from each project, rather than race ahead as fast as you can.
+
+Make sure to read the guidance about the projects below before attempting them.
+
+### Reading
+
+Dip in to some longer books, but don't feel you need to read the whole lot!
+
+- [ ] [Google - Site Reliability Engineering](https://sre.google/sre-book/table-of-contents/)
+- [ ] [The Unix Tools Philosophy](https://www.linuxtopia.org/online_books/gnu_linux_tools_guide/the-unix-tools-philosophy.html)
+- [ ] [The Phoenix Project](https://smile.amazon.co.uk/Phoenix-Project-Helping-Business-Anniversary/dp/B00VBEBRK6/)
 
 ## Conventions used in projects
 
