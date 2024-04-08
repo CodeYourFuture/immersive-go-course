@@ -22,6 +22,10 @@ In the CYF+ process your goal is to demonstrate the profile of an engineer at a 
 - [ ] [Troubleshooting Primer](../../primers/troubleshooting/)
 - [ ] [Linux process Intro](https://tldp.org/LDP/tlk/kernel/processes.html)
 - [ ] [Linux Process and Signals](https://www.bogotobogo.com/Linux/linux_process_and_signals.php) - This doc has some commands to give you an insight on how to view processes and pass signals to a process; we recommend running those commands and documenting your learning.
+- [ ] [PHP fastcgi](https://www.php.net/manual/en/install.fpm.php)
+- [ ] [Systemctl](https://www.freedesktop.org/software/systemd/man/systemctl.html) and then [this](https://www.redhat.com/sysadmin/linux-systemctl-manage-services)
+- [ ] [Nginx](https://nginx.org/en/docs/) and [How request processing works in Nginx](https://nginx.org/en/docs/http/request_processing.html)
+- [ ] [Nginx with PHP FastCGI](https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/)
 
 ## Projects
 
@@ -29,7 +33,7 @@ In the CYF+ process your goal is to demonstrate the profile of an engineer at a 
 - [ ] [Multiple Servers](../../projects/multiple-servers)
 - [ ] [Docker & Cloud Deployment](../../projects/docker-cloud)
 - [ ] [gRPC](../../projects/grpc-client-server)
-- [ ] [Troubleshooting project #1](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.cjnguaxmynan) TOADD
+- [ ] [Troubleshooting project #1](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.jwm4rlknw31h)
 
 ## Product
 
