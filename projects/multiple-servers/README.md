@@ -312,7 +312,7 @@ module servers
 
 Now, we can start a file in `static/` — let's say `static/static.go` — like this:
 
-```
+```go
 package static
 
 func Run() {
@@ -322,7 +322,7 @@ func Run() {
 
 With this in place, other code in your module can import `servers/static` and use `Run`:
 
-```
+```go
 package main
 
 import (
