@@ -32,8 +32,8 @@ In the CYF+ process your goal is to demonstrate the profile of an engineer at a 
 - [ ] [Troubleshooting project #1 - Fix Nginx]
     - This exercise is designed to help you learn how to setup Ngix proxy and configure it with PHP FastCGI to disaplay web pages.
     - Instruction: (please let Radha Kumari know when you are ready to do this exercise)
-        - ssh -i </path/to/the/ssh-private-key> <username>@<IP>
-        - ssh -i </path/to/the/ssh-private-key> <username>@<IP>
+        - `ssh -i </path/to/the/ssh-private-key> <username>@<IP>`
+        - `ssh -i </path/to/the/ssh-private-key> <username>@<IP>`
     - The goal of this exercise is - when you run "curl http://127.0.0.1/" in the terminal you get "Hello World" with HTTP response code 200. This exercise is a mix of both system and application troubleshooting
         - Run the curl command in verbose mode and see what the output looks like.
         - Identify what is the port that the curl defaults to and what runs on that port.
