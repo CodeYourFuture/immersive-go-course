@@ -22,13 +22,16 @@ In the CYF+ process your goal is to demonstrate the profile of an engineer at a 
 - [ ] [Troubleshooting Primer](../../primers/troubleshooting/)
 - [ ] [Linux process Intro](https://tldp.org/LDP/tlk/kernel/processes.html)
 - [ ] [Linux Process and Signals](https://www.bogotobogo.com/Linux/linux_process_and_signals.php) - This doc has some commands to give you an insight on how to view processes and pass signals to a process; we recommend running those commands and documenting your learning.
+- [ ] [PHP fastcgi](https://www.php.net/manual/en/install.fpm.php)
+- [ ] [Systemctl](https://www.freedesktop.org/software/systemd/man/systemctl.html) and then [this](https://www.redhat.com/sysadmin/linux-systemctl-manage-services)
+- [ ] [Nginx](https://nginx.org/en/docs/) and [How request processing works in Nginx](https://nginx.org/en/docs/http/request_processing.html)
+- [ ] [Nginx with PHP FastCGI](https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/)
 
 ## Projects
 
 - [ ] [Servers & databases](../../projects/server-database)
 - [ ] [Multiple Servers](../../projects/multiple-servers)
 - [ ] [Docker & Cloud Deployment](../../projects/docker-cloud)
-- [ ] [gRPC](../../projects/grpc-client-server)
 - [ ] [Troubleshooting project #1 - Fix Nginx]
     - This exercise is designed to help you learn how to setup Ngix proxy and configure it with PHP FastCGI to disaplay web pages.
     - Instruction: (please let Radha Kumari know when you are ready to do this exercise)
@@ -41,7 +44,6 @@ In the CYF+ process your goal is to demonstrate the profile of an engineer at a 
         - What is php fast CGI and php-fpm (fastCGI process manager)?
         - Find out where php-fpm configuration files live and what each configuration field means.
     - This exercise shouldn't take more than 1-2 days. If you are stuck, please ask for help. While you are doing the exercise, I would really recommend logging somewhere the commands you run and noting what information that gives you and whether or not that was helpful in reaching the end goal. If you were given Sudo access, make sure to document when you needed to use that and why.
-
 
 ## Product
 
