@@ -32,8 +32,18 @@ In the CYF+ process your goal is to demonstrate the profile of an engineer at a 
 - [ ] [Servers & databases](../../projects/server-database)
 - [ ] [Multiple Servers](../../projects/multiple-servers)
 - [ ] [Docker & Cloud Deployment](../../projects/docker-cloud)
-- [ ] [gRPC](../../projects/grpc-client-server)
-- [ ] [Troubleshooting project #1](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.jwm4rlknw31h)
+- [ ] [Troubleshooting project #1 - Fix Nginx]
+    - This exercise is designed to help you learn how to setup Ngix proxy and configure it with PHP FastCGI to disaplay web pages.
+    - Instruction: (please let Radha Kumari know when you are ready to do this exercise)
+        - `ssh -i </path/to/the/ssh-private-key> <username>@<IP>`
+        - `ssh -i </path/to/the/ssh-private-key> <username>@<IP>`
+    - The goal of this exercise is - when you run "curl http://127.0.0.1/" in the terminal you get "Hello World" with HTTP response code 200. This exercise is a mix of both system and application troubleshooting
+        - Run the curl command in verbose mode and see what the output looks like.
+        - Identify what is the port that the curl defaults to and what runs on that port.
+        - Find where Nginx configuration lives and what each configuration field means along with the location on the file system where it serves the content from.
+        - What is php fast CGI and php-fpm (fastCGI process manager)?
+        - Find out where php-fpm configuration files live and what each configuration field means.
+    - This exercise shouldn't take more than 1-2 days. If you are stuck, please ask for help. While you are doing the exercise, I would really recommend logging somewhere the commands you run and noting what information that gives you and whether or not that was helpful in reaching the end goal. If you were given Sudo access, make sure to document when you needed to use that and why.
 
 ## Product
 
