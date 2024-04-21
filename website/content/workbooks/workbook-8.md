@@ -17,7 +17,7 @@ weight=3
 
 - [ ] [Batch processing](../../projects/batch-processing)
 - [ ] [Buggy app](../../projects/buggy-app)
-- [ ] [Memcache](../../projects/memcache)
+- [ ] [Memcached Clusters](../../projects/memcached-clusters)
 - [ ] [Troubleshooting project #2](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.cjnguaxmynan) TOADD
 
 ## Product
