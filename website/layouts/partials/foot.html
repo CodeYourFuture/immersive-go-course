@@ -56,7 +56,7 @@
 {{ $scripts := resources.Get "scripts/app.js" | resources.Minify }} {{ partial
 "random-bg" .}}
 
-<script src="{{$scripts.Permalink}}" defer></script>
+<script src="{{$scripts.RelPermalink}}" defer></script>
 
 {{ if .Page.Store.Get "hasMermaid" }}
 <script
