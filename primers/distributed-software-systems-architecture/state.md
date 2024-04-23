@@ -155,17 +155,13 @@ There is one problem with synchronous replication: availability. Not only must t
 
 For example, if one machine has 99.9% uptime and 0.1% downtime, and we have three machines, then we would expect the availability for all three together to be closer to 99.7% (i.e. 100% - 3 x 0.1%). Adding more replicas makes this problem worse. Response time is also a problem with synchronous replication, because the leader has to wait for all followers. This means that the system cannot commit writes faster than the slowest follower.
 
-<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image2.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-![alt_text](images/image2.png "image_tooltip")
+![alt_text](syncrep.png "Synchronous replication")
 
 ###### Asynchronous and Semisynchronous Replication {#asynchronous-and-semisynchronous-replication}
 
 We can solve these performance and availability problems by not requiring the leader to write to _all_ the followers before returning to the client. Asynchronous replication means that the leader can commit the transaction before replicating to any followers. Semisynchronous replication means that the leader must confirm the write at a subset of its followers before committing the transaction.
 
-<p id="gdcalert3" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image3.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert4">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-![alt_text](images/image3.png "image_tooltip")
+![alt_text](semisyncrep.png "Semi-synchronous replication")
 
 Many databases provide configuration settings to control how many replicas need to acknowledge a write before the write can be considered complete. [MySQL](https://dev.mysql.com/doc/refman/8.0/en/replication.html), for example, defaults to asynchronous replication. MySQL can also support fully synchronous replication as described in the previous section, or semisynchronous replication, which means that at least one follower has committed every write before the leader considers the write complete.
 
