@@ -14,6 +14,7 @@ services:
         - 11214:11211
   mcrouter:
     image: docker-registry.wikimedia.org/mcrouter:latest
+    platform: linux/amd64
     links:
         - memcached1:memcached1
         - memcached2:memcached2
