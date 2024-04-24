@@ -1,6 +1,6 @@
 <!--forhugo
 +++
-title="2. State"   
+title="2. State"
 +++
 forhugo-->
 
@@ -201,10 +201,10 @@ As we saw with caches, replication can help us to scale our read load for databa
 
 A common sharded datastore used in industry is Vitess, originally developed at YouTube but available as an open-source project. It is an [orchestration layer](https://www.databricks.com/glossary/orchestration) designed for operating a massively sharded fleet of MySQL database instances and doing so reliably. It is worth reading some of the Vitess documentation:
 
-- [https://vitess.io/docs/14.0/overview/whatisvitess/](https://vitess.io/docs/14.0/overview/whatisvitess/)
-- [https://vitess.io/docs/14.0/overview/architecture/](https://vitess.io/docs/14.0/overview/architecture/)
-- [https://vitess.io/docs/14.0/overview/history/](https://vitess.io/docs/14.0/overview/history/)
-- [https://vitess.io/docs/14.0/overview/scalability-philosophy/](https://vitess.io/docs/14.0/overview/scalability-philosophy/)
+- [Vitess - What is Vitess](https://vitess.io/docs/19.0/overview/whatisvitess/)
+- [Vitess - Architecture](https://vitess.io/docs/19.0/overview/architecture/)
+- [Vitess - History](https://vitess.io/docs/19.0/overview/history/)
+- [Vitess - Scalability Philosophy](https://vitess.io/docs/19.0/overview/scalability-philosophy/)
 
 #### Questions: {#questions}
 
