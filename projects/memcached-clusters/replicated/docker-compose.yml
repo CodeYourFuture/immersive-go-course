@@ -19,6 +19,6 @@ services:
         - memcached1:memcached1
         - memcached2:memcached2
         - memcached3:memcached3
-    command: mcrouter --config-str='{"pools":{"A":{"servers":["memcached1:11211", "memcached2:11211", "memcached3:11211"]}},"route":{"type":"OperationSelectorRoute","operation_policies":{"add":"AllFastestRoute|Pool|A","delete":"AllFastestRoute|Pool|A","get":"AllFastestRoute|Pool|A","set":"AllFastestRoute|Pool|A"}}}' -p 11211
+    command: mcrouter --config-str='{"pools":{"A":{"servers":["memcached1:11211", "memcached2:11211", "memcached3:11211"]}},"route":{"type":"OperationSelectorRoute","operation_policies":{"add":"AllFastestRoute|Pool|A","delete":"AllFastestRoute|Pool|A","get":"AllFastestRoute|Pool|A","gets":"AllFastestRoute|Pool|A","set":"AllFastestRoute|Pool|A"}}}' -p 11211
     ports:
         - 11211:11211
