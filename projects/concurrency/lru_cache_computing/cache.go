@@ -5,6 +5,18 @@ import (
 	"sync"
 )
 
+type Cache[K comparable, V any] struct {
+	entryLimit uint64
+
+	computeChannel chan K
+
+	mu              sync.Mutex
+	computedEntries map[K]cacheEntry[K, V]
+	pendingEntries  map[K]*channelList[K, V]
+	// Front is most recently used, back is least recently used
+	evictionList *list.List
+}
+
 // entryLimit and concurrentComputeLimit must both be non-zero.
 // computer must never panic.
 func NewCache[K comparable, V any](entryLimit uint64, concurrentComputeLimit uint64, computer func(K) V) *Cache[K, V] {
@@ -77,18 +89,6 @@ type channelList[K any, V any] struct {
 	mu       sync.Mutex
 	channels []chan (keyValuePair[K, V])
 	value    *V
-}
-
-type Cache[K comparable, V any] struct {
-	entryLimit uint64
-
-	computeChannel chan K
-
-	mu              sync.Mutex
-	computedEntries map[K]cacheEntry[K, V]
-	pendingEntries  map[K]*channelList[K, V]
-	// Front is most recently used, back is least recently used
-	evictionList *list.List
 }
 
 func (c *Cache[K, V]) Get(key K) (V, bool) {

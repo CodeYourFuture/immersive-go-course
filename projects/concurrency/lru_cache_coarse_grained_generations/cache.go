@@ -6,6 +6,18 @@ import (
 	"time"
 )
 
+// type Cache implements a roughly-LRU cache. It attempts to keep to a maximum of targetSize, but may contain more entries at points in time.
+// When under size pressure, it garbage collects entries which haven't been read or written, with no strict eviction ordering guarantees.
+type Cache[K comparable, V any] struct {
+	targetSize uint64
+
+	mu sync.RWMutex
+	// Every time we Get/Put a value, we store which generation it was last accessed.
+	// We have a garbage collection goroutine which will delete entries that haven't been recently accessed, if the cache is full.
+	currentGeneration atomic.Uint64
+	values            map[K]*valueAndGeneration[V]
+}
+
 func NewCache[K comparable, V any](targetSize uint64, garbageCollectionInterval time.Duration) *Cache[K, V] {
 	cache := &Cache[K, V]{
 		targetSize: targetSize,
@@ -46,18 +58,6 @@ func NewCache[K comparable, V any](targetSize uint64, garbageCollectionInterval 
 	}()
 
 	return cache
-}
-
-// type Cache implements a roughly-LRU cache. It attempts to keep to a maximum of targetSize, but may contain more entries at points in time.
-// When under size pressure, it garbage collects entries which haven't been read or written, with no strict eviction ordering guarantees.
-type Cache[K comparable, V any] struct {
-	targetSize uint64
-
-	mu sync.RWMutex
-	// Every time we Get/Put a value, we store which generation it was last accessed.
-	// We have a garbage collection goroutine which will delete entries that haven't been recently accessed, if the cache is full.
-	currentGeneration atomic.Uint64
-	values            map[K]*valueAndGeneration[V]
 }
 
 type valueAndGeneration[V any] struct {
