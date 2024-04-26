@@ -52,6 +52,9 @@ func NewCache[K comparable, V any](targetSize uint64, gcTicker <-chan time.Time)
 			if len(keysToDelete) > 0 {
 				cache.mu.Lock()
 				for _, keyToDelete := range keysToDelete {
+					if len(cache.values) <= int(targetSize) {
+						break
+					}
 					delete(cache.values, keyToDelete)
 				}
 				cache.mu.Unlock()
