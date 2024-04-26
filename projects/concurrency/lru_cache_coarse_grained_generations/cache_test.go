@@ -9,11 +9,12 @@ import (
 )
 
 func TestPutThenGet(t *testing.T) {
-	cache := NewCache[string, string](10, 1*time.Millisecond)
+	gcTicker := make(chan time.Time)
+	cache := NewCache[string, string](10, gcTicker)
 	previouslyExisted := cache.Put("greeting", "hello")
 	require.False(t, previouslyExisted)
 
-	time.Sleep(3 * time.Millisecond)
+	gcTicker <- time.Now()
 
 	value, present := cache.Get("greeting")
 	require.True(t, present)
@@ -21,20 +22,22 @@ func TestPutThenGet(t *testing.T) {
 }
 
 func TestGetMissing(t *testing.T) {
-	cache := NewCache[string, string](1, 1*time.Millisecond)
+	gcTicker := make(chan time.Time)
+	cache := NewCache[string, string](1, gcTicker)
 	value, present := cache.Get("greeting")
 	require.False(t, present)
 	require.Nil(t, value)
 }
 
 func TestEviction_JustWrites(t *testing.T) {
-	cache := NewCache[string, string](10, 1*time.Millisecond)
+	gcTicker := make(chan time.Time)
+	cache := NewCache[string, string](10, gcTicker)
 
 	for i := 0; i < 10; i++ {
 		cache.Put(fmt.Sprintf("entry-%d", i), "hello")
 	}
 
-	time.Sleep(3 * time.Millisecond)
+	gcTicker <- time.Now()
 
 	_, present0 := cache.Get("entry-0")
 	require.True(t, present0)
@@ -44,7 +47,7 @@ func TestEviction_JustWrites(t *testing.T) {
 
 	cache.Put("entry-10", "hello")
 
-	time.Sleep(3 * time.Millisecond)
+	gcTicker <- time.Now()
 
 	_, present1 := cache.Get("entry-1")
 	require.False(t, present1)

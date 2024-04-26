@@ -18,15 +18,17 @@ type Cache[K comparable, V any] struct {
 	values            map[K]*valueAndGeneration[V]
 }
 
-func NewCache[K comparable, V any](targetSize uint64, garbageCollectionInterval time.Duration) *Cache[K, V] {
+// NewCache constructs a new Cache who aims to contain up to targetSize elements (but my occasionally exceed this limit),
+// and which performs garbage collection to maintain this target size each time gcTicker receives a value.
+// The value received by gcTicker is ignored, but is present to make it easy to use the standard library's `time.Ticker` type.
+func NewCache[K comparable, V any](targetSize uint64, gcTicker <-chan time.Time) *Cache[K, V] {
 	cache := &Cache[K, V]{
 		targetSize: targetSize,
 		values:     make(map[K]*valueAndGeneration[V], targetSize),
 	}
 
 	go func() {
-		ticker := time.Tick(garbageCollectionInterval)
-		for range ticker {
+		for range gcTicker {
 			currentGeneration := cache.currentGeneration.Load()
 			cache.currentGeneration.Add(1)
 
