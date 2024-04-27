@@ -32,7 +32,13 @@
   <ol class="c-timeline">
     {{ range .Pages }}
     <li class="c-timeline__entry">
-      {{ partial "timeline.html" . }} {{ if $hasDetails}}
+      {<a class="c-timeline__post" href="{{.Permalink}}">
+        <h3 class="c-timeline__title">{{.Title}}</h3>
+        <time class="c-timeline__date" datetime="{{.Date}}"
+          >{{.Date.Format "January 2, 2006"}}</time
+        >
+      </a>
+      {{ if $hasDetails}}
       <details class="c-timeline__details">
         <summary class="c-timeline__summary">
           <h4 class="c-timeline__summary-heading">Details</h4>
