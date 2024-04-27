@@ -52,6 +52,7 @@
   // sometimes buttons have an icon or are only visibly an icon
 
   &__icon,
+  &__icon svg,
   &--icon {
     // enforce tap sizing
     $taps: height, width, min-width, max-width;
@@ -64,6 +65,7 @@
     box-shadow: none;
     color: currentColor;
     place-content: center;
+    border-radius: 0;
 
     @include on-event {
       background: transparent;
