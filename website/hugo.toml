@@ -1,0 +1,66 @@
+baseURL = "https://systems.codeyourfuture.io/"
+languageCode = "en-gb"
+title = "CYF+"
+languageLang = "en"
+[module]
+  [[module.imports]]
+    path = "github.com/CodeYourFuture/curriculum/common-theme" 
+      
+[menus]
+    [[menus.secondary]]
+        name = "Main Curriculum 👈🏾"
+        weight = 1
+        url = "https://curriculum.codeyourfuture.io/"
+     [[menus.secondary]]
+        name = "Join Us 👋🏿"
+        weight = 2
+        url = "https://codeyourfuture.io/volunteers/"
+    [[menus.secondary]]
+        name = "Support 🫶🏼"
+        weight = 3
+        url = "https://codeyourfuture.io/donate/"
+
+[params]
+googleFonts="https://fonts.googleapis.com/css2?family=Major+Mono+Display:wght@500&family=Hanken+Grotesk:wght@400;600&display=swap"
+description = "A free and open source engineering programme."
+main_website = "https://codeyourfuture.io/"
+main_org_name = "Code Your Future"
+org = "https://github.com/CodeYourFuture"
+repo = "https://github.com/CodeYourFuture/immersive-go-course"
+pdrepo = "CYF-PD"
+root = "immersive-go-course"
+orgapi = "https://api.github.com/repos/CodeYourFuture/"
+# We use a proxy which concatenates paginated responses, otherwise we miss results.
+# Daniel is currently hosting this code https://github.com/illicitonion/github-issue-proxy but we should work out a long-term maintainable solution to this problem.
+issuesorgapi = "https://github-issue-proxy.illicitonion.com/repos/CodeYourFuture/"
+
+
+[caches.getjson]
+# Disable caching of fetches - we want every build to get up to date content for issues, so that if people make clarifications or fixes to issues, we pick them up.
+maxAge = 0
+
+[security.funcs]
+# Allow accessing a GitHub bearer token to avoid rate limits when doing HTTP fetches to the GitHub API.
+# This can be generated at https://github.com/settings/tokens?type=beta and needs read-only access to all public CYF GitHub repos.
+getenv = ["^HUGO_CURRICULUM_GITHUB_BEARER_TOKEN$"]
+
+[markup]
+[markup.tableOfContents]
+endLevel = 2
+ordered = true
+startLevel = 2
+[markup.highlight]
+lineNos = false
+codeFences = true
+guessSyntax = true
+[markup.goldmark.renderer]
+# Enable HTML codeblocks, e.g. for <details> blocks
+unsafe = true
+hardWraps = true
+footnote= true
+
+
+theme = "common-theme"
+
+[taxonomies]
+series = "versions"
