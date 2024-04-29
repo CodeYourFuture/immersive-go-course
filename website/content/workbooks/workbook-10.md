@@ -7,14 +7,14 @@ weight=5
 
 # Provisional start date: 20 May 2024
 
-## Study
+## Asynchronous work and pipelines
 
-- [ ] [Distributed Systems: Asynchronous Work and Pipelines](../../primers/distributed-software-systems-architecture/asynchronous-work-and-pipelines)
+- [ ] Read about [Distributed Systems: Asynchronous Work and Pipelines](../../primers/distributed-software-systems-architecture/asynchronous-work-and-pipelines)
+- [ ] Project: [Kafka Cron](../../projects/kafka-cron) - Distributed Cron system with Prometheus monitoring
+
+## Troubleshooting
+
 - [ ] [Troubleshooting Primer](../../primers/troubleshooting/)
-
-## Projects
-
-- [ ] [Kafka Cron](https://github.com/CodeYourFuture/immersive-go-course/tree/main/kafka-cron) - Distributed Cron system with Prometheus monitoring
 - [ ] [Troubleshooting project #4](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.cjnguaxmynan) TOADD
 
 ## Product
