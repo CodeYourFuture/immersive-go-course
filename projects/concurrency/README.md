@@ -385,7 +385,7 @@ Try to answer at least the following questions:
   * How much work needs to be done to evict an entry? (What's the big-O of evicting an entry?)
   * How much contention is there for locks when putting in the cache?
   * How much contention is there for locks when reading from the cache?
-* For each implementation, what use-cases is this implementation well-suited to? When would one of the other solutions be better? Some things to generally think about when considering trade-offs:
+* For each implementation, what use-cases is this implementation well-suited to? What use-cases would this implementation be particularly _bad_ at? When would one of the other solutions be better? Some things to generally think about when considering trade-offs:
   * What is the: average memory consumption, peak memory consumption, average-case latency, worst-case latency, consistency of latency, for each implementation?
   * Think about usage patterns: which is better if callers are mostly reading? Mostly writing? _Always_ reading? Alternating between reads and writes? Other usage patterns?
   * What guarantees can we offer with some implementations but not others? e.g. If we need to never use more than 10 MB of RAM, which implementations can guarantee that?
