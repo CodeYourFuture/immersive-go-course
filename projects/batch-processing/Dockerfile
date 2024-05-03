@@ -35,9 +35,6 @@ RUN cd && cd ImageMagick* && \
     make -j$(nproc) && make install && \
     ldconfig /usr/local/lib
 
-# Clean up the image
-RUN cd && rm -rf ${IMAGEMAGICK_VERSION}.tar.gz ImageMagick6-${IMAGEMAGICK_VERSION}
-
 ##
 ## GOBUILD
 ##
