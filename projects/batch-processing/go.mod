@@ -1,7 +1,5 @@
 module github.com/CodeYourFuture/immersive-go-course/batch-processing
 
-go 1.19
+go 1.22
 
-require (
-	gopkg.in/gographics/imagick.v2 v2.6.2 // indirect
-)
+require gopkg.in/gographics/imagick.v2 v2.6.4

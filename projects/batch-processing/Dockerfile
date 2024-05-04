@@ -1,109 +1,47 @@
-# syntax=docker/dockerfile:1
-##
-## IMAGEMAGICK
-##
-FROM golang:1.22-bullseye as imagemagick
+FROM golang:1.22-bookworm as imagemagickbase
 
-# Ignore APT warnings about not having a TTY
-ENV DEBIAN_FRONTEND noninteractive
+# Work out how to lock the version of libmagickwand-dev
+RUN apt-get update && apt-get install -y libmagickwand-dev
 
-# Install build essentials
-RUN apt-get update && \
-    apt-get install -y wget build-essential pkg-config --no-install-recommends
+FROM golang:1.22-bookworm as appbase
 
-# Install ImageMagick deps
-RUN apt-get -q -y install libjpeg-dev libpng-dev libtiff-dev \
-    libgif-dev libx11-dev --no-install-recommends
+WORKDIR /batch-processing
 
-ENV IMAGEMAGICK_VERSION=6.9.10-11
-
-# Install ImageMagick
-RUN cd && \
-    wget https://github.com/ImageMagick/ImageMagick6/archive/${IMAGEMAGICK_VERSION}.tar.gz
-
-RUN cd && \
-    tar xvzf ${IMAGEMAGICK_VERSION}.tar.gz && \
-    cd ImageMagick* && \
-    ./configure \
-    --without-magick-plus-plus \
-    --without-perl \
-    --disable-openmp \
-    --with-gvc=no \
-    --disable-docs
-
-RUN cd && cd ImageMagick* && \
-    make -j$(nproc) && make install && \
-    ldconfig /usr/local/lib
-
-# DEBUG
-# install bash so i can examine the filesystem
-# RUN apt-get update && apt-get install -y bash
-# docker build --target imagemagick -t imagemagick . && docker run -it --rm imagemagick /bin/bash
-
-##
-## BUILD
-##
-FROM golang:1.22-bullseye as build
-
-COPY --from=imagemagick /usr/local/bin /usr/local/bin
-COPY --from=imagemagick /usr/local/lib /usr/local/lib
-COPY --from=imagemagick /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
-COPY --from=imagemagick /usr/local/include/ImageMagick-6 /usr/local/include/ImageMagick-6
-
-# Build the app
-WORKDIR /app
-
-COPY go.mod ./
-COPY go.sum ./
+COPY go.mod go.sum ./
 
 RUN go mod download
 
-COPY *.go ./
+COPY inputs inputs
 
-COPY inputs /inputs
-RUN mkdir -p /outputs
+RUN mkdir -p outputs
 
-# This is required for test and run, but for develop it ensures we have a build cache
-RUN go build -o /out
+COPY *.go .
 
-# DEBUG
-# install bash so i can examine the filesystem
-# RUN apt-get update && apt-get install -y bash
-# docker build --target gobuild -t gobuild . && docker run -it --rm gobuild /bin/bash
+FROM golang:1.22-bookworm as combined
 
-##
-## COMBINED
-##
-# FROM golang:1.22-bullseye as combined
+# Work out how to minimise how many libraries (and headers(?)) we are copying across
+COPY --from=imagemagickbase /usr/lib/ /usr/lib/
+COPY --from=imagemagickbase /usr/include /usr/include
+COPY --from=appbase /batch-processing/ /batch-processing/
 
-# COPY --from=gobuild /out /out
+# root@917b05018df9:/usr/lib/aarch64-linux-gnu# pkg-config --cflags --libs MagickWand
+# -fopenmp -DMAGICKCORE_HDRI_ENABLE=0 -DMAGICKCORE_QUANTUM_DEPTH=16 -fopenmp -DMAGICKCORE_HDRI_ENABLE=0 -DMAGICKCORE_QUANTUM_DEPTH=16 -I/usr/include/aarch64-linux-gnu//ImageMagick-6 -I/usr/include/ImageMagick-6 -I/usr/include/aarch64-linux-gnu//ImageMagick-6 -I/usr/include/ImageMagick-6 -lMagickWand-6.Q16 -lMagickCore-6.Q16
+# root@917b05018df9:/usr/lib/aarch64-linux-gnu# 
 
-# COPY --from=imagemagick /usr/local/bin /usr/local/bin
-# COPY --from=imagemagick /usr/local/lib /usr/local/lib
-# COPY --from=imagemagick /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
-# COPY --from=imagemagick /usr/local/include/ImageMagick-6 /usr/local/include/ImageMagick-6
+WORKDIR /batch-processing
 
-# this doesnt work because the go build stage needs access to the libraries
+RUN go build -o out .
 
-##
-## TEST
-##
-FROM build as test
+FROM combined as develop
+
+ENTRYPOINT [ "/bin/bash" ]
+
+FROM combined as test
 
 ENTRYPOINT [ "go", "test", "-v" ]
 
-##
-## DEVELOP
-##
-FROM build as develop
+FROM combined as run
 
-COPY .bash_history /root/.bash_history
-ENTRYPOINT [ "/bin/bash" ]
+RUN ls -la
 
-##
-## RUN
-##
-FROM build as run
-
-WORKDIR /
-ENTRYPOINT /out --input /inputs/gradient.jpg --output /outputs/gradient_bw.jpg
+ENTRYPOINT ["./out", "--input=inputs/gradient.jpg", "--output=outputs/gradient_bw.jpg"]

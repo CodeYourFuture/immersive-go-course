@@ -1,2 +1,2 @@
-gopkg.in/gographics/imagick.v2 v2.6.2 h1:8ILTJzDKQKSYSfav+9GZs9H8zOOR2UtZVTWkUdFoiZ8=
-gopkg.in/gographics/imagick.v2 v2.6.2/go.mod h1:/QVPLV/iKdNttRKthmDkeeGg+vdHurVEPc8zkU0XgBk=
+gopkg.in/gographics/imagick.v2 v2.6.4 h1:H7UgF2ZAdV85sMB9YU2c6r3dpp9SP4N6UF+bG3OK728=
+gopkg.in/gographics/imagick.v2 v2.6.4/go.mod h1:/QVPLV/iKdNttRKthmDkeeGg+vdHurVEPc8zkU0XgBk=
