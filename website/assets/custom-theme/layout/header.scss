@@ -1,28 +1,3 @@
 .l-header {
-  // @include pattern(dots, var(--theme-color--pop), null, true, 0.5);
-
-  // &__action {
-  //   display: flex;
-  //   flex-flow: column;
-  //   justify-content: flex-start;
-  //   position: fixed;
-  //   right: 0;
-  //   top: 0;
-  //   height: 100vh;
-  //   padding-top: var(--theme-spacing--gutter);
-  //   background-color: var(--theme-color--pop);
-  //   border-color: var(--theme-color--pop);
-  //   &.is-fixed {
-  //     min-width: var(--theme-spacing--menu);
-  //     width: var(--theme-spacing--menu);
-  //   }
-  //   svg {
-  //     grid-area: icon;
-  //     height: auto;
-  //   }
-  //   @include on-event {
-  //     background-color: var(--theme-color--accent);
-  //     color: var(--theme-color--contrast-max);
-  //   }
-  // }
+  @include pattern(dots, var(--theme-color--pop), null, true, 0.5);
 }
