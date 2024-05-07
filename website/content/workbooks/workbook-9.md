@@ -11,7 +11,7 @@ weight=4
 
 - [ ] [Distributed Systems: State](../../primers/distributed-software-systems-architecture/state)
 - [ ] [Troubleshooting Primer](../../primers/troubleshooting/)
-- [ ] [Linux Bash I](https://www.bogotobogo.com/Linux/linux_tips2_bash.php) & [Linux Bash II](https://www.bogotobogo.com/Linux/linux_tips2_bash.php) (There are other blog posts in the same series that could be useful to go through in spare time, would recommend running the commands that the blog post suggests for better understanding.)
+- [ ] [Linux Bash I](https://www.bogotobogo.com/Linux/linux_tips2_bash.php) & [Linux Bash II](https://www.bogotobogo.com/Linux/linux_bash_2.php) (There are other blog posts in the same series that could be useful to go through in spare time, would recommend running the commands that the blog post suggests for better understanding.)
 - [ ] PHP fastcgi - https://www.php.net/manual/en/install.fpm.php
       Systemctl - https://www.freedesktop.org/software/systemd/man/systemctl.html and then https://www.redhat.com/sysadmin/linux-systemctl-manage-services
 - [ ] Nginx
