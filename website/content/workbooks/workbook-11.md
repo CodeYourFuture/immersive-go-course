@@ -7,15 +7,18 @@ weight=6
 
 # Provisional start date: 3 June 2024
 
-## Study
+## Distributed Locking and Distributed Consensus
 
-- [ ] [Distributed Systems: Asynchronous Work and Pipelines](../../primers/distributed-software-systems-architecture/distributed-locking-and-distributed-consensus/)
-- [ ] [Troubleshooting Primer](../../primers/troubleshooting/)
+- [ ] Read about [Distributed Systems: Distributed Locking and Distributed Consensus](../../primers/distributed-software-systems-architecture/distributed-locking-and-distributed-consensus/)
+- [ ] Do [the RAFT OTEL project](../../projects/raft-otel). This large project explores a distributed consensus protocol using distributed tracing.
 
-## Projects
+## Datastores
 
-- [ ] [RAFT OTEL](../../projects/raft-otel) Do the raft-otel project. This large project explores a distributed consensus protocol using distributed tracing.
 - [ ] [DataStores]() TODO: Add datastores project
+
+## Troubleshooting
+
+- [ ] [Troubleshooting Primer](../../primers/troubleshooting/)
 - [ ] [Troubleshooting project #3](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.cjnguaxmynan) TOADD
 
 ## Product
