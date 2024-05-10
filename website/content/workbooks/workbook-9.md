@@ -28,7 +28,24 @@ weight=4
 ## Troubleshooting
 
 - [ ] [Troubleshooting Primer](../../primers/troubleshooting/)
-- [ ] [Troubleshooting project #3](https://docs.google.com/document/d/1V6HEu_OcJ3MHH-aHzUfANf06VJa1rPcGHcpBwql7QLA/edit#heading=h.cjnguaxmynan) TOADD
+- [ ] Troubleshooting project #3
+    - This project is designed to get you familiar with upstream service failure.
+    - You'll be given 2 instances today. \o/
+      A www host (www=webserver), and a db host (db=database).
+    - To log in: `ssh -i </path/to/the/ssh-private-key> <username>@<IP>`
+        - You have sudo access on both hosts, please give a shout if that doesn't work. (You'll need it.)
+    - The goal of the exercise is:
+        - When you run `lynx -dump http://localhost/`, you will see a cute image of a cat on your terminal.
+        - (Unlike in the previous exercise, today we don't care that the database password is exposed in `ps`, so don't worry about that.)
+        - Along the way, we expect you'll be able to answer:
+            - What kind of failures do you see when talking to an upstream service?
+              (Do you know about upstream and downstream services? It's useful jargon.)
+            - The webserver doesn't start. Can you explain why?
+    - Some knowledge to get you started:
+        - `httpurr` makes a return. Code has changed a bit from previous exercise, if you need it, source code is in `/httpurr-source/` on the www host.
+        - Unlike previous time, we don't use docker this time.
+        - The database is postgresql. (Unlike previous time, when it was mysql.) It's a lovely database.
+    - While doing the exercise, I would recommend logging what you do.
 
 ## Product
 
