@@ -375,9 +375,12 @@ ExecStart=/usr/bin/docker run --name httpurr --user 1001:1001 --link httpurr-db 
 - I got a new image whenever I send a new request.
 
 ## Enhancing security
+
 The problem : We want to hide the database password , that we can see using `ps`
-- I created `.env` holding the `DB_PASSWORD` on `/etc/http-db-pass/` directory 
+
+- I created `.env` holding the `DB_PASSWORD` on `/etc/http-db-pass/` directory
 - I changed the `httpurr` service file to read password from `.env`
+
 ```zsh
 [saadia@ip-172-31-30-87 ~]$ cat /etc/systemd/system/httpurr.service
 [Unit]
@@ -396,6 +399,45 @@ ExecStart=/usr/bin/docker run --name httpurr --user 1001:1001 --link httpurr-db 
 [Install]
 WantedBy=multi-user.target
 ```
+
+- I set the permissions to allow only the root user and user running the service to view the file :
+
+```zsh
+sudo chown root:root /etc/http-db-pass/.env
+sudo chmod 600 /etc/http-db-pass/.env
+```
+
+- I reloaded to daemon and restarted the `httpurr` service.
+- I sent the request again and checked the `ps` : `ps auxww | grep miauw`
+- I can still see the password in the logs
+- Then I tried to create the .env file in the container and get the password from there.
+- I changed the `httpurr` service file to do that as following:
+
+```zsh
+[saadia@ip-172-31-30-87 ~]$ cat /etc/systemd/system/httpurr.service
+[Unit]
+Description=HTTPurr
+After=docker.service
+Requires=docker.service
+Wants=httpurr-db.service
+[Service]
+EnvironmentFile=/etc/httpurr-db-pass/.env
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop httpurr
+ExecStartPre=-/usr/bin/docker rm httpurr
+ExecStartPre=/usr/bin/docker build -t httpurr /httpurr
+ExecStart=/usr/bin/docker run --name httpurr --user 1001:1001 --link httpurr-db --rm -p 80:80/tcp httpurr --dbhost=httpurr-db --dbport=3306 --dbuser=httpurr --env-file /etc/httpurr-db-pass/.env --dbname=httpurr
+[Install]
+WantedBy=multi-user.target
+```
+
+- Also changed the database code `catsdb/table.go` to use the password from .env instead of the command line :
+
+```zsh
+db_pass = os.getenv('DB_PASSWORD')
+```
+- I need to reload the daemon and restart the server to be able to test it. But I couldn't because of the problem on my instance.
 
 ## Wrong path
 
@@ -493,7 +535,9 @@ tmpfs            95M     0   95M   0% /run/user/1003
 39M	/boot
 ...
 ```
-- I checked the `/var` usage :  
+
+- I checked the `/var` usage :
+
 ```zsh
 [saadia@ip-172-31-30-87 ~]$ sudo du -h --max-depth=1 /var | sort -hr
 5.3G	/var
@@ -502,7 +546,9 @@ tmpfs            95M     0   95M   0% /run/user/1003
 57M	/var/cache
 ...
 ```
-- I checked the `/var/lib` usage :  
+
+- I checked the `/var/lib` usage :
+
 ```zsh
 [saadia@ip-172-31-30-87 ~]$ sudo du -h --max-depth=1 /var/lib | sort -hr
 4.9G	/var/lib/docker
@@ -516,7 +562,9 @@ tmpfs            95M     0   95M   0% /run/user/1003
 144K	/var/lib/containerd
 ...
 ```
-- I checked the `/var/lib` usage :  
+
+- I checked the `/var/lib` usage :
+
 ```zsh
 [saadia@ip-172-31-30-87 ~]$ ssudo du -h --max-depth=1 /var/lib/docker | sort -hr
 5.1G	/var/lib/docker
@@ -531,8 +579,10 @@ tmpfs            95M     0   95M   0% /run/user/1003
 0	/var/lib/docker/plugins
 0	/var/lib/docker/containers
 ```
+
 - I saw that `/var/lib/docker/overlay2` use most of the space, I checked what is this directory: is one of the storage driver of docker , I should not touch it and looked for how to of clean up docker;
-- I found that I can check docker disk usage and what space can I claim using : 
+- I found that I can check docker disk usage and what space can I claim using :
+
 ```zsh
 [saadia@ip-172-31-30-87 ~]$ sudo docker system df
 TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
@@ -541,14 +591,14 @@ Containers      0         0         0B        0B
 Local Volumes   0         0         0B        0B
 Build Cache     60        3         894.1MB   893.7MB
 ```
+
 - I decided to reclaim at least the build cache storage space
+
 ```zsh
 [saadia@ip-172-31-30-87 ~]$ sudo docker system prune -a
 Total reclaimed space: 893.7MB
 ```
-- I tried build the image again  `sudo docker build . -t httpurr` and it was rebuilt without error.
 
-But all those steps maybe were not relevant as we can just restart the service and rebuild the image , or maybe they are and we may hit the same problem of the space of the disk. 
+- I tried build the image again `sudo docker build . -t httpurr` and it was rebuilt without error.
 
-
-
+But all those steps maybe were not relevant as we can just restart the service and rebuild the image , or maybe they are and we may hit the same problem of the space of the disk.
