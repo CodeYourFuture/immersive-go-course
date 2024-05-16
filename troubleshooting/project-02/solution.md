@@ -437,6 +437,7 @@ WantedBy=multi-user.target
 ```zsh
 db_pass = os.getenv('DB_PASSWORD')
 ```
+
 - I need to reload the daemon and restart the server to be able to test it. But I couldn't because of the problem on my instance.
 
 ## Wrong path
@@ -600,5 +601,27 @@ Total reclaimed space: 893.7MB
 ```
 
 - I tried build the image again `sudo docker build . -t httpurr` and it was rebuilt without error.
+  **Note :**
+  All those steps maybe were not relevant as we can just restart the service and rebuild the image , or maybe they are and we may hit the same problem of the space of the disk.
 
-But all those steps maybe were not relevant as we can just restart the service and rebuild the image , or maybe they are and we may hit the same problem of the space of the disk.
+## Answering questions :
+
+1. **How is systemd configured? Where are the logs?**
+
+- systemd is configured using unit files (e.g `httpurr.service`) , we can create or edit them to describe how the `systemd` start , stop, reload and manage the service.
+- We can access to the logs using `journalctl` command.
+
+2. **Can you describe what docker does?**
+
+- Docker containerise applications and their dependencies by packing them into a lightweight portable containers.
+  It separate the application from the infrastructures for a faster delivery.
+
+3. **Can you describe the two ways that docker volumes are used in this setup?**
+
+- In the `httpurr-db` service set up we have a `bind mount` volume `-v /database:/var/lib/mysql` which is used to store database data on the host machine, ensuring data is not lost when containers are restarted or removed.
+- I couldn't find the other way
+
+4. **Docker uses images. What are images? And how do you create your own?**
+
+- Images are templates to create docker containers. Built on layers containing everything needed to run an application (code, dependencies, libraries ...)
+- Images can be create using a `Dockerfile` containing all the instructions defining what it goes into this image.
