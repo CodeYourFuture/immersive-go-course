@@ -246,7 +246,7 @@ What happens to the Kafka system logs and the metrics that our binaries export? 
 
 In this project, and in several previous projects, you have used `docker-compose` to deploy our code, alongside dependencies (such as Kafka and
 Zookeeper here). `docker-compose` is an extremely convenient tool for running a multi-part software stack locally (it also works well for running 
-integration tests agasint in a Continuous Integration workflow as part of your development process). However, in most deployments, we want to be able
+integration tests in a Continuous Integration workflow as part of your development process). However, in most deployments, we want to be able
 to run our code and its dependencies across more than one host, in order to scale horizontally and to be robust to single-node failures. For this,
 `kubernetes` is a better tool. `Kubernetes`, like `docker-compose`, is a platform for running containerised applications, but where `docker-compose` 
 is focused on running a set of related containers on a single host, `kubernetes` is optimized for running services across many hosts.
