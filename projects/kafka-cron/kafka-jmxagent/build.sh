@@ -1,0 +1,1 @@
+sudo docker build --tag=lnolan-cp-kafka .

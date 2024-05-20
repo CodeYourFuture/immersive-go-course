@@ -1,0 +1,3 @@
+* * * * * *, /sbin/ping -c 1 www.microsoft.com, ms-pinger, cluster-a, 3
+* * * * * *, /sbin/ping -c 1 www.google.com, google-pinger, cluster-a, 3
+* * * * * *, badcmd -c 1 www.google.com, badjob, cluster-a, 3
