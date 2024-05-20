@@ -13,7 +13,7 @@ weight=4
 
 ## Managing state at scale
 
-- [ ] Read about [Distributed Systems: State](../../primers/distributed-software-systems-architecture/scaling-stateless-services)
+- [ ] Read about [Distributed Systems: Scaling Stateless Services](../../primers/distributed-software-systems-architecture/scaling-stateless-services)
 - [ ] Do this HashiCorp tutorial. It will give you hands-on experience with seeing health checks can be used to manage failure. https://learn.hashicorp.com/tutorials/consul/introduction-chaos-engineering?in=consul/resiliency
 - [ ] Demonstrate circuit breaking with this HashiCorp tutorial: https://learn.hashicorp.com/tutorials/consul/service-mesh-circuit-breaking?in=consul/resiliency
 - [ ] See different kinds of load-balancing algorithms in use with this HashiCorp tutorial: https://learn.hashicorp.com/tutorials/consul/load-balancing-envoy?in=consul/resiliency
