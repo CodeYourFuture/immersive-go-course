@@ -258,7 +258,7 @@ Here are some introductions to Kubernetes:
 You may have already used `minikube` in one of the previous projects. `Minikube` is a local version of Kubernetes, which we can use to learn 
 (rather than needing to incur the expense of cloud services such as [EKS](https://aws.amazon.com/eks/) for learning on.)
 
-Get your local `minikube setup` working bu following [minikube start](https://minikube.sigs.k8s.io/docs/start/).
+Get your local `minikube setup` working by following [minikube start](https://minikube.sigs.k8s.io/docs/start/).
 Follow the steps to install the program and run the `hello-minikube` application.
 
 Once you have done this, you will need to convert your `docker-compose.yml` files to `kubernetes` deployment files.
