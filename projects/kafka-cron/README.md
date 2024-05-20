@@ -242,15 +242,14 @@ How many containers being down can our system tolerate?
 
 What happens to the Kafka system logs and the metrics that our binaries export? Did our alerts fire? If not, consider how they could be improved - remember, the point of them is to tell us when something's wrong!
 
-
 ### Porting your system from docker-compose to minikube
 
 In this project, and in several previous projects, you have used `docker-compose` to deploy our code, alongside dependencies (such as Kafka and
 Zookeeper here). `docker-compose` is an extremely convenient tool for running a multi-part software stack locally (it also works well for running 
 integration tests agasint in a Continuous Integration workflow as part of your development process). However, in most deployments, we want to be able
 to run our code and its dependencies across more than one host, in order to scale horizontally and to be robust to single-node failures. For this,
-`Kubernetes` is a better tool. `Kubernetes`, like `docker-compose`, is a platform for running containerised applications, but where `docker-compose` 
-is focused on running a set of related containers on a single host, `Kubernetes` is optimized for running services across many hosts.
+`kubernetes` is a better tool. `Kubernetes`, like `docker-compose`, is a platform for running containerised applications, but where `docker-compose` 
+is focused on running a set of related containers on a single host, `kubernetes` is optimized for running services across many hosts.
 
 Here are some introductions to Kubernetes: 
  * [What is Kubernetes](https://www.digitalocean.com/community/tutorials/an-introduction-to-kubernetes)
@@ -271,6 +270,7 @@ Learn your way around the `kubernetes` command-line tool, `kubectl` (see the [ku
 * How can you resize your service, i.e. change the number of running instances (pods)?
 * How can you remove one instance of your service (a single pod)?
 * How can you see the logs for your service?
+* How can you see the log of Kubernetes' management operations?
 
 ### Dealing with long-running jobs and load (challenging)
 
