@@ -264,6 +264,8 @@ Follow the steps to install the program and run the `hello-minikube` application
 Once you have done this, you will need to convert your `docker-compose.yml` files to `kubernetes` deployment files.
 There is a tool, [kompose](https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/) which may assist you.
 
+> **Note:** `kompose` *will not* give you perfect results, however. In particular, `kompose` will not correctly convert cases where you are using a `docker-compose` `volume` to map a configuration file into your running container. `kompose` will just create a `persistentVolumeClaim` with empty data. The best thing to do is to remove those and use a [ConfigMap] for the config file content and map that in as a volume. You'll have to do this by hand. Note that there are some `persistentVolumeClaims` for application data that are appropriate - don't remove these, only the ones that are substituted for config. 
+
 Test that your system works as it did on `docker-compose`.
 
 Learn your way around the `kubernetes` command-line tool, `kubectl` (see the [kubectl documentation](https://kubernetes.io/docs/reference/kubectl/)).
