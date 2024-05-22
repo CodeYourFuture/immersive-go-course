@@ -20,6 +20,8 @@ html {
   padding: 0;
   height: 100%;
   animation: fade-in 0.2s;
+
+  border-right: var(--theme-spacing--1) solid var(--theme-color--pop);
 }
 
 html {

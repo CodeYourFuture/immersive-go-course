@@ -4,7 +4,7 @@ $heading__levels: 1, 2, 3, 4, 5, 6;
   .e-heading__#{$h} {
     font-family: var(--theme-font--display);
     font-size: var(--theme-type-size--#{$h});
-    font-weight: 500;
+    font-weight: 900;
     margin: 0;
   }
   // unstyled headings from markdown/ body copy need some relational breathing space
@@ -19,6 +19,7 @@ h4,
 .e-heading__4 {
   text-transform: uppercase;
   background-color: transparent;
+  max-width: calc(var(--theme-spacing--linelength) / 2);
 }
 
 h4,

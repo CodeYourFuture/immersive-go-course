@@ -1,3 +1,7 @@
 .l-header {
-  @include pattern(dots, var(--theme-color--pop), null, true, 0.5);
+  @include pattern(dots, var(--theme-color--pop), null, false, 0.5);
+  background: initial;
+  border: initial;
+  box-shadow: initial;
+  backdrop-filter: initial;
 }

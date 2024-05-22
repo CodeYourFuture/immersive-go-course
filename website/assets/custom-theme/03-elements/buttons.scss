@@ -29,7 +29,8 @@
     #{$rule}: var(--button-#{$rule});
   }
 
-  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+  transition:
+    all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
     border-color 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
   @include on-event {
@@ -55,7 +56,7 @@
   &__icon svg,
   &--icon {
     // enforce tap sizing
-    $taps: height, width, min-width, max-width;
+    $taps: height, width, min-width, max-width, font-size;
     @each $rule in $taps {
       #{$rule}: var(--theme-spacing--touchtarget);
     }

@@ -3,12 +3,16 @@
 
 .c-toc {
   color: var(--theme-color--accent);
-  max-width: var(--theme-spacing--container);
+
   border: var(--theme-border--thick);
+  padding: var(--gap);
 
   ol {
     color: var(--theme-color--ink);
-    padding-right: var(--theme-spacing--gutter);
+    text-transform: uppercase;
+    ol {
+      padding-left: var(--theme-spacing--gutter);
+    }
   }
 
   ol li {

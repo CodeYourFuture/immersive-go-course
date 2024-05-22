@@ -2,4 +2,26 @@
   &__breadcrumbs {
     padding: 0; //no emojis on this layout so no need for extra padding
   }
+  &__container {
+    .c-page-header--toc:not(.c-page-header--solo) & {
+      @media (min-width: $c-max) {
+        grid-template:
+          ".              " var(--gap)
+          "breadcrumbs    " min-content
+          "toc            " auto
+          ".             " var(--gap)
+          "title          " min-content
+          "subtitle       " min-content
+          "description    " min-content
+          / 1fr;
+        margin-bottom: calc(2 * calc(-1 * var(--theme-spacing--4)));
+      }
+    }
+  }
+
+  &__toc {
+    .c-toc {
+      max-height: none;
+    }
+  }
 }
