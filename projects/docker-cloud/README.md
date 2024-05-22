@@ -31,7 +31,7 @@ We're going to build a simple Go server, and then _containerise_ it.
 
 > In this project, we'll use the terms containerise and dockerise interchangeably to mean the same thing: making an application run in a container using Docker.
 
-A **container** is a kind of [sandboxed](<https://en.m.wikipedia.org/wiki/Sandbox_(computer_security)>) process on a computer that is isolated from all other processes, unless specifically allowed.
+A **container** is a kind of [sandboxed](https://en.m.wikipedia.org/wiki/Sandbox_(computer_security)) process on a computer that is isolated from all other processes, unless specifically allowed.
 
 Containers have an isolated filesystem. This filesystem is provided by a container **image**. Since the image contains the container’s filesystem, it must contain everything needed to run an application: all dependencies, configurations, scripts, binaries, & other files or data. The image also contains other configuration for the container, such as environment variables, a default command to run, and other metadata.
 
