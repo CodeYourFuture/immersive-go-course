@@ -46,7 +46,7 @@ getenv = ["^HUGO_CURRICULUM_GITHUB_BEARER_TOKEN$"]
 
 [markup]
 [markup.tableOfContents]
-endLevel = 2
+endLevel = 6
 ordered = true
 startLevel = 2
 [markup.highlight]
