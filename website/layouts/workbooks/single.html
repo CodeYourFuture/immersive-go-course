@@ -1,0 +1,16 @@
+{{ define "main" }}
+<article>
+  {{ partial "page-header.html" . }} {{ with .Content }}
+  <section class="c-copy">{{ . }}</section>
+  {{ end }} {{ range $index, $block := .Params.blocks }}
+  <details class="c-issue">
+    <summary class="c-issue__title e-heading__3">
+      <a class="c-issue__link" href="{{ $block.src }}">{{ $block.name }} 🔗</a>
+    </summary>
+    <div class="c-issue__body">
+      {{ partial "block/block.html" (dict "block" $block "Page" $.Page "Site"
+      $.Site) }}
+    </div>
+  </details>
+</article>
+{{ end }}
