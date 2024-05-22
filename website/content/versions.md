@@ -1,5 +1,6 @@
 +++
 title="Versions"
+menu=['syllabus']
 +++
 
 ## CYF+ Iterations Log
