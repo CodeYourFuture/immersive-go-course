@@ -1,0 +1,16 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "This is a super small static Hugo site. Assets are handled by Hugo Pipes and there are no node modules. 5kb CSS, 500 bytes of JS (brotli'd). Please be a good citizen of the repo and keep this website simple and small.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "prettier-plugin-go-template": "^0.0.15"
+  }
+}
