@@ -73,12 +73,13 @@ Test our implementation and observe both of our consumers running jobs scheduled
 
 ### Part 2: Distributed cron with multiple queues
 
-A new requirement: our distributed cron system needs to be able to schedule jobs to run in multiple clusters. Imagine that we want to support users who have data stored in specific clusters and they want to make sure their cron jobs are running near their data.
+A new requirement: our distributed cron system needs to be able to schedule jobs to run in multiple clusters. Imagine that we want to support users who have data stored in specific cells/AZs and they want to make sure their cron jobs are running near their data.
 
-We don't really need to set up any clusters - just write our program as though you had multiple sets of consumer workers in different clusters.
+We don't really need to set up any cells for this - just write our program as though you had multiple sets of consumer workers. 
+You *don't* need to set up multiple Kafka clusters for this - this extension is just about having multiple sets of consumer jobs, which we notionally call clusters.
 
 - Define a set of clusters in our program (two is fine, `cluster-a` and `cluster-b`)
-- Each cluster should have its own Kafka topic
+- Each cluster should have its own Kafka topic 
 - Update the job format so that jobs must specify what cluster to run in
 - Run separate consumers that are configured to read from each cluster-specific topic
 
