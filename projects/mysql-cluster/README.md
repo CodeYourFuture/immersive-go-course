@@ -10,7 +10,7 @@ This project is designed to introduce you to MySQL database setup, schema creati
 You will set up a primary MySQL server, test it, add a secondary server for replication, and demonstrate replication and failover processes. Most steps are designed to succeed, but some will require some troubleshooting and problem-solving.
 
 ## Learning Objectives
-- Be able to install MySQL server
+- Install MySQL server
 - Learn how to configure MySQL as a cluster
 - Troubleshoot the cluster configuration
 - Fail-over the cluster
