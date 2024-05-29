@@ -11,7 +11,7 @@ You will set up a primary MySQL server, test it, add a secondary server for repl
 
 ## Learning Objectives
 - Install MySQL server
-- Learn how to configure MySQL as a cluster
+- Configure MySQL as a cluster
 - Troubleshoot the cluster configuration
 - Fail-over the cluster
 
