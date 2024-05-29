@@ -215,4 +215,4 @@ Timebox: 5 days
 
 ### Task 6: Add another replica (Optional)
 
-Can you add another replica to this MySQL cluster using the steps above? Describe the issues you are having, what do you think might be the solution?
+Can you add another replica to this MySQL cluster using the steps above? Describe the issues you are having; what do you think might be the solution?
