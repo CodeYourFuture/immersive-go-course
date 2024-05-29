@@ -105,7 +105,7 @@ There will also be command line tools for configuring and starting each server, 
 - `go run ./cmd/api-server` — start the API server
 - `go run ./cmd/static-server` — start the static server
 
-Specifically, the `cmd/` files will import functionality from `api` and `static` respectively, and run them. This modularity will make the code easier to understand (which is _the most important thing_ for code!). If you need a refesher on modularity in Go, the Go website has [a good guide](https://go.dev/doc/code).
+Specifically, the `cmd/` files will import functionality from `api` and `static` respectively, and run them. This modularity will make the code easier to understand (which is _the most important thing_ for code!). If you need a refresher on modularity in Go, the Go website has [a good guide](https://go.dev/doc/code).
 
 In reality, starting each will look like this:
 
@@ -121,7 +121,7 @@ Static server:
 > go run ./cmd/static-server --path assets --port 8082
 ```
 
-> 💡 See the [prep README.md](../prep/README.md#command-line-examples) for an explanation of this command line example.
+> 💡 See the [prep README.md](../../prep/README.md#command-line-examples) for an explanation of this command line example.
 
 ### Static server
 
@@ -312,7 +312,7 @@ module servers
 
 Now, we can start a file in `static/` — let's say `static/static.go` — like this:
 
-```
+```go
 package static
 
 func Run() {
@@ -322,7 +322,7 @@ func Run() {
 
 With this in place, other code in your module can import `servers/static` and use `Run`:
 
-```
+```go
 package main
 
 import (
@@ -406,7 +406,7 @@ We can `curl` the server to `GET` images:
 ```console
 > curl 'http://localhost:8081/images.json?indent=2' -i
 HTTP/1.1 200 OK
-Content-Type: text/json
+Content-Type: application/json
 Date: Thu, 11 Aug 2022 20:17:32 GMT
 Content-Length: 763
 
@@ -434,7 +434,7 @@ We can `curl` the server to `POST` new images:
 ```console
 > curl 'http://localhost:8081/images.json?indent=2' -i --data '{"title": "Cat", "alt_text": "A cool cat", "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"}'
 HTTP/1.1 200 OK
-Content-Type: text/json
+Content-Type: application/json
 Date: Thu, 11 Aug 2022 20:17:32 GMT
 Content-Length: 240
 

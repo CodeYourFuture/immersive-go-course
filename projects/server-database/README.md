@@ -55,7 +55,7 @@ Now, set up an HTTP server (we did this in the `http-auth` project), and create 
 ```console
 > curl 'http://localhost:8080/images.json' -i
 HTTP/1.1 200 OK
-Content-Type: text/json
+Content-Type: application/json
 Date: Wed, 03 Aug 2022 18:06:34 GMT
 Content-Length: 487
 
@@ -75,7 +75,7 @@ We don't always want to use the exact same field names from our programming lang
 ```console
 > curl 'http://localhost:8080/images.json' -i
 HTTP/1.1 200 OK
-Content-Type: text/json
+Content-Type: application/json
 Date: Wed, 03 Aug 2022 18:06:34 GMT
 Content-Length: 487
 
@@ -89,7 +89,7 @@ Next, add a query parameter `indent` which uses `MarshalIndent` instead (https:/
 ```console
 > curl 'http://localhost:8080/images.json?indent=2' -i
 HTTP/1.1 200 OK
-Content-Type: text/json
+Content-Type: application/json
 Date: Mon, 08 Aug 2022 19:57:51 GMT
 Content-Length: 536
 
@@ -366,7 +366,7 @@ This is going to be an exercise for you. At the end, the following request shoul
 ```console
 > curl 'http://localhost:8080/images.json?indent=2' -i --data '{"title": "Cat", "alt_text": "A cool cat", "url": "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"}'
 HTTP/1.1 200 OK
-Content-Type: text/json
+Content-Type: application/json
 Date: Thu, 11 Aug 2022 20:17:32 GMT
 Content-Length: 240
 
@@ -382,7 +382,7 @@ After that request, a `GET /images.json` request should return all the images:
 ```console
 > curl 'http://localhost:8080/images.json?indent=2' -i
 HTTP/1.1 200 OK
-Content-Type: text/json
+Content-Type: application/json
 Date: Thu, 11 Aug 2022 20:17:32 GMT
 Content-Length: 763
 
