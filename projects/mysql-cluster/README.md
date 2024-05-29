@@ -132,7 +132,7 @@ Timebox: 5 days
      SHOW REPLICA STATUS\G;
      ```
    - Ensure `Slave_IO_Running` and `Slave_SQL_Running` are both `Yes`.
-   - Something isn't quite right. Can you figure out how to fix this? There may be a few things that need to be fixed. Use `SHOW REPLICA STATUS\G` to find out what is wrong. Can you see the `cyfdb` database on the replica?
+   - Something isn't quite right. Can you figure out how to fix this? There may be a few things that need to be fixed. Use `SHOW REPLICA STATUS\G` to find out what is wrong. Can you see the `cyfdb` database on the replica? Keep a log of all commands you are executing on each server while troubleshooting this.
 
 ### Task 3: Demonstrate Replication
 
