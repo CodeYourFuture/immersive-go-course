@@ -1,13 +1,16 @@
 <!--forhugo
 +++
-title="Clustered MySQL Configuration and Troubleshooting"
+title="MySQL Replication -  Configuration and Troubleshooting"
 +++
 forhugo-->
-# Clustered MySQL Configuration and Troubleshooting
+# MySQL Replication - Configuration and Troubleshooting
 
 This project is designed to introduce you to MySQL database setup, schema creation, replication, and failover using Amazon EC2 instances.
 
 You will set up a primary MySQL server, test it, add a secondary server for replication, and demonstrate replication and failover processes. Most steps are designed to succeed, but some will require some troubleshooting and problem-solving.
+
+There are different ways to configure MySQL replication. In this exercise, you will be configuring our servers for primary-replica (or master-slave) replication.
+In this type of replication, the primary server (or the master) takes all the writes and they are automatically replicated onto the replica server (or the slave). This technique is widely used to increase scalability of the database for read-intensive operations (which is extremely common for web). In the primary-replica setup, the replica (or replicas) would normally be used for reads and primary for writes only. Even though it's technically possible to use the primary for the reads as well, it is not possible to write to the replica directly.
 
 ## Learning Objectives
 - Install MySQL server
