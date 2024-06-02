@@ -161,6 +161,7 @@ In this type of replication, the primary server (or the master) takes all the wr
 ### Task 4: Demonstrate Failover
 
 1. **Simulate Primary Server Failure**
+We're going to stop the primary server, to simulate some real failure (e.g. hardware failure or loss of network).
    - Stop the MySQL service on the primary server:
      ```bash
      sudo systemctl stop mysql
