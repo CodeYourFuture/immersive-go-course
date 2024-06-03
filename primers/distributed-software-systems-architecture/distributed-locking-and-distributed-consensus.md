@@ -36,7 +36,7 @@ Read about the operational characteristics of distributed consensus algorithms i
 
 ### Project work for this section {#project-work-for-this-section}
 
-See [raft-otel](https://github.com/CodeYourFuture/immersive-go-course/tree/main/raft-otel) project.
+See [raft-otel](https://github.com/CodeYourFuture/immersive-go-course/tree/main/projects/raft-otel) project.
 This project is an opportunity to explore the RAFT distributed consensus protocol through the medium of distributed tracing.
 
 ## Further Optional Reading {#further-optional-reading}
