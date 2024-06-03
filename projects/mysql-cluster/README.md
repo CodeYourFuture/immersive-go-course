@@ -11,9 +11,9 @@ You will set up a primary MySQL server, test it, add a secondary server for repl
 
 ## Learning Objectives
 - Install MySQL server
-- Configure MySQL as a cluster
-- Troubleshoot the cluster configuration
-- Fail-over the cluster
+- Configure MySQL for replication
+- Troubleshoot the replication configuration
+- Fail-over the replicating primary
 
 Timebox: 2 days
 
@@ -21,7 +21,9 @@ Timebox: 2 days
 
 There are different ways to configure MySQL replication. In this exercise, you will be configuring your servers for primary-replica (or master-slave) replication.
 
-In this type of replication, the primary server (or the master) takes all the writes and they are automatically replicated onto the replica server (or the slave). This technique is widely used to increase the scalability of the database for read-intensive operations (which is extremely common for the web). In the primary-replica setup, the replica (or replicas) would normally be used for reads and primary for writes only. Even though it's technically possible to use the primary for the reads and the writes, it is impossible to write directly to the replica.
+In this type of replication, the primary server (or the master) takes all the writes and they are automatically replicated onto the replica server (or the slave). This technique is widely used to increase the scalability of the database for read-intensive operations (which is extremely common for the web). In the primary-replica setup, the primary would normally be used for writes and replica (or replicas) for reads only. Even though it's technically possible to use the primary for the reads and the writes, it is impossible to write directly to the replica.
+
+Another advantage of using such a replication setup is database resilience. For example, it is recommended to setup primary-replica with one primary and two or three replicas in different availability zones. In the event of one availability zone (or datacenter) going down, the database will continue functioning flawlessly as other replicas will be used for reading. In a different scenario of one replica crashing, it can be replaced while the remaining replicas are serving the reads. Should the primary crash, an operation called a 'fail-over' should be carried out: one replica is promoted to be a primary while another MySQL server is being stood up in place of a broken primary.
 
 ### Task 1: Set Up the Primary MySQL Server
 
@@ -190,7 +192,9 @@ We're going to stop the primary server, to simulate some real failure (e.g. hard
      ```sql
      SELECT * FROM cyfd.users;
      ```
-
+4. **Service Location**
+   - Write down your thoughts on how primary and replica can be conveniently located by their clients (e.g. a web application), given the fact that primary may be failed over and replicas replaced at any moment, and the new instances will receive a different IP address.
+     
 ### Task 5: Reconfigure Original Primary as Secondary
 
 1. **Reconfigure the Original Primary**
