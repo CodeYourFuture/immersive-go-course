@@ -15,11 +15,11 @@ You will set up a primary MySQL server, test it, add a secondary server for repl
 - Troubleshoot the cluster configuration
 - Fail-over the cluster
 
-Timebox: 5 days
+Timebox: 2 days
 
 ## Project
 
-There are different ways to configure MySQL replication. In this exercise, you will be configuring our servers for primary-replica (or master-slave) replication.
+There are different ways to configure MySQL replication. In this exercise, you will be configuring your servers for primary-replica (or master-slave) replication.
 
 In this type of replication, the primary server (or the master) takes all the writes and they are automatically replicated onto the replica server (or the slave). This technique is widely used to increase the scalability of the database for read-intensive operations (which is extremely common for the web). In the primary-replica setup, the replica (or replicas) would normally be used for reads and primary for writes only. Even though it's technically possible to use the primary for the reads and the writes, it is impossible to write directly to the replica.
 
@@ -152,11 +152,11 @@ In this type of replication, the primary server (or the master) takes all the wr
      SELECT * FROM testdb.users;
      ```
    - Verify that the data matches the primary server.
-   - Execute the following on the secondary server:
+   - Before you execute the next statement, please write down what result you would expect from it:
    ```sql
    INSERT INTO cyfdb.users (name, email) VALUES ('Jane Doe', 'jane@example.com');
    ```
-   Did it work? If not, can you guess why?
+   Does the result match your prediction? If not, can you guess why?
 
 ### Task 4: Demonstrate Failover
 
