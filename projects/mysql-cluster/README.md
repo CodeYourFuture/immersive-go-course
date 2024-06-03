@@ -220,7 +220,7 @@ We're going to stop the primary server, to simulate some real failure (e.g. hard
 2. **Verify Data Synchronization**
    - Insert new data on the new primary and verify it replicates to the original primary.
 
-   This step may again not work straight away. Refer to how you configured the original primary, did you follow every step for this server?
+   This step may again not work straight away. Refer to how you configured the original primary: did you follow every step for this server?
 
 ### Task 6: Add another replica (Optional)
 
