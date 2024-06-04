@@ -253,8 +253,6 @@ func (h *Harness) CheckCommitted(cmdNum int) (nc int, index int) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	h.printCommits()
-
 	// Find the length of the commits slice for connected servers.
 	commitsLen := -1
 	for i := 0; i < h.n; i++ {

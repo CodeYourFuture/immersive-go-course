@@ -1,4 +1,4 @@
-# Sample Raft implementation - Incomplete Version
+# Sample Raft implementation
 
 This is based on Eli Bendersky's [https://eli.thegreenplace.net] RAFT demo code.
 
