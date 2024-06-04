@@ -12,7 +12,7 @@ we are going to use distributed tracing to understand its behaviour.
 ## Learning Objectives
 
 - Describe the differences between distributed tracing and logging and metrics
-- Implement RAFT
+- Implement RAFT (or run and modify an existing implementation)
 - Instrument an application with distributed tracing
 - Use distributed tracing to get a detailed understanding of complex application behaviour
 - Minimise costs of distributed tracing
