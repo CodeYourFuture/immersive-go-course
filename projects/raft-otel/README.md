@@ -97,8 +97,11 @@ Read these blog posts carefully.
 
 You can either
 
-1.  try to write your own RAFT implementation, building up the functionality in the stages described by Bendersky, or
+1.  try to write your own RAFT implementation, building up the functionality in the stages described by Bendersky (this will take a lot of time), or
 2.  use [our version of Bendersky's code](https://github.com/CodeYourFuture/immersive-go-course/pull/214) - this version of the code is modified so you can run it under docker-compose, and it uses gRPC rather than go's 'net/rpc', and has a small FSM and a K/V interface with a demo client.
+
+Reading code written by others is a useful skill to have, so if you opt to create your own implementation, you should still review other implementations.
+Do they differ from yours in any significant respect?
 
 There are some ways you could extend this code, if you like.
 
@@ -111,7 +114,7 @@ but without potentially overwriting any changes to that value that other process
 
 Update the demo client to use the new operation.
 
-##### Operations when an instance is not the leader
+##### Operations when an instance is not the leader - redirecting or proxying clients
 
 The initial code  doesn't do anything if you send a get/set to any server other than the leader. It may be useful to have your program return the
 address (host:port) of the leader instead, as part of your gRPC reply. Your client can then
