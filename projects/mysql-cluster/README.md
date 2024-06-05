@@ -137,7 +137,7 @@ Another advantage of using such a replication setup is database resilience. For 
      ```sql
      SHOW REPLICA STATUS\G;
      ```
-   - Ensure `Slave_IO_Running` and `Slave_SQL_Running` are both `Yes`.
+   - Ensure `Replica_IO_Running` and `Replica_SQL_Running` are both `Yes`.
    - Something isn't quite right. Can you figure out how to fix this? There may be a few things that need to be fixed. Use `SHOW REPLICA STATUS\G` to find out what is wrong. Can you see the `cyfdb` database on the replica? Keep a log of all commands you are executing on each server while troubleshooting this.
 
 ### Task 3: Demonstrate Replication
@@ -151,7 +151,7 @@ Another advantage of using such a replication setup is database resilience. For 
 2. **Verify Data on the Secondary Server**
    - On the secondary server, query the table:
      ```sql
-     SELECT * FROM testdb.users;
+     SELECT * FROM cyfdb.users;
      ```
    - Verify that the data matches the primary server.
    - Before you execute the next statement, please write down what result you would expect from it:
@@ -190,7 +190,7 @@ We're going to stop the primary server, to simulate some real failure (e.g. hard
      ```
    - Query the table to ensure the new data is inserted:
      ```sql
-     SELECT * FROM cyfd.users;
+     SELECT * FROM cyfdb.users;
      ```
 4. **Service Location**
    - Write down your thoughts on how primary and replica can be conveniently located by their clients (e.g. a web application), given the fact that primary may be failed over and replicas replaced at any moment, and the new instances will receive a different IP address.
