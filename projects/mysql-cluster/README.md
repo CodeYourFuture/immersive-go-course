@@ -21,7 +21,7 @@ Timebox: 2 days
 
 There are different ways to configure MySQL replication. In this exercise, you will be configuring your servers for primary-replica (or master-slave) replication.
 
-In this type of replication, the primary server (or the master) takes all the writes and they are automatically replicated onto the replica server (or the slave). This technique is widely used to increase the scalability of the database for read-intensive operations (which is extremely common for the web). In the primary-replica setup, the primary would normally be used for writes and replica (or replicas) for reads only. Even though it's technically possible to use the primary for the reads and the writes, it is impossible to write directly to the replica.
+In this type of replication, the primary server (or the source/master) takes all the writes and they are automatically replicated onto the replica server (or the replica/slave). This technique is widely used to increase the scalability of the database for read-intensive operations (which is extremely common for the web). In the primary-replica setup, the primary would normally be used for writes and replica (or replicas) for reads only. Even though it's technically possible to use the primary for the reads and the writes, it is impossible to write directly to the replica.
 
 Another advantage of using such a replication setup is database resilience. For example, it is recommended to setup primary-replica with one primary and two or three replicas in different availability zones. In the event of one availability zone (or datacenter) going down, the database will continue functioning flawlessly as other replicas will be used for reading. In a different scenario of one replica crashing, it can be replaced while the remaining replicas are serving the reads. Should the primary crash, an operation called a 'fail-over' should be carried out: one replica is promoted to be a primary while another MySQL server is being stood up in place of a broken primary.
 
@@ -70,7 +70,7 @@ Another advantage of using such a replication setup is database resilience. For 
    - Run the following SQL commands:
      ```sql
      CREATE USER 'replica_user'@'%' IDENTIFIED BY 'C90L6`!Doe{K';
-     GRANT REPLICATION SLAVE ON *.* TO 'replica_user'@'%';
+     GRANT REPLICATION REPLICA ON *.* TO 'replica_user'@'%';
      FLUSH PRIVILEGES;
      ```
 
@@ -116,20 +116,20 @@ Another advantage of using such a replication setup is database resilience. For 
      ```
 
 4. **Configure Replication**
-   - Obtain the master status on the primary server:
+   - Obtain the source/master status on the primary server:
      ```sql
-     SHOW MASTER STATUS;
+     SHOW SOURCE STATUS;
      ```
    - Note down the `File` and `Position` values, also note down the private instance IP address (e.g. from your AWS console)
    - On the secondary server, set up the replication:
      ```sql
-     CHANGE MASTER TO
-         MASTER_HOST='<primary_server_ip>',
-         MASTER_USER='replica_user',
-         MASTER_PASSWORD='C90L6`!Doe{K',
-         MASTER_LOG_FILE='<file_name_from_master_status>',
-         MASTER_LOG_POS=<position_from_master_status>;
-     START SLAVE;
+     CHANGE SOURCE TO
+         SOURCE_HOST='<primary_server_ip>',
+         SOURCE_USER='replica_user',
+         SOURCE_PASSWORD='C90L6`!Doe{K',
+         SOURCE_LOG_FILE='<file_name_from_source_master_status>',
+         SOURCE_LOG_POS=<position_from_source_master_status>;
+     START REPLICA;
      ```
 
 5. **Verify Replication**
@@ -202,15 +202,15 @@ We're going to stop the primary server, to simulate some real failure (e.g. hard
      ```bash
      sudo systemctl start mysql
      ```
-   - On the original primary server, set it up as the slave to the new primary:
+   - On the original primary server, set it up as the replica to the new primary:
      ```sql
-     CHANGE MASTER TO
-         MASTER_HOST='<new_primary_ip>',
-         MASTER_USER='replica_user',
-         MASTER_PASSWORD='C90L6`!Doe{K',
-         MASTER_LOG_FILE='<file_name_from_new_primary>',
-         MASTER_LOG_POS=<position_from_new_primary>;
-     START SLAVE;
+     CHANGE SOURCE TO
+         SOURCE_HOST='<new_primary_ip>',
+         SOURCE_USER='replica_user',
+         SOURCE_PASSWORD='C90L6`!Doe{K',
+         SOURCE_LOG_FILE='<file_name_from_new_primary>',
+         SOURCE_LOG_POS=<position_from_new_primary>;
+     START REPLICA;
      ```
    - Check the replica status:
      ```sql
