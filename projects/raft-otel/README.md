@@ -12,7 +12,7 @@ we are going to use distributed tracing to understand its behaviour.
 ## Learning Objectives
 
 - Describe the differences between distributed tracing and logging and metrics
-- Implement RAFT
+- Implement RAFT (or run and modify an existing implementation)
 - Instrument an application with distributed tracing
 - Use distributed tracing to get a detailed understanding of complex application behaviour
 - Minimise costs of distributed tracing
@@ -98,48 +98,37 @@ Read these blog posts carefully.
 You can either
 
 1.  try to write your own RAFT implementation, building up the functionality in the stages described by Bendersky, or
-2.  use Bendersky's code, after having thoroughly read it and understood it
-3.  write your own implementation, using Bendersky's as a reference if you get stuck
+2.  use [our version of Bendersky's code](https://github.com/CodeYourFuture/immersive-go-course/pull/214) - this version of the code is modified so you can run it under docker-compose, and it uses gRPC rather than go's 'net/rpc', and has a small FSM and a K/V interface with a demo client.
 
-**Note:** Note that Bendersky's code as it stands does not include a main package for actually running standalone RAFT servers.
-It instead includes a test harness that simulates running a cluster in one process.
-We want to run a real cluster sending real RPCs between the members, so that we can see traces composed of spans from different instances.
-In order to do this we will need to make some straightforward changes to Bendersky's codebase:
+**Note:** Writing your own implmementation from scratch will take a lot of time - we suggest that if you try this route you spend no more than 2 days - at the start of the third day, if your implementation is not complete, switch to the provided implementation. You can come back and complete your own implementation if you have time at the end of the sprint.
 
-- add a `main` package (with code similar to the test harness setup code)
-- pass in the list of cluster members (i.e. a list of host:port pairs) as an argument to the program (in a real-world application we would likely use some form of service discovery)
-- change the code in `server.go` to send and receive gRPC calls (in a similar fashion to the [gRPC Client-Server project](https://github.com/CodeYourFuture/immersive-go-course/tree/main/grpc-client-server))
+Reading code written by others is a useful skill to have, so if you opt to create your own implementation, you should still review other implementations.
+Do they differ from yours in any significant respect?
 
-Reading code written by others is a useful skill to have, so if you opt to create your own implementation, you should still review Bendersky's code.
-Does it differ from yours in any significant respect?
+There are some ways you could extend this code, if you like.
 
-By the end of Part 1 we should have a running RAFT cluster with 5 instances.
-We may choose to run our RAFT cluster locally using `docker-compose`, `minikube`, or any other appropriate tool.
+#### Implement Compare and Swap in addition to Get/Set
 
-If you are using Bendersky's code, you will notice that his RAFT implementation implements a method `func (cm *ConsensusModule) Submit(command interface{}) bool`.
-This simply appends the `command` provided to a log.
-
-**Note:** What Bendersky is doing here is rather sketchily demonstrating a theoretical [Finite State Machine](https://en.wikipedia.org/wiki/Finite-state_machine) (FSM).
-FSMs are a computer science concept (that you don't need to know any details about for this project): the idea that you can implement a program's core state as an abstract machine, with a specific set of states
-and a specific set of transitions between those states. Externally-provided commands are the trigger to move between states.
-
-Try modifying your code to instead implement Get, Set, and CompareAndSet commands - a highly-consistent key-value store - and make these available via gRPC methods.
-For instance, a Set command may have two fields, a key and a value, and a Get command may have one field, a key. If your RAFT cluster accepts a Set command setting X = 10, then a Set command setting X = 20, and then gets a Get command for X, it should return 20.
-There is already a `storage` module that you can use.
-
-**Note:** [CompareAndSwap](https://en.wikipedia.org/wiki/Compare-and-swap) (also called CompareAndSet, or CAS)
+[CompareAndSwap](https://en.wikipedia.org/wiki/Compare-and-swap) (also called CompareAndSet, or CAS)
 is a very useful pattern for concurrent systems that lets you update a key to a given value only if that key already has a specific value.
 This is useful for implementing sequences of operations where we read a value, perform some computation that modifies that value, and then write that value back -
 but without potentially overwriting any changes to that value that other processes might have performed.
 
-Next, write a client that uses your RAFT cluster to perform Sets, Gets, and CompareAndSets.
-Bendersky's code also doesn't do anything if you send a `Submit` to any server other than the leader. It may be useful to have your program return the
-address (host:port) of the leader instead, as part of your gRPC reply, along with an indication that the operation was not attempted. Your client can then
-retry the operation against the leader.
+Add support for CompareAndSwap to the server implementation, and update the demo client to use the new operation after the existing operations it performs.
 
-Please timebox this part of the project to no more than two days, in order to leave time for the other sections.
-At the start of the third day, if your implementation is not complete, begin modifying Bendersky's. You can come back and complete your
-own implementation if you have time at the end of the sprint.
+##### Operations when an instance is not the leader - redirecting or proxying clients
+
+The initial code  doesn't do anything if you send a get/set to any server other than the leader. It may be useful to have your program return the
+address (host:port) of the leader instead, as part of your gRPC reply. Your client can then
+retry the operation against the leader. Alternatively, you could modify the program to proxy the request directly to the leader.
+
+##### Operations when an instance is not the leader - allow stale reads
+
+The reason we do not serve read operations (here, `get`) from hosts that are not the RAFT leader is that they might have stale data.
+You could update the K/V Get operation to include parameters to let the client do stale reads from non-leaders.
+Ideally, you would allow the client to specify a duration of allowed staleness, and check whether the instance has successfully
+processed an incoming AppendEntries message from the leader within that duration. The response from the `get` should probably include an indication of whether the read is stale.
+
 
 ### Part 2: Add distributed tracing
 
@@ -150,8 +139,10 @@ Honeycomb provides a useful guide for their own
 [OpenTelemetry Distribution for Go](https://docs.honeycomb.io/getting-data-in/opentelemetry/go-distro/).
 
 Add tracing to all parts of your application which you might wish to trace. Consider what operations are
-interesting - in general, anything that may feasibly take a long time, such as a RPC, writing to storage, or
-taking a lock may be a candidate for a span.
+interesting - in general, anything that may feasibly take a long time, such as a RPC, writing to storage, sleeping, or
+taking a lock may be a candidate for a span. Traces should generally be higher-level operations: these may be self-instantiated,
+such as an instance choosing to begin a leader election, or may be triggered by external events, such as a client attempting to 
+write a value to the FSM.
 
 Run your system and view traces in Honeycomb. Run through the [Honeycomb sandbox tour](https://play.honeycomb.io/sandbox/environments/analyze-debug-tour)
 and then explore your own data in the same way.
@@ -162,8 +153,9 @@ Create a [Board](https://docs.honeycomb.io/working-with-your-data/boards/) in ho
 
 ### Part 3: Debugging latency and failures using distributed tracing
 
-Bendersky's implementation of RAFT allows you to simulate unreliable RPCs. Enable this (if you wrote your own implementation then you will
-need to add this kind of chaos capability as a feature first - for example, adding an environment variable which, if set, will drop some percent of requests completely, and add random latency to others).
+Add an environment variable which, if set, will drop some percentage of the internal RAFT requests (i.e. requests between RAFT servers) completely, and add latency to others.
+You can do this by modifying the `CallRequestVote` and `CallAppendEntries` methods in `server.go`.
+
 Now, use Honeycomb to observe the dropped RPCs and delays that
 the simulation injects. Did these show up on your board from Part 2?
 
