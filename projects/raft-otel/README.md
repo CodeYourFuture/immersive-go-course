@@ -112,7 +112,7 @@ is a very useful pattern for concurrent systems that lets you update a key to a 
 This is useful for implementing sequences of operations where we read a value, perform some computation that modifies that value, and then write that value back -
 but without potentially overwriting any changes to that value that other processes might have performed.
 
-Update the demo client to use the new operation.
+Add support for CompareAndSwap to the server implementation, and update the demo client to use the new operation after the existing operations it performs.
 
 ##### Operations when an instance is not the leader - redirecting or proxying clients
 
