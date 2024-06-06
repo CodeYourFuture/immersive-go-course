@@ -97,8 +97,10 @@ Read these blog posts carefully.
 
 You can either
 
-1.  try to write your own RAFT implementation, building up the functionality in the stages described by Bendersky (this will take a lot of time), or
+1.  try to write your own RAFT implementation, building up the functionality in the stages described by Bendersky, or
 2.  use [our version of Bendersky's code](https://github.com/CodeYourFuture/immersive-go-course/pull/214) - this version of the code is modified so you can run it under docker-compose, and it uses gRPC rather than go's 'net/rpc', and has a small FSM and a K/V interface with a demo client.
+
+**Note:** Writing your own implmementation from scratch will take a lot of time - we suggest that if you try this route you spend no more than 2 days - at the start of the third day, if your implementation is not complete, switch to the provided implementation. You can come back and complete your own implementation if you have time at the end of the sprint.
 
 Reading code written by others is a useful skill to have, so if you opt to create your own implementation, you should still review other implementations.
 Do they differ from yours in any significant respect?
@@ -119,10 +121,6 @@ Add support for CompareAndSwap to the server implementation, and update the demo
 The initial code  doesn't do anything if you send a get/set to any server other than the leader. It may be useful to have your program return the
 address (host:port) of the leader instead, as part of your gRPC reply. Your client can then
 retry the operation against the leader. Alternatively, you could modify the program to proxy the request directly to the leader.
-
-Please timebox this part of the project to no more than two days, in order to leave time for the other sections.
-At the start of the third day, if your implementation is not complete, begin modifying Bendersky's. You can come back and complete your
-own implementation if you have time at the end of the sprint.
 
 ##### Operations when an instance is not the leader - allow stale reads
 
