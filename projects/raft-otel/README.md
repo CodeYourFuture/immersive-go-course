@@ -155,7 +155,7 @@ Create a [Board](https://docs.honeycomb.io/working-with-your-data/boards/) in ho
 
 ### Part 3: Debugging latency and failures using distributed tracing
 
-Add an environment variable which, if set, will drop some percentage of the internal RAFT requests completely, and add latency to others.
+Add an environment variable which, if set, will drop some percentage of the internal RAFT requests (i.e. requests between RAFT servers) completely, and add latency to others.
 You can do this by modifying the `CallRequestVote` and `CallAppendEntries` methods in `server.go`.
 
 Now, use Honeycomb to observe the dropped RPCs and delays that
