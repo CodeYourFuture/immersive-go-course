@@ -129,7 +129,7 @@ own implementation if you have time at the end of the sprint.
 The reason we do not serve read operations (here, `get`) from hosts that are not the RAFT leader is that they might have stale data.
 You could update the K/V Get operation to include parameters to let the client do stale reads from non-leaders.
 Ideally, you would allow the client to specify a duration of allowed staleness, and check whether the instance has successfully
-processed an incoming AppendEntries message from the leader within that duration. 
+processed an incoming AppendEntries message from the leader within that duration. The response from the `get` should probably include an indication of whether the read is stale.
 
 
 ### Part 2: Add distributed tracing
