@@ -19,9 +19,9 @@ Timebox: 2 days
 
 ## Project
 
-There are different ways to configure MySQL replication. In this exercise, you will be configuring your servers for primary-replica (or master-slave) replication.
+There are different ways to configure MySQL replication. In this exercise, you will be configuring your servers for primary-replica replication.
 
-In this type of replication, the primary server (or the source/master) takes all the writes and they are automatically replicated onto the replica server (or the replica/slave). This technique is widely used to increase the scalability of the database for read-intensive operations (which is extremely common for the web). In the primary-replica setup, the primary would normally be used for writes and replica (or replicas) for reads only. Even though it's technically possible to use the primary for the reads and the writes, it is impossible to write directly to the replica.
+In this type of replication, the primary server (`SOURCE`) takes all the writes and they are automatically replicated onto the replica server (`REPLICA`). This technique is widely used to increase the scalability of the database for read-intensive operations (which is extremely common for the web). In the primary-replica setup, the primary would normally be used for writes and replica (or replicas) for reads only. Even though it's technically possible to use the primary for the reads and the writes, it is impossible to write directly to the replica.
 
 Another advantage of using such a replication setup is database resilience. For example, it is recommended to setup primary-replica with one primary and two or three replicas in different availability zones. In the event of one availability zone (or datacenter) going down, the database will continue functioning flawlessly as other replicas will be used for reading. In a different scenario of one replica crashing, it can be replaced while the remaining replicas are serving the reads. Should the primary crash, an operation called a 'fail-over' should be carried out: one replica is promoted to be a primary while another MySQL server is being stood up in place of a broken primary.
 
@@ -46,7 +46,7 @@ Another advantage of using such a replication setup is database resilience. For 
      sudo apt-get install mysql-server
      ```
    - Secure the MySQL installation:
-     Answer `Y` for everything, and for this exercise choose *LOW* password validation policy)
+     Answer `Y` for everything, and for this exercise choose *LOW* password validation policy
      ```bash
      sudo mysql_secure_installation
      ```
@@ -116,7 +116,7 @@ Another advantage of using such a replication setup is database resilience. For 
      ```
 
 4. **Configure Replication**
-   - Obtain the source/master status on the primary server:
+   - Obtain the source status on the primary server:
      ```sql
      SHOW SOURCE STATUS;
      ```
@@ -127,8 +127,8 @@ Another advantage of using such a replication setup is database resilience. For 
          SOURCE_HOST='<primary_server_ip>',
          SOURCE_USER='replica_user',
          SOURCE_PASSWORD='C90L6`!Doe{K',
-         SOURCE_LOG_FILE='<file_name_from_source_master_status>',
-         SOURCE_LOG_POS=<position_from_source_master_status>;
+         SOURCE_LOG_FILE='<file_name_from_source_status>',
+         SOURCE_LOG_POS=<position_from_source_status>;
      START REPLICA;
      ```
 
