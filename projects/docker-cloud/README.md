@@ -295,7 +295,8 @@ If it's worked, our public repository with a published image will show up [on th
 
 ![](./readme-assets/cloud-architecture.png)
 
-Lastly, run the server on Amazon Elastic Container Service, enabling step 4 and 5 in the architecture diagram. The guide we went through above will give us most of what we need. Here's some things to watch out for:
+Lastly, run the server on Amazon Elastic Container Service, enabling step 4 and 5 in the architecture diagram. This [guide](https://aws.plainenglish.io/deploying-a-docker-container-in-aws-using-fargate-5a19a140b018) (from step 4) will give us most of what we need.
+Here's some things to watch out for:
 
 - We need to set up a **custom** container definition
 - The `Image` field will use the URL from the ECR repository, under `Image URI`
