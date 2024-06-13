@@ -1,0 +1,74 @@
+.c-note {
+  --gap: var(--theme-spacing--gutter);
+
+  @include block(false, true, true, false);
+  width: fit-content;
+  margin-bottom: var(--gap);
+  box-shadow: var(--theme-box-shadow--slim);
+  background-image: linear-gradient(
+    -45deg,
+    var(--theme-color--block),
+    var(--theme-color--paper)
+  );
+
+  @include grid-assign(title, text);
+  grid-template:
+    "..... ..... ..... " var(--theme-spacing--1)
+    "..... title title" auto
+    "..... ..... ..... " var(--theme-spacing--1)
+    "..... text  ....." 1fr
+    "..... ..... ..... " var(--gap)
+    / var(--gap) minmax(auto, var(--theme-spacing--linelength)) var(--gap);
+
+  &__title {
+    color: var(--theme-color--ink);
+
+    &::before {
+      display: inline-block;
+      content: "📝 ";
+
+      //override the content based on c-note--modifier parent for warning, exercise, activity, remember, and narrative
+      @at-root .c-note--tip & {
+        content: "💡 ";
+      }
+      @at-root .c-note--warning & {
+        content: "⚠️ ";
+      }
+      @at-root .c-note--exercise & {
+        content: "🏋️ ";
+      }
+      @at-root .c-note--activity & {
+        content: "🎮 ";
+      }
+      @at-root .c-note--remember & {
+        content: "📝 ";
+      }
+      @at-root .c-note--narrative & {
+        content: "📖 ";
+      }
+      @at-root .c-note--discussion & {
+        content: "💬 ";
+      }
+      @at-root .c-note--piece & {
+        content: "🧩 ";
+      }
+      @at-root .c-note--question & {
+        content: "🧐 ";
+      }
+      @at-root .c-note--next & {
+        content: "👉🏿  ";
+      }
+      @at-root .c-note--glossary & {
+        content: "🧑🏻‍🎓  ";
+      }
+    }
+  }
+
+  &--tip {
+    background: var(--theme-color--accent-shade);
+  }
+  &--glossary {
+    background: none;
+    box-shadow: none;
+  }
+}

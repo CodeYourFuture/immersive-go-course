@@ -1,0 +1,25 @@
+@mixin block($border: thick, $radius: true, $shadow: true, $background: true) {
+  @if $border == "thick" {
+    border: var(--theme-border--thick);
+  }
+  @if $border == "gradient" {
+    border: var(--theme-border--thick);
+    border-image: var(--theme-border-image);
+  }
+
+  @if $shadow {
+    box-shadow: var(--theme-box-shadow);
+  }
+
+  @if $background {
+    background-color: var(--theme-color--block);
+  }
+
+  @if $radius {
+    border-radius: var(--theme-border-radius);
+  }
+
+  max-width: var(--theme-spacing--container);
+
+  @content;
+}
