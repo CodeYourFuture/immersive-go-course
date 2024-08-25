@@ -1,3 +1,8 @@
++++
+title="Partnerships"
+menu="syllabus"
++++
+
 # Partnerships
 
 CYF+ is an immersive education programme involving guided independent study and a work placement.
@@ -61,19 +66,20 @@ Our aim is to transition from 100% CYF mentorship at the start of the programme,
 CYF+ caters its curriculum to the needs of the specific hiring partner. In 2023 [we partnered with Slack](https://slack.com/intl/en-gb/blog/news/slack-cyf-plus-engineering-employment-pathways-refugees) to hire two SREs for their Demand Engineering team, so put together projects and material focusing on distributed systems thinking, troubleshooting, and handling scale and failure, as well as using Go as the main programming language. [You can see the content of the first run's course here](https://systems.codeyourfuture.io/versions/1-0-0/).
 
 The course will always include:
-* Quality code - making conscious decisions about what the best, most readable, most maintainable way to write code is.
-* Distributed systems thinking - state, failure, reliability, etc.
-* Working in existing codebases - understanding and debugging code they didn't write.
-* Troubleshooting - how to work in an environment where many systems are black boxes you don't know the details of.
-* Handling scale and failure - concurrency, error handling, retry strategies, sources of risk and failure.
+
+- Quality code - making conscious decisions about what the best, most readable, most maintainable way to write code is.
+- Distributed systems thinking - state, failure, reliability, etc.
+- Working in existing codebases - understanding and debugging code they didn't write.
+- Troubleshooting - how to work in an environment where many systems are black boxes you don't know the details of.
+- Handling scale and failure - concurrency, error handling, retry strategies, sources of risk and failure.
 
 Additionally we can tailor specific topics or projects to the specific needs of a company or team.
 
 ## What CYF+ needs from partners
 
-* A collaborative attitude to understanding what knowledge and experience new-hires will need, and how best to supply them.
-* A commitment to hire at least 2 excellent junior engineers on a 9-month internship, including paying their salary and providing a supportive mentoring environment.
-* A contribution to Code Your Future of at least £20,000 per hire to support mentoring, training, and course development costs.
+- A collaborative attitude to understanding what knowledge and experience new-hires will need, and how best to supply them.
+- A commitment to hire at least 2 excellent junior engineers on a 9-month internship, including paying their salary and providing a supportive mentoring environment.
+- A contribution to Code Your Future of at least £20,000 per hire to support mentoring, training, and course development costs.
 
 ## CYF+'s track record
 
@@ -92,7 +98,7 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 <section class="c-person-profile">
   <img src="static/rita.jpg" alt="Rita Glushkova" />
 
-  "CYF+ turned my life around by 180 degrees. What initially felt like a distant dream has now become my everyday reality. It was one of the biggest challenges I undertook, but every minute of it was a transformative experience to become a better, more knowledgeable, and confident software engineer. It opened doors to Big Tech and prepared me to work in a world where millions of requests flood every second. Through CYF+ I met the most amazing mentors, worked with advanced technologies, and presented at a conference. Thanks to CYF+ and everyone involved, I am finally living the life I always wanted!" - [Margarita Glushkova](https://www.linkedin.com/in/margarita-glushkova-894344105/)
+"CYF+ turned my life around by 180 degrees. What initially felt like a distant dream has now become my everyday reality. It was one of the biggest challenges I undertook, but every minute of it was a transformative experience to become a better, more knowledgeable, and confident software engineer. It opened doors to Big Tech and prepared me to work in a world where millions of requests flood every second. Through CYF+ I met the most amazing mentors, worked with advanced technologies, and presented at a conference. Thanks to CYF+ and everyone involved, I am finally living the life I always wanted!" - [Margarita Glushkova](https://www.linkedin.com/in/margarita-glushkova-894344105/)
 
   <div style="clear: both"></div>
 </section>
@@ -100,7 +106,7 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 <section class="c-person-profile">
   <img src="static/berkeli.jpg" alt="Berkeli Halmyradov" />
 
-  "I learned about CYF during a very difficult time in my life right at the peak of the pandemic, when I thought there was no hope. Almost 3 years later, I’m now working as a Site Reliability Engineer at Slack and it's all thanks to CYF, CYF+, and the amazing volunteers that work tirelessly to help students become engineers. For me, CodeYourFuture isn't just a bootcamp, it's a community where everyone is welcome regardless of their background or situation." - [Berkeli Halmyradov](https://www.linkedin.com/in/berkeli/)
+"I learned about CYF during a very difficult time in my life right at the peak of the pandemic, when I thought there was no hope. Almost 3 years later, I’m now working as a Site Reliability Engineer at Slack and it's all thanks to CYF, CYF+, and the amazing volunteers that work tirelessly to help students become engineers. For me, CodeYourFuture isn't just a bootcamp, it's a community where everyone is welcome regardless of their background or situation." - [Berkeli Halmyradov](https://www.linkedin.com/in/berkeli/)
 
   <div style="clear: both"></div>
 </section>
@@ -110,25 +116,27 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 <section class="c-person-profile">
   <img src="static/dwhsquare.jpg" alt="Daniel Wagner-Hall" />
 
-  [Daniel Wagner-Hall](https://github.com/illicitonion) acts as a mentor for the trainees on the course, as well as helping to create course content. He's been a volunteer with CYF since 2020, and has worked at companies like Google, Twitter, and Apple. He's developed systems that reliably serve millions of queries per second, maintains [several](https://github.com/bazelbuild/rules_rust) [significant](https://crates.io/crates/num_enum) [open](https://www.selenium.dev/project/structure/#selenium_committers) [source](https://github.com/bazel-contrib/target-determinator) [projects](https://www.pantsbuild.org/docs/team), and loves to help people grow.
+[Daniel Wagner-Hall](https://github.com/illicitonion) acts as a mentor for the trainees on the course, as well as helping to create course content. He's been a volunteer with CYF since 2020, and has worked at companies like Google, Twitter, and Apple. He's developed systems that reliably serve millions of queries per second, maintains [several](https://github.com/bazelbuild/rules_rust) [significant](https://crates.io/crates/num_enum) [open](https://www.selenium.dev/project/structure/#selenium_committers) [source](https://github.com/bazel-contrib/target-determinator) [projects](https://www.pantsbuild.org/docs/team), and loves to help people grow.
+
   <div style="clear: both"></div>
 </section>
 
 <section class="c-person-profile">
   <img src="static/lauranolan.jpg" alt="Laura Nolan" />
 
-  [Laura Nolan](https://www.linkedin.com/in/laura-nolan-bb7429/) is a principal software engineer, known for writing and speaking about Site Reliability Engineering (SRE) and software operations topics. She is a contributor to [the O'Reilly Site Reliability Engineering book](https://www.oreilly.com/library/view/site-reliability-engineering/9781491929117/), and contributes her knowledge to developing the CYF+ curriculum as well as mentoring trainees on the course.
+[Laura Nolan](https://www.linkedin.com/in/laura-nolan-bb7429/) is a principal software engineer, known for writing and speaking about Site Reliability Engineering (SRE) and software operations topics. She is a contributor to [the O'Reilly Site Reliability Engineering book](https://www.oreilly.com/library/view/site-reliability-engineering/9781491929117/), and contributes her knowledge to developing the CYF+ curriculum as well as mentoring trainees on the course.
 
-  Laura initially worked with CYF as part of her former role at Slack, but CYF impressed her so much with its sheer efficiency and focus on its mission to diversify tech that she stayed as a volunteer.
+Laura initially worked with CYF as part of her former role at Slack, but CYF impressed her so much with its sheer efficiency and focus on its mission to diversify tech that she stayed as a volunteer.
+
   <div style="clear: both"></div>
 </section>
 
 <section class="c-person-profile">
   <img src="static/radha.jpg" alt="Radha Kumari" />
 
-  My name is [Radha Kumari](https://www.linkedin.com/in/kumari-radha-a3419b25/) and I'm a Staff Software Engineer at Slack. I'm part of the Demand Engineering Team, responsible for all of Slack's ingress Traffic and how internal services interact with each other.
+My name is [Radha Kumari](https://www.linkedin.com/in/kumari-radha-a3419b25/) and I'm a Staff Software Engineer at Slack. I'm part of the Demand Engineering Team, responsible for all of Slack's ingress Traffic and how internal services interact with each other.
 
-  I have had the privilege of working alongside some amazing human beings in designing this innovative and unique course aimed at teaching infrastructure and Site Reliability Engineering (SRE) skills to Refugees and low-income people. Mentoring individuals through this program and witnessing their growth has been incredibly rewarding, reinforcing my belief in the transformative power of education and mentorship.
+I have had the privilege of working alongside some amazing human beings in designing this innovative and unique course aimed at teaching infrastructure and Site Reliability Engineering (SRE) skills to Refugees and low-income people. Mentoring individuals through this program and witnessing their growth has been incredibly rewarding, reinforcing my belief in the transformative power of education and mentorship.
 
   <div style="clear: both"></div>
 </section>
@@ -136,9 +144,9 @@ CYF+ has run one cohort with Slack, where both participants were converted to fu
 <section class="c-person-profile">
   <img src="static/abdi.jpg" alt="Abdirizak Mohamed" />
 
-  [Abdirizak Mohamed](https://www.linkedin.com/in/abdirizak-mohamed-63778117b/) is a software engineer who has worked for several companies, including Zoopla and most recently Amazon. At Amazon, he works on improving the resiliency of the Prime Video platform, including owning a project to automate the management of assets required for widely distributed load tests.
+[Abdirizak Mohamed](https://www.linkedin.com/in/abdirizak-mohamed-63778117b/) is a software engineer who has worked for several companies, including Zoopla and most recently Amazon. At Amazon, he works on improving the resiliency of the Prime Video platform, including owning a project to automate the management of assets required for widely distributed load tests.
 
-  Abdirizak has been with CYF for several years, primarily delivering course content during weekly classes, buddying with trainees, and providing feedback on coursework. For CYF+ he supports trainees by holding office hours and reviewing exercise submissions.
+Abdirizak has been with CYF for several years, primarily delivering course content during weekly classes, buddying with trainees, and providing feedback on coursework. For CYF+ he supports trainees by holding office hours and reviewing exercise submissions.
 
   <div style="clear: both"></div>
 </section>

@@ -1,7 +1,9 @@
-baseURL = "/"
-languageCode = "en-us"
+baseURL = "https://systems.codeyourfuture.io"
 title = "CYF+"
-languageLang = "en"
+
+[module]
+[[module.imports]]
+  path = "github.com/CodeYourFuture/curriculum/common-theme"
 
 [params]
 description = "A free and open source immersive engineering programme. Practical, hands on projects in Go, distributed systems engineering, site reliability engineering, software engineering. Pace, scale, and complexity."
@@ -25,3 +27,17 @@ unsafe = true
 disableKinds = ["taxonomy", "term"]
 [taxonomies]
 series = "versions"
+
+[menus]
+    [[menus.secondary]]
+        name = "Main Curriculum 👈🏾"
+        weight = 1
+        url = "https://curriculum.codeyourfuture.io"
+     [[menus.secondary]]
+        name = "Join Us 👋🏿"
+        weight = 2
+        url = "https://codeyourfuture.io/volunteers/"
+    [[menus.secondary]]
+        name = "Support 🫶🏼"
+        weight = 3
+        url = "https://codeyourfuture.io/donate/"

@@ -1,6 +1,7 @@
 <!--forhugo
 +++
 title="Projects"
+menu="syllabus"
 +++
 forhugo-->
 
