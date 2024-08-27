@@ -1,0 +1,29 @@
+.l-menu {
+  @include pattern(graph, currentColor, b, false, 0.2);
+  @include backdrop(true, true, 0.6);
+  z-index: 5;
+  width: fit-content;
+  --box-shadow: var(--theme-color--ink-fade);
+  box-shadow: -20px -2px 30px var(--box-shadow);
+  text-transform: lowercase;
+
+  .is-dark-mode & {
+    --box-shadow: var(--theme-color--contrast-max);
+  }
+
+  &__container {
+    max-height: calc(100vh - 2 * var(--theme-spacing--4));
+    grid-template:
+      ". ....... ......... ......... ." var(--gap)
+      ". heading ......... action    ." min-content
+      ". ....... ......... ......... ." var(--gap)
+      ". primary primary   primary   ." 1fr
+      ". secondary secondary secondary ." var(--theme-spacing--touchtarget)
+      ". ....... ......... ......... ." var(--gap) / var(--gap)
+      1fr 1fr var(--theme-spacing--touchtarget) var(--gap);
+  }
+  &__secondary {
+    background: transparent;
+    width: auto;
+  }
+}

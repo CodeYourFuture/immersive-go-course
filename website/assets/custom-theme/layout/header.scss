@@ -1,0 +1,44 @@
+.l-header {
+  grid-template:
+    " . ......... . " var(--theme-spacing--2)
+    " . container ." minmax(0, 1fr)
+    " . ......... ." var(--theme-spacing--3) / minmax(
+      var(--theme-spacing--gutter),
+      1fr
+    )
+    var(--theme-spacing--container) minmax(var(--theme-spacing--gutter), 1fr);
+  @include pattern(dots, var(--theme-color--pop), null, false, 0.5);
+  background: initial;
+  border: initial;
+  box-shadow: initial;
+  backdrop-filter: initial;
+
+  &__container {
+    grid-template:
+      "heading . search . action" min-content/max-content var(
+        --theme-spacing--4
+      )
+      1fr var(--theme-spacing--4) min-content;
+  }
+
+  &__action {
+    background: var(--theme-color--brand);
+    height: 100vh;
+    position: fixed;
+    right: 0;
+    top: 0;
+    align-items: flex-start;
+    padding: var(--theme-spacing--2) var(--theme-spacing--3) 0
+      var(--theme-spacing--2);
+
+    @include on-event() {
+      background-color: var(--theme-color--accent);
+      color: var(--theme-color--paper);
+    }
+
+    svg {
+      height: fit-content;
+      align-items: flex-start;
+    }
+  }
+}

@@ -1,0 +1,35 @@
+// Hugo generates this so to apply bem we'd have to rewrite the internals
+// not worth it!
+
+.c-toc {
+  color: var(--theme-color--accent);
+  border: var(--theme-border--thick);
+  padding: var(--gap);
+
+  ol {
+    color: var(--theme-color--ink);
+    text-transform: uppercase;
+    ol {
+      padding-left: var(--theme-spacing--gutter);
+    }
+  }
+
+  ol li {
+    text-transform: uppercase;
+    font-family: var(--theme-font--display);
+    font-weight: 500;
+
+    a,
+    a:link {
+      text-decoration: none;
+    }
+
+    li {
+      text-transform: none;
+      font-family: var(--theme-font--copy);
+      &::marker {
+        color: var(--theme-color--pop);
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "curriculum",
+  "version": "1.0.0",
+  "description": "The curriculum platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "dotenv -e ../.env -- hugo server --environment development",
+    "build:dev": "hugo mod vendor && dotenv -e ../.env  -- hugo --environment development"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CodeYourFuture/curriculum/issues"
+  },
+  "homepage": "https://github.com/CodeYourFuture/curriculum#readme",
+  "dependencies": {
+    "dotenv-cli": "^7.3.0",
+    "dotenv": "^16.3.1",
+    "prettier": "^2.8.8",
+    "prettier-plugin-go-template": "^0.0.13"
+  }
+}

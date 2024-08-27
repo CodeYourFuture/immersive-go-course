@@ -1,0 +1,25 @@
+.c-splash {
+  margin-top: var(--theme-spacing--6);
+  transform: rotate(-3.5deg);
+  @include backdrop(true, true, 0.6);
+  border-top: var(--theme-spacing--gutter) solid var(--theme-color--pop);
+  border-radius: 8px 8px 2px 2px;
+  box-shadow: var(--theme-box-shadow);
+  padding: var(--theme-spacing--gutter);
+  max-width: var(--theme-spacing--linelength);
+  text-wrap: balance;
+  font: var(--theme-font--system);
+
+  animation: float 6s infinite alternate ease-in-out;
+
+  strong,
+  a {
+    font-size: var(--theme-type-size--4);
+    font-weight: 700;
+  }
+  strong {
+    color: var(--theme-color--pop);
+    display: block;
+    line-height: 2;
+  }
+}

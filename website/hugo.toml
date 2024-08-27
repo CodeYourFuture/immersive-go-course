@@ -1,0 +1,43 @@
+baseURL = "https://systems.codeyourfuture.io"
+title = "CYF+"
+
+[module]
+[[module.imports]]
+  path = "github.com/CodeYourFuture/curriculum/common-theme"
+
+[params]
+description = "A free and open source immersive engineering programme. Practical, hands on projects in Go, distributed systems engineering, site reliability engineering, software engineering. Pace, scale, and complexity."
+repo = "https://github.com/CodeYourFuture/immersive-go-course/"
+tree = "https://github.com/CodeYourFuture/immersive-go-course/tree/main/"
+edit = "https://github.com/CodeYourFuture/immersive-go-course/edit/main/"
+
+[markup]
+[markup.tableOfContents]
+endLevel = 6
+ordered = true
+startLevel = 2
+[markup.highlight]
+lineNos = false
+codeFences = true
+guessSyntax = true
+[markup.goldmark.renderer]
+# Enable HTML codeblocks, e.g. for <details> blocks
+unsafe = true
+
+disableKinds = ["taxonomy", "term"]
+[taxonomies]
+series = "versions"
+
+[menus]
+    [[menus.secondary]]
+        name = "Main Curriculum 👈🏾"
+        weight = 1
+        url = "https://curriculum.codeyourfuture.io"
+     [[menus.secondary]]
+        name = "Join Us 👋🏿"
+        weight = 2
+        url = "https://codeyourfuture.io/volunteers/"
+    [[menus.secondary]]
+        name = "Support 🫶🏼"
+        weight = 3
+        url = "https://codeyourfuture.io/donate/"

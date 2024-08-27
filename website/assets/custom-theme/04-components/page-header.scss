@@ -1,0 +1,42 @@
+.c-page-header {
+  &__breadcrumbs {
+    padding: 0; //no emojis on this layout so no need for extra padding
+  }
+  &__container {
+    .c-page-header--toc:not(.c-page-header--solo) & {
+      @media (min-width: $c-max) {
+        grid-template:
+          ".              " var(--gap)
+          "breadcrumbs    " min-content
+          "toc            " auto
+          ".             " var(--gap)
+          "title          " min-content
+          "subtitle       " min-content
+          "description    " min-content
+          / 1fr;
+        margin-bottom: calc(-1 * var(--theme-spacing--2));
+      }
+    }
+  }
+
+  &__toc {
+    position: sticky;
+    top: 0;
+    .c-toc {
+      max-height: none;
+    }
+  }
+  .p-home & {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: calc(-1 * var(--theme-spacing--6));
+    .c-page-header__title {
+      max-width: 16ch;
+      font: var(--theme-font--brand);
+      font-size: var(--theme-type-size--1);
+      text-shadow: initial;
+      color: var(--theme-color--brand);
+      mix-blend-mode: saturation;
+    }
+  }
+}
