@@ -8,3 +8,11 @@
   padding: var(--theme-spacing--6);
   max-width: var(--theme-spacing--linelength);
 }
+
+span {
+  toggle-root: check self;
+}
+
+span:toggle(check) {
+  text-decoration: line-through;
+}

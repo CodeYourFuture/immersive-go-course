@@ -1,11 +1,5 @@
-* {
-  box-sizing: border-box;
-}
 body,
 html {
-  font-family: var(--theme-font--copy);
-  font-size: 100%;
-  background-color: var(--theme-color--paper);
   background-image: url("./pictures/svgs/neons/nnneon-hex.svg"),
     url("./pictures/svgs/quads/qqquad-02.svg"),
     radial-gradient(
@@ -19,7 +13,7 @@ html {
   margin: 0;
   padding: 0;
   height: 100%;
-  animation: fade-in 0.2s;
+  animation: fade-in 0.6s;
 }
 
 html {

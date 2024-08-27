@@ -13,9 +13,16 @@ $heading__levels: 1, 2, 3, 4, 5, 6;
   }
 }
 
+h1,
+.e-heading__1,
 h4,
 .e-heading__4 {
   text-transform: uppercase;
+  background-color: transparent;
+}
+
+h4,
+.e-heading__4 {
   color: var(--theme-color--accent);
 }
 
