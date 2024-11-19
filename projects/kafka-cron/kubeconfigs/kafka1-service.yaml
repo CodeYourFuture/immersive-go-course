@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: ../../kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: kafka1
+  name: kafka1
+spec:
+  ports:
+    - name: "9092"
+      port: 9092
+      targetPort: 9092
+    - name: "29092"
+      port: 29092
+      targetPort: 29092
+    - name: "9999"
+      port: 9999
+      targetPort: 9999
+    - name: "8999"
+      port: 8999
+      targetPort: 8999
+  selector:
+    io.kompose.service: kafka1
+status:
+  loadBalancer: {}
