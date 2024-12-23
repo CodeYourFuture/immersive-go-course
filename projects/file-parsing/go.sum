@@ -1,0 +1,4 @@
+github.com/mattn/go-sqlite3 v1.14.24 h1:tpSp2G2KyMnnQu99ngJ47EIkWVmliIizyZBfPrBWDRM=
+github.com/mattn/go-sqlite3 v1.14.24/go.mod h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y=
+github.com/tidwall/go-node v0.1.0 h1:4y3F7uyKSI/19N6I4KIclsUInRTksf4DE5XeiSgwmug=
+github.com/tidwall/go-node v0.1.0/go.mod h1:hZYJcOj7pBSJ7V950z3P/OeYsgPG44WwESO12QpHShw=
