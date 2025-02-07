@@ -1,0 +1,76 @@
+:root {
+  --color-bg: #565264;
+  --color-main: #ffffff;
+  --color-primary: #D6CFCB;
+  --color-secondary: #CCB7AE;
+  --color-tertiary: #706677;
+  --wrapper-height: 87vh;
+  --image-max-width: 300px;
+  --image-margin: 3rem;
+  --font-family: "HK Grotesk";
+  --font-family-header: "HK Grotesk";
+}
+
+/* Basic page style resets */
+* {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* Import fonts */
+@font-face {
+  font-family: HK Grotesk;
+  src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Regular.otf?v=1603136326027")
+    format("opentype");
+}
+@font-face {
+  font-family: HK Grotesk;
+  font-weight: bold;
+  src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Bold.otf?v=1603136323437")
+    format("opentype");
+}
+
+body {
+  font-family: HK Grotesk;
+  background-color: var(--color-bg);
+  color: var(--color-main);
+}
+
+/* Page structure */
+.wrapper {
+  min-height: var(--wrapper-height);
+  display: grid;
+  place-items: normal center;
+  margin: 0 1rem;
+}
+.content {
+  max-width: 1032px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+}
+
+h1 {
+  color: var(--color-primary);
+  font-style: normal;
+  font-weight: bold;
+  font-size: 100px;
+  line-height: 105%;
+  margin: 0;
+}
+
+h2 {
+  color: var(--color-secondary);
+}
+
+.gallery-image img {
+  border: 1em solid var(--color-tertiary);
+}
