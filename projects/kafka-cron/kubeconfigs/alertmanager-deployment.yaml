@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ../../kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: alertmanager
+  name: alertmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: alertmanager
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ../../kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: alertmanager
+    spec:
+      containers:
+        - args:
+            - --config.file=/etc/alertmanager/alertmanager.conf
+          image: prom/alertmanager
+          name: alertmanager
+          ports:
+            - containerPort: 9093
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/alertmanager/
+              name: amconfig
+      hostname: alertmanager
+      restartPolicy: Always
+      volumes:
+        - name: amconfig
+          configMap:
+            name: amconfig
+status: {}
