@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 	"net/http"
 	"os"
@@ -11,7 +12,8 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// We generate a random number between 0 and 9 (inclusive), so that we can decide whether to behave properly (half of the time), or simulate error conditions.
+		// We generate a random number between 0 and 9 (inclusive), so that we can decide 
+        // whether to behave properly (half of the time), or simulate error conditions.
 		randomNumber := rand.Intn(10)
 		switch randomNumber {
 		// 50% of the time, we just report the weather. 30% nice, 20% less so.
@@ -38,7 +40,8 @@ func main() {
 
 			rejectAsTooBusy(w, retryAfterHeader)
 		case 7:
-			// But 10% of the time there's actually a bug which means we don't tell you a time to retry after, and trying to parse the header will result in an error.
+			// But 10% of the time there's actually a bug which means 
+            // we don't tell you a time to retry after, and trying to parse the header will result in an error.
 			retryAfter := "a while"
 			rejectAsTooBusy(w, retryAfter)
 		// 20% of the time we just drop the connection.
@@ -48,8 +51,12 @@ func main() {
 		default:
 			// This shouldn't be possible, as we generated the random number to be at most 9.
 			// Print out enough information in our local log that we can notice and debug what happened:
-			fmt.Fprintf(os.Stderr, "Reached unreachable code - HTTP handler switch encountered unhandled random number %d which shouldn't be possible", randomNumber)
-			// Give a very generic error message to the caller, because they don't know anything about the internals of our code, and we don't want to tell them anything about it.
+			fmt.Fprintf(
+                os.Stderr, 
+                "Reached unreachable code - HTTP handler switch encountered unhandled random number %d which shouldn't be possible",
+                randomNumber)
+			// Give a very generic error message to the caller
+            // because they don't know anything about the internals of our code, and we don't want to tell them anything about it.
 			w.WriteHeader(500)
 			w.Write([]byte("Internal server error"))
 		}
