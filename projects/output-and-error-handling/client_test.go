@@ -16,10 +16,15 @@ func TestSuccessfullResponse(t *testing.T) {
         server := makeSuccessfullServer()
         defer server.Close()
 
-        api := module.TestAPI{Client: server.Client(), URL: server.URL}
+        api := module.BaseAPI{
+            Client: server.Client(), 
+            URL: server.URL, 
+            Testing: true,
+        }
+
         buf := bytes.Buffer{}
         
-        if err := api.DoStuff(&buf); err != nil {
+        if err := api.DoStuff(&buf, &buf); err != nil {
             t.Error("something went wrong")
         }
 
@@ -64,16 +69,21 @@ Retrying...
         }
         for _, test := range cases {
             t.Run(test.Name, func(t *testing.T){
-                api := module.TestAPI{Client: test.Server.Client(), URL: test.Server.URL}
+                api := module.BaseAPI{
+                    Client: test.Server.Client(), 
+                    URL: test.Server.URL,
+                    Testing: true,
+                }
+
                 buf := bytes.Buffer{}
 
-                if err := api.DoStuff(&buf); err != nil {
+                if err := api.DoStuff(&buf, &buf); err != nil {
                     t.Error("something wrong happened")
                 }
 
                 // Evaluate sleep time
-                if api.SleepTime != test.SleepTime {
-                    t.Errorf("expected sleep time to be %v got %v", test.SleepTime, api.SleepTime)
+                if api.TestAPI.SleepTime != test.SleepTime {
+                    t.Errorf("expected sleep time to be %v got %v", test.SleepTime, api.TestAPI.SleepTime)
                 }
                 // Evaluate buffer
                 got := buf.String()
@@ -119,16 +129,21 @@ Retrying...
 
         for _, test := range cases {
             t.Run(test.Name, func(t *testing.T) {
-                api := module.TestAPI{Client: test.Server.Client(), URL: test.Server.URL}
+                api := module.BaseAPI{
+                    Client: test.Server.Client(), 
+                    URL: test.Server.URL,
+                    Testing: true,
+                }
+
                 buf := bytes.Buffer{}
 
-                if err := api.DoStuff(&buf); err != nil {
+                if err := api.DoStuff(&buf, &buf); err != nil {
                     t.Error("something wrong happened")
                 }
 
                 // Evaluate sleep time
-                if api.SleepTime != test.SleepTime {
-                    t.Errorf("expected sleep time to be %v got %v", test.SleepTime, api.SleepTime)
+                if api.TestAPI.SleepTime != test.SleepTime {
+                    t.Errorf("expected sleep time to be %v got %v", test.SleepTime, api.TestAPI.SleepTime)
                 }
                 // Evaluate buffer
                 got := buf.String()
