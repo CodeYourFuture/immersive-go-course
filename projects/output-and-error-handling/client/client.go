@@ -84,7 +84,6 @@ func (b *BaseAPI) DoStuff(w1, w2 io.Writer) error {
             }else {
                 // Abort otherwise.
                 fmt.Fprintf(w2, "I can't give you the weather")
-                return nil
             }
         } 
         // 3.2 Invalid Delayed Response
