@@ -1,41 +1,14 @@
-package main_test
+package client
 
 import (
-	"bytes"
-	"fmt"
+    "testing"
+    "bytes"
 	"net/http"
-	"net/http/httptest"
-	"testing"
-	"time"
-
-	module "github.com/CodeYourFuture/immersive-go-course/projects/output-and-error-handling"
+    "time"
+    "net/http/httptest"	
 )
 
-func TestSuccessfullResponse(t *testing.T) {
-    t.Run("evaluate successfull response.", func(t *testing.T) {
-        server := makeSuccessfullServer()
-        defer server.Close()
 
-        api := module.BaseAPI{
-            Client: server.Client(), 
-            URL: server.URL, 
-            Testing: true,
-        }
-
-        buf := bytes.Buffer{}
-        
-        if err := api.DoStuff(&buf, &buf); err != nil {
-            t.Error("something went wrong")
-        }
-
-        got := buf.String()
-        want := "testing weather response"
-
-        if got != want {
-            t.Errorf("got %s wanted %s", got, want)
-        }
-    })
-}
 func TestDelayedResponse(t *testing.T) {
     t.Run("evaluate retrying given seconds", func(t *testing.T) {
         cases := []struct {
@@ -69,7 +42,8 @@ Retrying...
         }
         for _, test := range cases {
             t.Run(test.Name, func(t *testing.T){
-                api := module.BaseAPI{
+
+                api := BaseAPI{
                     Client: test.Server.Client(), 
                     URL: test.Server.URL,
                     Testing: true,
@@ -93,9 +67,6 @@ Retrying...
             })
         }
     })
-    //t.Run("Evaluate consecutive retrying", func(t *testing.T) {
-    //    
-    //})
     t.Run("evaluate retrying given timestamp", func(t *testing.T) {
         cases := []struct {
             Name                string 
@@ -129,7 +100,7 @@ Retrying...
 
         for _, test := range cases {
             t.Run(test.Name, func(t *testing.T) {
-                api := module.BaseAPI{
+                api := BaseAPI{
                     Client: test.Server.Client(), 
                     URL: test.Server.URL,
                     Testing: true,
@@ -157,7 +128,7 @@ Retrying...
         server := makeUndeterminedServer()
         defer server.Close()
 
-        api := module.BaseAPI{
+        api := BaseAPI{
             Client: server.Client(),
             URL: server.URL,
             Testing: true,
@@ -179,34 +150,6 @@ Retrying...
     })
 }
 
-func TestConnectionLost(t *testing.T) {
-    server := makeHijackedServer()
-    api := module.BaseAPI{
-        Client: server.Client(),
-        URL: server.URL,
-        Testing: true,
-    }
-    
-    buf := bytes.Buffer{}
-
-    if err := api.DoStuff(&buf, &buf); err != nil {
-        t.Error("something bad happened")
-    }
-
-    got := buf.String()
-    want := "Connection Lost. Try again later"
-
-    if got != want {
-        t.Errorf("got %s wanted %s", got, want)
-    }
-
-}
-
-func makeSuccessfullServer() *httptest.Server {
-    return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprint(w, "testing weather response")
-    }))
-}
 func makeDelayedServer(seconds string) *httptest.Server {
     return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Retry-After", seconds)
@@ -229,12 +172,3 @@ func makeDelayedTimestampServer(seconds int) *httptest.Server {
         w.WriteHeader(429)
     }))
 }
-func makeHijackedServer() *httptest.Server {
-    return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        conn, _, _ := w.(http.Hijacker).Hijack()
-		conn.Close()
-    }))
-}
-
-
-
