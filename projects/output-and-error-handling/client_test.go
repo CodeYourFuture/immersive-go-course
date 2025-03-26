@@ -153,6 +153,53 @@ Retrying...
             })
         }
     })
+    t.Run("evaluate retrying given undetermined server", func(t *testing.T) {
+        server := makeUndeterminedServer()
+        defer server.Close()
+
+        api := module.BaseAPI{
+            Client: server.Client(),
+            URL: server.URL,
+            Testing: true,
+        }
+        
+        buf := bytes.Buffer{}
+        if err := api.DoStuff(&buf, &buf); err != nil {
+            t.Error("something wrong happened")
+        }
+
+        got := buf.String()
+        want := `Max Time Waiting: 10s. Please do not leave
+Retrying...
+`
+
+        if got != want {
+            t.Errorf("got %s wanted %s", got, want)
+        }
+    })
+}
+
+func TestConnectionLost(t *testing.T) {
+    server := makeHijackedServer()
+    api := module.BaseAPI{
+        Client: server.Client(),
+        URL: server.URL,
+        Testing: true,
+    }
+    
+    buf := bytes.Buffer{}
+
+    if err := api.DoStuff(&buf, &buf); err != nil {
+        t.Error("something bad happened")
+    }
+
+    got := buf.String()
+    want := "Connection Lost. Try again later"
+
+    if got != want {
+        t.Errorf("got %s wanted %s", got, want)
+    }
+
 }
 
 func makeSuccessfullServer() *httptest.Server {
@@ -166,6 +213,12 @@ func makeDelayedServer(seconds string) *httptest.Server {
         w.WriteHeader(429)    
     }))
 }
+func makeUndeterminedServer() *httptest.Server {
+    return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Retry-After", "a while")
+        w.WriteHeader(429)    
+    }))
+}
 func makeDelayedTimestampServer(seconds int) *httptest.Server {
     return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -174,6 +227,12 @@ func makeDelayedTimestampServer(seconds int) *httptest.Server {
 
         w.Header().Set("Retry-After", timeFormatted)
         w.WriteHeader(429)
+    }))
+}
+func makeHijackedServer() *httptest.Server {
+    return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        conn, _, _ := w.(http.Hijacker).Hijack()
+		conn.Close()
     }))
 }
 
