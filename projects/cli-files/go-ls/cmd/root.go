@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
+    "errors"
 )
 const defaultRoute = "."
 
@@ -13,45 +13,50 @@ func Execute() {
     // Display instructions.
     if len(os.Args) == 2 {
         if os.Args[1] == "-h" {
-            fmt.Fprint(os.Stdout, "how to use the go-ls command:\n * type go-ls and a valid directory file\n * type go-ls -m and a valid directory for a better format")
+            fmt.Fprintln(os.Stdout, "how to use the go-ls command:\n * type go-ls and a valid directory file\n * type go-ls -m and a valid directory for a better format")
             return
         }
         
         // Read under normal formatting.
         file = os.Args[1]
         if err := readAndPrintFile(file, false); err != nil {
-            fmt.Fprintf(os.Stderr, "There was an error reading the directory")
+            fmt.Fprintln(os.Stderr, err)
         }
         return
     } 
 
     // Check valid conditions.
     if len(os.Args) > 3 {
-        fmt.Fprint(os.Stderr, "this is your current directory. please type just one arg\n")
+        fmt.Fprintln(os.Stderr, "type go-ls -h to chech the commands")
         return
     }
 
     // Read under specical fomatting.
     if len(os.Args) == 3 && os.Args[1] == "-m" {
         file = os.Args[2]
-            if checkNonDir(file) {
-                if err := readAndPrintFile(file, true); err != nil {
-                    fmt.Fprintf(os.Stderr, "There was an error reading the directory")
-            }
+        if err := readAndPrintFile(file, true); err != nil {
+            fmt.Fprintln(os.Stderr, err)
         }
         return
     }
+    
+    // Read default route.
     if err := readAndPrintFile(file, false); err != nil {
-        fmt.Fprintf(os.Stderr, "There was an error reading the directory")
+        fmt.Fprintln(os.Stderr, err)
     }
     return
 }
 
 func readAndPrintFile(file string, formatted bool) error {
-    files, err := os.ReadDir(file)
-    if err != nil {
+    if err := checkNonDir(file); err != nil {
         return err
     }
+
+    files, err := os.ReadDir(file)
+    if err != nil {
+        return errors.New("there was an error reading the directory")
+    }
+
     for _, file := range files {
         if formatted {
             fmt.Fprintf(os.Stdout, "%s ",  file.Name())
@@ -63,14 +68,13 @@ func readAndPrintFile(file string, formatted bool) error {
 }
 
 // Evaluate possible non-dir.
-func checkNonDir(file string) bool {
+func checkNonDir(file string) error {
     FileInfo, err := os.Stat(file)
     if err != nil {
-        log.Fatal(err)
+        return errors.New("there was an error reading the directory")
     }
     if !FileInfo.IsDir() {
-        fmt.Fprintf(os.Stderr, "File %s is not a directory", FileInfo.Name())
-        return false
+        return errors.New(FileInfo.Name() + " is a file not a directory")
     }
-    return true
+    return nil
 }
