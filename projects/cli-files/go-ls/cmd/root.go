@@ -9,7 +9,8 @@ const defaultRoute = "."
 
 func Execute() {
     file := defaultRoute
-
+    
+    // Evaluate possible mistakes at the moment of execution.
     if len(os.Args) == 2 {
         file = os.Args[1]
 
@@ -22,7 +23,7 @@ func Execute() {
         fmt.Fprint(os.Stderr, "this is your current directory. please type just one arg\n")
     }
 
-
+    // Evaluate possible non-dir.
     FileInfo, err := os.Stat(file)
     if err != nil {
         log.Fatal(err)
@@ -32,6 +33,7 @@ func Execute() {
         return
     }
 
+    // Finally read and print the output.
     files, err := os.ReadDir(file)
     if err != nil {
         log.Fatal(err)
