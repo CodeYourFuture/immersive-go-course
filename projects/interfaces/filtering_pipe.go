@@ -14,7 +14,9 @@ func(f *FilteringPipe) Write(p []byte) (n int, err error) {
         if _, err := strconv.Atoi(string(c)); err != nil {
             continue
         }
-        f.Writer.Write([]byte{c})
+        if _, err := f.Writer.Write([]byte{c}); err != nil {
+            return 0, err
+        }
     }
-    return 0, nil
+    return len(p), nil
 }

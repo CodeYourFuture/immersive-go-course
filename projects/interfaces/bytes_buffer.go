@@ -7,6 +7,7 @@ import (
 
 type OurByteBuffer struct {
     Available       []byte
+    Index           int
 }
 
 // Return number of bytes available in buffer.
