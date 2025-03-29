@@ -1,0 +1,70 @@
+syntax = "proto3";
+package raft;
+option go_package = "/raft_proto";
+
+service RaftKVService {
+  rpc Set(SetRequest) returns (SetResponse) {}
+  rpc Get(GetRequest) returns (GetResponse) {}
+}
+
+message SetRequest {
+    string keyname = 1;
+    string value = 2;
+}
+
+message SetResponse {
+}
+
+message GetRequest {
+    string keyname = 1;
+}
+
+message GetResponse {
+    string value = 1;
+}
+
+service RaftService {
+  rpc RequestVote(RequestVoteRequest) returns (RequestVoteResponse) {}
+  rpc AppendEntries(AppendEntriesRequest) returns (AppendEntriesResponse) {}
+}
+
+message RequestVoteRequest {
+    int64 term = 1;
+    string candidateId = 2;
+    int64 lastLogIndex = 3;
+    int64 lastLogTerm = 4;
+}
+
+message RequestVoteResponse {
+    int64 term = 1;
+    bool voteGranted = 2;
+}
+
+message AppendEntriesRequest {
+    int64 term = 1;
+    string leader = 2;
+    int64 prevLogIndex = 3;
+    int64 prevLogTerm = 4;
+    repeated LogEntry entries = 5;        
+    int64 leaderCommit = 6;
+}
+
+
+message LogEntry {
+    int64 term = 1;
+    Command command = 2;
+}
+
+message Command {
+    string Command = 1;
+    repeated string Args = 2;
+}
+
+
+message AppendEntriesResponse {
+    int64 term = 1;
+    bool success = 2;
+    int64 conflictIndex = 3;
+    int64 conflictTerm = 4;
+}
+
