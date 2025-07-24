@@ -90,7 +90,7 @@ The CPU utilisation target should not be set too high. Your service will take so
 
 ### Autoscaling and Long-Running Connections {#autoscaling-and-long-running-connections}
 
-One case where autoscaling does not help you to manage load is when your application is based on long-running connections, such as websockets or gRPC streaming. Managing these at scale can be challenging. Read the article [Load balancing and scaling long-lived connections in Kubernetes](https://learnk8s.io/kubernetes-long-lived-connections).
+One case where autoscaling does not help you to manage load is when your application is based on long-running connections, such as websockets or gRPC streaming. Managing these at scale can be challenging. Read the article [Load balancing and scaling long-lived connections in Kubernetes](https://learnkube.com/kubernetes-long-lived-connections)
 
 - Why doesn’t autoscaling work to redistribute load in systems with long-lived connections?
 - How can we make these kinds of systems robust?
