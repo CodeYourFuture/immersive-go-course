@@ -1,0 +1,12 @@
+services:
+  raft:
+    build: .
+    deploy:
+      mode: replicated
+      replicas: 3
+  client:
+    build:
+      dockerfile: ./Dockerfile.client
+    deploy:
+      mode: replicated
+      replicas: 1
