@@ -1,0 +1,1 @@
+* * * * *, badcmd -c 1 www.google.com, badjob, cluster-a, 3

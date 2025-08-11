@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ../../kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: zoo1
+  name: zoo1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: zoo1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ../../kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: zoo1
+    spec:
+      containers:
+        - env:
+            - name: ZOOKEEPER_CLIENT_PORT
+              value: "2181"
+            - name: ZOOKEEPER_SERVERS
+              value: zoo1:2888:3888
+            - name: ZOOKEEPER_SERVER_ID
+              value: "1"
+          image: confluentinc/cp-zookeeper:7.3.0
+          name: zoo1
+          ports:
+            - containerPort: 2181
+          resources: {}
+      hostname: zoo1
+      restartPolicy: Always
+status: {}
